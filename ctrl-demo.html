@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset='utf-8'>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ctrl-demo</title>
+</head>
+<body>
+    <h2>Demo</h2>
+    <pre>
+        &lt;ctrl-ing ref="obj" darkmode>
+          [ {"sec":"hdr","text":"Demo"},
+            {"sec":"num","label":"Numbers","path":"$['numbers'][0]","unit":"[-]"},
+            {"sec":"chk","label":"Toggle","path":"$['toggle']"},
+            {"sec":"txt","label":"Text","path":"$['text']"},
+            {"sec":"col","label":"Color","path":"$['color']"},
+            {"sec":"sel","label":"Select","options":{"solid":1,"dashed":2,"dotted":3},"path":"$['lineStyle']"}
+            ]
+        &lt;/ctrl-ing>
+    </pre>
+    <div style="display: flex; flex-wrap: nowrap; justify-content: space-between; background-color:#efefef; position:relative;">
+        <pre id="out"></pre>
+        <ctrl-ing id="ctrlr" ref="obj" autoupdate callback="callbk">
+            [ {"sec":"hdr","text":"Demo"},
+              {"sec":"num","label":"Numbers[0]","min":1,"max":20,"step":1.00,"path":"$['numbers'][0]","unit":"[-]"},
+              {"sec":"chk","label":"Toggle","path":"$['toggle']"},
+              {"sec":"txt","label":"Text","path":"$['text']"},
+              {"sec":"sep"},
+              {"sec":"col","label":"Color","path":"$['color']"},
+              {"sec":"sel","label":"Select","options":{"solid":1,"dashed":2,"dotted":"three"},"path":"$['lineStyle']"},
+              {"sec":"num","label":"x","path":"$['x']","unit":"[-]"},
+              {"sec":"btn","label":"show current time","text":"press","path":"window['f']"},
+              {"sec":"rng","label":"slide","path":"$['slide']"},
+              {"sec":"vec","label":"Vector","path":["$['vec']['x']","$['vec']['y']"]},
+              {"sec":"mtr","label":"Meter","path":"$['volumn']","min":20,"max":80,
+              "low":45,"high":70,"optimum":30,"value":50,"unit":"m&sup2;"},
+              {"sec":"out","label":"obj=","path":"$"}
+              ]
+        </ctrl-ing>
+    </div>
+</body>
+<script>
+const obj = {
+        numbers: [0,13],
+        toggle: true,
+        text: "something trivial ...",
+        color: "#ff8000",
+        lineStyle: 2,
+        vec: {x:1,y:2},
+        get x() { return this.numbers[1]; },
+        set x(q) { this.numbers[1] = q;},
+        time() {},
+        arr: ["bar","foo"],
+        slide: 32,
+        volumn:40
+    }
+    function callbk() { document.getElementById('out').innerHTML = "obj = "+Ctrling.stringify(obj); }
+    function f() { console.log('#'); document.body.style.color = "red"; }
+//    callbk1();
+</script>
+<script src="./ctrling.js"></script>
+</html>

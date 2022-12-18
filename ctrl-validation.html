@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset='utf-8'>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ctrl-validation</title>
+    <style>
+        main {
+            /* grid layout */
+            display: grid;
+            border-radius:5px;
+            padding: 0 2px 0 2px;
+            width: 20em;
+            background-color: #444;
+
+            font-family: monospace;
+    
+            /* top right corner position */
+            position: absolute;
+            top: 4px;
+            right: 24px;
+            user-select: none;
+        }
+        main > section {
+            width: 100%;
+            margin: 2px 0 2px 0;
+        }
+        main > section.hdr {
+            text-align: center;
+            font-weight: bold;
+            color: #eee;
+            background-color: #666;
+            border-radius: 5px 5px 0 0;
+        }
+        main > section.btn, 
+        main > section.sel, 
+        main > section.rng, 
+        main > section.col, 
+        main > section.out, 
+        main > section.mtr, 
+        main > section.vec, 
+        main > section > label  {
+            display: flex;
+            flex-wrap: nowrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.25em;
+
+            color: #ddd;
+
+            border-radius: 0px;
+            border: none;
+        }
+        main > section > span {
+            display: flex;
+            flex-wrap: nowrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.1em;
+            max-width: 100%;
+        }
+        main > section input {
+            background-color: #555;
+            color: #ddd;
+            border: none;
+        }
+        main > section input:focus-visible {
+            color: #eee;
+            outline: 1px solid #ddd;
+        }
+        main > section.num input {
+            width: 5em;
+        }
+        main > section.vec input {
+            width: 2.5em;
+        }
+        main > section.rng input {
+            width: 7em;
+        }
+        main > section.txt input:invalid {
+            background-color: rgba(0, 255, 60, 0.717);
+        }
+        main > section.num input:invalid {
+            background-color: rgba(0, 255, 60, 0.717);
+        }
+        main > section.out {
+            min-width: 2em;
+            max-width: 100%;
+            overflow: hidden;
+        }
+        main > section.sep > hr {
+            width: 85%;
+        }
+        main > section output {
+            font-family: monospace;
+            padding: 0 0.5em;
+            white-space: pre;
+        }
+        main > section.btn input {
+            background-color: #ddd;
+            color: #222;
+            font-family: monospace;
+            border-radius: 3px;
+        }
+        main > section select {
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <h1>ctrl-validation</h1>
+    <main>
+        <section class="hdr">Validation</section>
+        <section class="txt"><label>Text<input type="text" pattern="^((\+|-)?(0|[1-9]\d*)?(\.\d*)?[,]?\s*)*(\+|-)?(0|[1-9]\d*)?(\.\d*)?$"></label></section>
+        <section class="vec"><label>Vector</label><span><input type="text"><input type="text"><input type="text"></span></section>
+    </main>
+<script>
+    const input = document.querySelector('input');
+    input.addEventListener('input', () => {
+        input.setCustomValidity('');
+        console.log(input.checkValidity())
+        input.reportValidity();
+    });
+    input.addEventListener("invalid", () => {
+        input.setCustomValidity("Please fill in correct.");
+    });
+</script>
+</body>
+</html>
+
+{"sec":"vec","label":"Vector","path":"[$['vec']['x'],$['vec']['y']]"

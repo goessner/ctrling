@@ -1,0 +1,57 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ctrl-tst-3</title>
+</head>
+<body>
+    <h2>hi</h2>
+    <ctrl-ing id="ctrlr" ref="obj" darkmode>
+        [ {"sec":"hdr","text":"Mechanism"},
+          {"sec":"btn","label":"Start animation","text":"Run","path":"$['run']","disabled":true},
+          {"sec":"num","label":"Count","value":5,"path":"$['count'][1]","unit":"[-]"},
+          {"sec":"chk","label":"Active","path":"$['active']"},
+          {"sec":"txt","label":"Title","path":"$['title']","value":"hallo"},
+          {"sec":"rng","label":"Volumn","path":"$['volumn']","value":7,"min":1,"max":12,"unit":"[s]"},
+          {"sec":"hdr","text":"Status"},
+          {"sec":"out","label":"Current time","path":"$['time']","unit":"[s]"},
+          {"sec":"col","label":"Link color","path":"$['color']"},
+          {"sec":"sel","label":"Line style","options":["solid","dashed","dotted"],"path":"$['lineStyle']"}
+          {"sec":"mtr","label":"Iteration","min":0,"max":128,"path":"$['itr']","unit":"[-]"}
+        ]
+    </ctrl-ing>
+</body>
+<script>
+    var tst = 5;
+    const obj = {
+        title: 'hello',
+        count: [42,13],
+        active: true,
+        volumn: 5,
+        get run() {
+            console.log('!')
+            document.body.style.backgroundColor = '#aaaaaa'
+        },
+        color: '#999999',
+        time: 2.5,
+        lineStyle:"dashed",
+        itr: 23
+    }
+    const ctrlr = document.getElementById('ctrlr');
+/*
+
+    ctrlr.parseJSON();
+
+    ctrlr.hdr({text:'Mechanism'})
+         .num({label:'Count', unit:'[-]', value:5, path:"$['count']"})
+         .chk({label:'Active', path:"$['active']"})
+         .txt({label:'Title', path:"$['title']",value:'hallo'})
+         .rng({label:'Volumn', path:"$['volumn']",value:7,min:1,max:12})
+         .hdr({text:'Status'})
+         .out({label:'Current time', unit:'[s]', path:"$['time']"})
+//             .tick()
+*/
+</script>
+<script src="./ctrling.js"></script>
+</html>

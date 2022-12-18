@@ -1,0 +1,21 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <title>Getting Started</title>
+    <script src="./ctrling.js"></script>
+</head>
+<body>
+    <ctrl-ing ref="obj" autoupdate>
+        [ {"sec":"hdr","text":"Getting Started"},
+          {"sec":"chk","label":"Toggle","path":"$['toggle']"},
+          {"sec":"out","label":"obj=","path":"$"}
+        ]
+    </ctrl-ing>
+    <script>
+        const obj = {
+            toggle: false
+        }
+    </script>
+    </body>
+</html>

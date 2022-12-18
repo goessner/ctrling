@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset='utf-8'>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ctrl-demo</title>
+</head>
+<body>
+    <h2>Demo</h2>
+    <pre>
+&lt;ctrl-ing ref="obj" darkmode>
+    [ {"sec":"hdr","text":"Selfcontrol"},
+      {"sec":"chk","label":"Disable button","path":"$['disabled']"},
+      {"sec":"btn","id":"run","label":"Fake button","text":"start","path":"$['running']"},
+      {"sec":"out","label":"obj=","path":"$"}
+    ]
+&lt;/ctrl-ing>
+    </pre>
+    <div style="display: flex; flex-wrap: nowrap; justify-content: space-between; background-color:#efefef; position:relative;">
+        <pre id="out"></pre>
+        <ctrl-ing id="ctrl" ref="obj" darkmode callback="callbk">
+            [ {"sec":"hdr","text":"Selfcontrol"},
+              {"sec":"chk","label":"Disable button","path":"$['disabled']"},
+              {"sec":"btn","id":"run","label":"Fake button","text":"start","path":"$['running']"},
+              {"sec":"var","type":"vec2","label":"vec","path":"$['vec']"},
+              {"sec":"vec","label":"Vector","path":["$['vec']['u']","$['vec']['v']","$['vec']['w']","$['vec']['x']","$['vec']['y']"]},
+              {"sec":"out","label":"obj=","path":"$"}
+            ]
+        </ctrl-ing>
+    </div>
+</body>
+<script>
+    const ctrlr = document.getElementById('ctrl');
+    const obj = {
+        vec: {u:'u',v:'v',w:'w',x:1,y:2},
+        get disabled() { return !!ctrlr.sectionById('run').disabled; },
+        set disabled(q) {
+            const ctrl = document.getElementById('ctrl');
+            const btn = ctrl.sectionById('run');
+            btn.disabled = q;
+            ctrl.updateSection(btn);
+            ctrl.update();
+        },
+        running() {
+            const sec = document.getElementById('ctrl').sectionById('run');
+            sec.text = sec.text == 'start' ? 'stop' : 'start';
+            ctrl.updateSection(sec);
+            ctrl.update();
+        }
+    }
+    function callbk() { document.getElementById('out').innerHTML = "obj = "+Ctrling.stringify(obj); }
+</script>
+<script src="./ctrling.js"></script>
+</html>

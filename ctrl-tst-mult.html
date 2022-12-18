@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ctrl-tst-mult</title>
+</head>
+<body>
+    <h2>Ctrl-1</h2>
+    <div style="position:relative;border:solid 1px black">
+        <ctrl-ing id="o1" ref="o1" width="42em">
+            [ {"sec":"hdr","text":"Ctrl-1"},
+            {"sec":"btn","label":"Do something","text":"Run","path":"$['run']","disabled":true},
+            {"sec":"btn","label":"Do something","text":"Run","path":"$['run']","disabled":true},
+            {"sec":"btn","label":"Do something","text":"Run","path":"$['run']","disabled":true},
+            {"sec":"btn","label":"Do something","text":"Run","path":"$['run']","disabled":true},
+            {"sec":"btn","label":"Do something","text":"Run","path":"$['run']","disabled":true},
+            {"sec":"btn","label":"Do something","text":"Run","path":"$['run']","disabled":true}
+            ]
+        </ctrl-ing>
+    </div>
+    <h2>Ctrl-2</h2>
+    <div style="position:relative;border:solid 1px black">
+        <ctrl-ing id="o2" ref="o2" width="22em">
+            [ {"sec":"hdr","text":"Ctrl-2"},
+            {"sec":"btn","label":"Do something other","text":"Run","path":"$['run']","disabled":true}
+            ]
+        </ctrl-ing>
+    </div>
+</body>
+<script>
+    const o1 = {
+    }
+    const o2 = {
+    }
+</script>
+<script src="./ctrling.js"></script>
+</html>

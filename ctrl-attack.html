@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset='utf-8'>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ctrl-demo</title>
+</head>
+<body>
+    <h2>Attack Demo</h2>
+    <div style="display: flex; flex-wrap: nowrap; justify-content: space-between; background-color:#efefef; position:relative;">
+        <pre id="out"></pre>
+        <ctrl-ing id="ctrl" ref="obj" darkmode callback="callbk">
+            [ {"sec":"hdr","text":"Attack"},
+              {"sec":"chk","label":"Check","path":"$['checked']"},
+              {"sec":"btn","label":"button","text":"call","path":"window['f']"},
+              {"sec":"txt","label":"string","path":"$['str']"}
+            ]
+        </ctrl-ing>
+    </div>
+</body>
+<script>
+    const obj = {
+        checked: true,
+        str: "hello"
+    }
+    function callbk() { document.getElementById('out').innerHTML = "var obj = "+Ctrling.stringify(obj); }
+    function f() { console.log('#'); document.body.style.color = "red"; }
+</script>
+<script src="./ctrling.js"></script>
+</html>

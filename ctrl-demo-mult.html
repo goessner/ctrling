@@ -1,0 +1,69 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ctrl-demo-mult</title>
+</head>
+<body>
+    <pre>
+        &lt;ctrl-ing ref="obj1" darkmode>
+          [ {"sec":"hdr","text":"Demo-1"},
+            {"sec":"num","label":"Numbers","path":"$['numbers'][0]","unit":"[-]"},
+            {"sec":"chk","label":"Toggle","path":"$['toggle']"}
+          ]
+        &lt;/ctrl-ing>
+    </pre>
+    <div style="display: flex; flex-wrap: nowrap; justify-content: space-between; border:solid 1px black; position:relative;">
+        <pre id="out1"></pre>
+        <ctrl-ing id="ctrlr" ref="obj1" darkmode callback="callbk1">
+            [ {"sec":"hdr","text":"Demo-1"},
+              {"sec":"num","label":"Numbers[0]","path":"$['numbers'][0]","unit":"[-]"},
+              {"sec":"chk","label":"Toggle","path":"$['toggle']"}
+            ]
+        </ctrl-ing>
+    </div>
+    <hr>
+    <pre>
+        &lt;ctrl-ing ref="obj1" darkmode>
+          [ {"sec":"hdr","text":"Demo-2"},
+            {"sec":"txt","label":"Text","path":"$['text']"},
+            {"sec":"col","label":"Color","path":"$['color']"}
+          ]
+        &lt;/ctrl-ing>
+    </pre>
+    <div style="display: flex; flex-wrap: nowrap; justify-content: space-between; border:solid 1px black; position:relative;">
+        <pre id="out2"></pre>
+        <ctrl-ing id="ctrlr" ref="obj2" darkmode callback="callbk2">
+            [ {"sec":"hdr","text":"Demo-2"},
+              {"sec":"txt","label":"Text","path":"$['text']"},
+              {"sec":"col","label":"Color","path":"$['color']"}
+            ]
+        </ctrl-ing>
+    </div>
+</body>
+<script>
+    function stringify(obj) {
+        return JSON.stringify(obj).replaceAll(/\[.*?\]/gm, ($0) => $0.replaceAll(',',';'))
+                                  .replaceAll('{','{\n  ')
+                                  .replaceAll('}','\n}')
+                                  .replaceAll(',',',\n  ')
+                                  .replaceAll(/\[.*?\]/gm, ($0) => $0.replaceAll(';',','))
+    }
+    const obj1 = {
+        numbers: [42,13],
+        toggle: true
+    }
+    function callbk1() { document.getElementById('out1').innerHTML = stringify(obj1); }
+    callbk1();
+
+    const obj2 = {
+        text: "something trivial ...",
+        color: "#ff8000"
+    }
+    function callbk2() { document.getElementById('out2').innerHTML = stringify(obj2); }
+    callbk2();
+
+</script>
+<script src="./ctrling.js"></script>
+</html>

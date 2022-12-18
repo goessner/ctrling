@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/markdown-it-texmath/css/texmath.min.css">
+    <title>ctrl-lissajous</title>
+</head>
+
+<body>
+    <h1 style="text-align:center;width:98vw">Lissajous</h1>
+    <div style="display: flex; flex-wrap: nowrap; justify-content: space-between; background-color:#efefef; position:relative;">
+        <canvas id="c" width="401" height="401"></canvas>
+        <div style="text-align: center;">
+            <ctrl-ing id="ctrl" ref="app" darkmode callback="$['modify']">
+                [ {"sec":"hdr","text":"Parameters"},
+                  {"sec":"num","label":"a","min":0,"max":10,"step":1,"path":"$['a']","unit":"[-]"},
+                  {"sec":"num","label":"b","min":0,"max":10,"step":1,"path":"$['b']","unit":"[-]"},
+                  {"sec":"hdr","text":"Animation"},
+                  {"sec":"chk","label":"run","path":"$['run']"},
+                  {"sec":"rng","label":"vel","min":1,"max":10,"step":1,"path":"$['vel']"},
+                  {"sec":"hdr","text":"Style"},
+                  {"sec":"col","label":"Stroke","path":"$['ls']"},
+                  {"sec":"col","label":"Fill","path":"$['fs']"}
+                ]
+            </ctrl-ing>
+            <h3>Equation</h3>
+            <section><eqn><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi mathvariant="bold">p</mi><mo>=</mo><mrow><mo fence="true">(</mo><mtable rowspacing="0.1600em" columnalign="center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi>A</mi><mi>sin</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi>a</mi><mi>t</mi><mo>+</mo><mi>q</mi><mo stretchy="false">)</mo></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi>B</mi><mi>sin</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi>b</mi><mi>t</mi><mo stretchy="false">)</mo></mrow></mstyle></mtd></mtr></mtable><mo fence="true">)</mo></mrow></mrow><annotation encoding="application/x-tex">\bold p = \begin{pmatrix}A\sin(at+q)\\B\sin(bt)\end{pmatrix}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.63888em;vertical-align:-0.19444em;"></span><span class="mord mathbf">p</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:2.40003em;vertical-align:-0.95003em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size3">(</span></span><span class="mord"><span class="mtable"><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.45em;"><span style="top:-3.61em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">A</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mop">sin</span><span class="mopen">(</span><span class="mord mathnormal">a</span><span class="mord mathnormal">t</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">q</span><span class="mclose">)</span></span></span><span style="top:-2.4099999999999997em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.05017em;">B</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mop">sin</span><span class="mopen">(</span><span class="mord mathnormal">b</span><span class="mord mathnormal">t</span><span class="mclose">)</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.9500000000000004em;"><span></span></span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size3">)</span></span></span></span></span></span></span></eqn></section>
+        </div>
+    </div>
+</body>
+<script>
+const app = {
+    ctx: document.getElementById('c').getContext('2d'),
+    a: 2,
+    b: 5,
+    q: 0,
+    ls:'#000080',
+    fs:'#fffafa',
+    sz: 150,  // curve image size ...
+    get run() { return this._run !== undefined ? this._run : true; },
+    set run(q) {
+        const ctrl = document.getElementById('ctrl');
+        console.log(ctrl)
+        ctrl.sections[5].disabled = !q;
+        ctrl.updateSection(ctrl.sections[5], 5);
+        return this._run = q; 
+    },
+
+    crv() {
+        if (!this._crv) this._crv = [];
+        this._crv.length = 0;
+        for (let i=0; i<=360; i+=1)
+            this._crv.push({ x:Math.sin(i/180*Math.PI*this.a + this.q)*this.sz,
+                             y:Math.sin(i/180*Math.PI*this.b)*this.sz });
+        if (this.run)
+            this.q = (this.q + Math.PI/360*this.vel)%(2*Math.PI);
+        this.dirty = false;
+        return this._crv;
+    },
+    get g() { 
+        return this._g || 
+              (this._g = g2().view({x:200,y:200,cartesian:true})
+                             .clr()
+                             .ply({ pts:this.crv(),closed:false,lw:5,ls:()=>this.ls,fs:()=>this.fs }));
+    },
+    tick() {
+        if (app.run || app.dirty)
+            app.crv();
+        app.g.exe(app.ctx);
+        requestAnimationFrame(app.tick);
+    },
+    modify: function mdfy() { mdfy.dirty = true; },
+    get vel() { return this._vel || 1; },
+    set vel(q) { this._vel = q; },
+    get dirty() { return this.modify.dirty },
+    set dirty(q) { this.modify.dirty = q; }
+}
+    
+window.addEventListener('load', () => app.tick(), false);
+
+</script>
+<script src="../g2-ng/g2.core.js"></script>
+<script src="../g2-ng/g2.hdl.canvas.js"></script>
+<script src="./ctrling.js"></script>
+</html>
