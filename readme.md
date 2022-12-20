@@ -97,7 +97,7 @@ The generated encapsulated shadow DOM structure for this example is quite clear.
 
 ## CDN
 
-Use a local instance or following CDN link for `ctrling.js`.
+Use a local instance or one of the following CDN links for `ctrling.js`.
 * `https://cdn.jsdelivr.net/npm/ctrling/ctrling.js`
 * `https://cdn.jsdelivr.net/npm/ctrling/ctrling.min.js`
 
