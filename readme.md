@@ -39,10 +39,10 @@ All section objects are generating plain native HTML (form) elements in the back
 
 Let's start with a minimal example resulting in this controlling menu.
 
-<figure> 
+<figure style="text-align:center"> 
    <img src="./docs/gettingstarted.gif">
 </figure>  
-<figcaption>Fig. 2: Minimal <code>&lt;ctrl-ing&gt;</code> Example.</figcaption><br>
+<figcaption style="font-size:0.95em;text-align:center">Fig. 2: Minimal <code>&lt;ctrl-ing&gt;</code> Example.</figcaption><br>
 
 Here is the complete HTML code.
 
