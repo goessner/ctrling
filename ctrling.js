@@ -58,7 +58,7 @@ class Ctrling extends HTMLElement {
         this.main = this.shadowRoot.querySelector('main');
 
         this.sections = this.innerHTML !== undefined ? this.sectionsFromJSON() : [];
-console.log(this.main.innerHTML);
+//console.log(this.main.innerHTML);
         this.style.display = 'block';
         this.style.width = this.main.offsetWidth + 'px';
         this.style.height = this.main.offsetHeight + 'px';
