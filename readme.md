@@ -4,10 +4,10 @@
 
 `ctrl-ing` is a tiny HTML custom element (18.4 kB uncompressed) used to interactively control your Web-App parameters or JavaScript/JSON object values in a comfortable way with a pleasing GUI [[1]](#1).
 
-<figure> 
+<figure style="text-align:center"> 
    <img src="./docs/lissajous.gif">
 </figure>  
-<figcaption>Fig. 1: Controlling an Animation.</figcaption><br>
+<figcaption style="font-size:0.95em;text-align:center">Fig. 1: Controlling an Animation.</figcaption><br><br>
 
 The interactive menu for this example was created via:
 
@@ -42,7 +42,7 @@ Let's start with a minimal example resulting in this controlling menu.
 <figure style="text-align:center"> 
    <img src="./docs/gettingstarted.gif">
 </figure>  
-<figcaption style="font-size:0.95em;text-align:center">Fig. 2: Minimal <code>&lt;ctrl-ing&gt;</code> Example.</figcaption><br>
+<figcaption style="font-size:0.95em;text-align:center">Fig. 2: Minimal <code>&lt;ctrl-ing&gt;</code> Example.</figcaption><br><br>
 
 Here is the complete HTML code.
 
