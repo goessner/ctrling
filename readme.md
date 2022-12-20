@@ -25,7 +25,7 @@ The interactive menu for this example was created via:
   ]
 </ctrl-ing>
 ```
-<figcaption>Listing 1: Structure of custom HTML element <code>ctrl-ing</code>.</figcaption><br>
+<figcaption>Listing 1: Structure of custom HTML element <code>ctrl-ing</code>.</figcaption><br><br>
 
 Beside implementing your web application, all you need to do for creating an appealing GUI, is inserting a `<ctrl-ing>` element to your HTML document (see Listing 1). Its content is compact JSON text, representing an array of section objects. Each section corresponds to a single line in the grid-like view structure of the `<ctrl-ing>` element's shadow DOM and is associated to either
 
@@ -69,7 +69,7 @@ Here is the complete HTML code.
     </body>
 </html>
 ```
-<figcaption>Listing 2: Minimalistic example using <code>&lt;ctrl-ing&gt;</code> element.</figcaption><br>
+<figcaption>Listing 2: Minimalistic example using <code>&lt;ctrl-ing&gt;</code> element.</figcaption><br><br>
 
 With this example please take note of following points:
 
