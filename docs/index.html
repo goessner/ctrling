@@ -56,12 +56,13 @@
 </ul>
 <p>All section objects are generating plain native HTML (form) elements in the background (shadow DOM).</p>
 <h2 id="2-getting-started">2. Getting Started</h2>
-<p>Load the <code>ctrling.js</code> script somewhere into your web document locally or from CDN.</p>
-<pre><code class="code-line language-html"><div><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;path/to/tweakpane-3.1.1.min.js&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
-or
-<span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;https://cdn.jsdelivr.net/npm/tweakpane@3.1.1/dist/tweakpane.min.js&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
-</div></code></pre>
-<p>Here is a minimal web page using <code>ctrling</code>.</p>
+<p>Let's start with a minimal example resulting in this controlling menu.</p>
+<div  ></div>
+<figure> 
+   <img src="./gettingstarted.gif">
+</figure>  
+<figcaption>Fig. 2: Minimal <code>&lt;ctrl-ing&gt;</code> Example.</figcaption><br>
+<p>Here is the HTML code.</p>
 <pre><code class="code-line language-html"><div><span class="hljs-meta">&lt;!doctype <span class="hljs-keyword">html</span>&gt;</span>
 <span class="hljs-tag">&lt;<span class="hljs-name">html</span>&gt;</span>
 <span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
@@ -70,11 +71,10 @@ or
     <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;./ctrling.js&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
 <span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">h2</span>&gt;</span>Getting Started<span class="hljs-tag">&lt;/<span class="hljs-name">h2</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">ctrl-ing</span> <span class="hljs-attr">ref</span>=<span class="hljs-string">&quot;obj&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">ctrl-ing</span> <span class="hljs-attr">ref</span>=<span class="hljs-string">&quot;obj&quot;</span> <span class="hljs-attr">autoupdate</span>&gt;</span>
         [ {&quot;sec&quot;:&quot;hdr&quot;,&quot;text&quot;:&quot;Getting Started&quot;},
           {&quot;sec&quot;:&quot;chk&quot;,&quot;label&quot;:&quot;Toggle&quot;,&quot;path&quot;:&quot;$[&#x27;toggle&#x27;]&quot;},
-          {&quot;sec&quot;:&quot;out&quot;,&quot;label&quot;:&quot;const obj = &quot;,&quot;path&quot;:&quot;$&quot;}
+          {&quot;sec&quot;:&quot;out&quot;,&quot;label&quot;:&quot;obj=&quot;,&quot;path&quot;:&quot;$&quot;}
         ]
     <span class="hljs-tag">&lt;/<span class="hljs-name">ctrl-ing</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="language-javascript">
@@ -86,12 +86,33 @@ or
 <span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span>
 </div></code></pre>
 <div  ></div>
-<figcaption>Listing 2: Minimalistic example using <code>ctrl-ing</code> element.</figcaption><br>
+<figcaption>Listing 2: Minimalistic example using <code>&lt;ctrl-ing&gt;</code> element.</figcaption><br>
+<p>With this example please take note of following points:</p>
+<ul>
+<li>By its <code>ref=&quot;obj&quot;</code> attribute the <code>&lt;ctrl-ing&gt;</code> instance references a global object <code>obj</code>.</li>
+<li>The <code>chk</code> section in the JSON content accesses the <code>toggle</code> member of the reference object <code>obj</code> via its <code>path</code> property using standard <a href="https://ietf-wg-jsonpath.github.io/draft-ietf-jsonpath-base/draft-ietf-jsonpath-base.html#name-normalized-paths">JSONPath</a> syntax, where the root identifier <code>&quot;$&quot;</code> corresponds to the <code>ref</code> attribute above.</li>
+<li>The <code>out</code> section is monitoring the reference object in JSON text format.</li>
+<li>The <code>autoupdate</code> attribute of the <code>&lt;ctrl-ing&gt;</code> instance enables monitoring sections to be updated automatically.</li>
+<li><code>ctrling.js</code> is inserted via CDN to the page.</li>
+</ul>
+<p>The generated encapsulated shadow DOM structure for this example is quite clear.</p>
+<pre><code class="code-line language-html"><div><span class="hljs-tag">&lt;<span class="hljs-name">main</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">section</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;hdr&quot;</span>&gt;</span>Getting Started<span class="hljs-tag">&lt;/<span class="hljs-name">section</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">section</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;chk&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">label</span>&gt;</span>Toggle<span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;checkbox&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">section</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">section</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;out&quot;</span>&gt;</span>
+        obj=<span class="hljs-tag">&lt;<span class="hljs-name">span</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">output</span>&gt;</span>{
+          &quot;toggle&quot;:false
+        }<span class="hljs-tag">&lt;/<span class="hljs-name">output</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">section</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">main</span>&gt;</span>
+</div></code></pre>
 <h2 id="2-implementation-aspects">2. Implementation Aspects</h2>
 <p>The connection from JSON sections to application parameter values is established via their section object's <code>path</code> members, whose values obey the syntax of <em>Normalized Paths</em> according to <a href="https://ietf-wg-jsonpath.github.io/draft-ietf-jsonpath-base/draft-ietf-jsonpath-base.html#name-normalized-paths">Internet standard <em>JSONPath</em></a> (IETF). Herein the <em>root identifier</em> <code>$</code> will be replaced by the object variable name indicated by the <code>&lt;ctrl-ing&gt;</code> element's <code>ref</code> attribute.</p>
 <p>Each JSON section creates a HTML <code>&lt;section&gt;</code> element at initialization time. Let's take a simple example</p>
 <div  ></div>
-<div style="display: flex; flex-wrap: nowrap; justify-content: space-between; background-color:#efefef; position:relative;">
+<div style="display: flex; flex-wrap: nowrap; justify-content: space-between; font-size:0.8em;background-color:#efefef; position:relative;">
     <pre id="out"></pre>
     <ctrl-ing ref="obj" callback="window['callbk']">
         [ {"sec":"hdr","text":"Toggle Example"},
@@ -236,9 +257,9 @@ const btn = {
 &lt;/ctrl-ing&gt;
 </div></code></pre>
 <div  ></div>
-<div style="display: flex; flex-wrap: nowrap; justify-content: space-between; position:relative;font-size:0.8em;background-color:#efefef;">
+<div style="display: flex; flex-wrap: nowrap; justify-content: space-between; position:relative;font-size:0.8em;">
 <pre id="outchk"></pre>
-<ctrl-ing ref="chk" darkmode callback="cbchk">
+<ctrl-ing ref="chk" darkmode callback="window['cbchk']">
   [ {"sec":"hdr","text":"Checkbox"},
     {"sec":"chk","label":"Checkbox","path":"$['toggle']"}
   ]
@@ -1119,7 +1140,7 @@ D. Corbacho, Debouncing and Throttling Explained Through Examples<br>
 <span id="4">[4] S. Goessner, Make your HTML canvas Interactive,
 <a href="https://www.researchgate.net/publication/360034117_Make_your_HTML_canvas_Interactive">Researchgate, DOI: 10.13140/RG.2.2.31978.39367</a></span></p>
 <div  ></div>
-<script src="file:///C:/git/ctrling/ctrling.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/ctrling/ctrling.js"></script>
 
 </main>
 </body>

@@ -1,0 +1,23 @@
+{
+  "name": "ctrling",
+  "version": "0.8.1",
+  "description": "An appealing prototypical GUI for controlling your Web-App, JSON or JavaScript Object Values",
+  "keywords": [
+    "prototypical",
+    "GUI",
+    "controlling",
+    "JSON",
+    "javascript",
+    "object",
+    "JSONPath",
+    "HTML",
+    "custom element"
+  ],
+  "main": "ctrling.js",
+  "author": "Stefan Goessner <fang03@web.de>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/goessner/ctrling.git"
+  },
+  "license": "MIT"
+}
