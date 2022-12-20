@@ -1,8 +1,15 @@
+[![](https://data.jsdelivr.com/v1/package/npm/ctrling/badge)](https://www.jsdelivr.com/package/npm/ctrling)
 # `ctrling`
 
 ## What is it ... ?
 
-`ctrl-ing` is a tiny HTML custom element (18.4 kB uncompressed) used to interactively control your Web-App parameters or JavaScript/JSON object values in a comfortable way with low effort while getting a pleasing GUI.
+`ctrl-ing` is a tiny HTML custom element used to interactively control your Web-App parameters or JavaScript/JSON object values in a comfortable way with the following characteristics:
+
+* tiny footprint 18.7/11.3 kB un/compressed.
+* dependency free.
+* easy prototypical generation with low effort.
+* no programming required.
+* getting a pleasing GUI.
 
 <figure style="text-align:center"> 
    <img src="./docs/lissajous.gif">
@@ -94,6 +101,9 @@ The generated encapsulated shadow DOM structure for this example is quite clear.
     </section>
 </main>
 ```
+
+
+
 
 ## CDN
 
