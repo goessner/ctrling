@@ -9,7 +9,7 @@
     <h2>Attack Demo</h2>
     <div style="display: flex; background-color:#efefef; position:relative;">
         <pre id="out"></pre>
-        <ctrl-ing ref="obj" darkmode autoupdate callback="$['invalidate']">
+        <ctrl-ing ref="obj" top="1em" darkmode autoupdate callback="$['invalidate']">
             [ {"sec":"hdr","text":"Paths"},
               {"sec":"chk","label":"Check","path":"$['checked']"},
               {"sec":"btn","label":"press","path":"window['f']"},
@@ -29,5 +29,5 @@
     function callbk() { document.getElementById('out').innerHTML = "var obj = "+Ctrling.stringify(obj); }
     function f() { document.body.style.color = "red"; }
 </script>
-<script src="./ctrling.js"></script>
+<script src="../ctrling.js"></script>
 </html>

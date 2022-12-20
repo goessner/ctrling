@@ -29,13 +29,15 @@ class Ctrling extends HTMLElement {
     }
 
     get refRoot() {
-        const ref = this.getAttribute('ref') || '';   // must conform to variable syntax rules (ASCII).
+        const ref = this.ref;   // must conform to variable syntax rules (ASCII).
         const refName = /[A-Za-z_][A-Za-z_0-9]*/.test(ref) ? ref : "";
         // `globalThis` does not work with let and const, only with var ...
         // see https://stackoverflow.com/questions/28776079/do-let-statements-create-properties-on-the-global-object
         const refroot = globalThis[refName];
         return refroot !== undefined ? refroot : eval(refName);  // ... so use 'eval'.
     }
+    get ref() { return this.getAttribute('ref') || 'window'; }
+    set ref(q) { if (q) this.setAttribute('ref',q); }
     get width() { return this.getAttribute('width') || '200px'; }
     set width(q) { if (q) this.setAttribute('width',q); }
     get top() { return this.getAttribute('top') || '0px'; }
@@ -50,8 +52,8 @@ class Ctrling extends HTMLElement {
         // https://github.com/WICG/webcomponents/issues/551
         setTimeout(()=>this.init()); 
     }
-    disconnectedCallback() {}
-    attributeChangedCallback(name, oldval, val) {}
+    disconnectedCallback() {}  // perhaps remove event listeners required ... ?
+    attributeChangedCallback(name, oldval, val) {}  // todo implement ...
 
     init() {
         this.shadowRoot.innerHTML = Ctrling.template.main({ width:this.width, top:this.top, right:this.right, darkmode:this.darkmode});

@@ -5,7 +5,7 @@
 
 `ctrl-ing` is a tiny HTML custom element used to interactively control your Web-App parameters or JavaScript/JSON object values in a comfortable way with the following characteristics:
 
-* tiny footprint 18.7/11.3 kB un/compressed.
+* tiny footprint `18.7/11.3 kB` un/compressed.
 * dependency free.
 * easy prototypical generation with low effort.
 * no programming required.
@@ -81,7 +81,7 @@ Here is the complete HTML code.
 With this example please take note of following points:
 
 * By its `ref="obj"` attribute the `<ctrl-ing>` instance references a global object `obj`.
-* The `chk` section in the JSON content accesses the `toggle` member of the reference object `obj` via its `path` property using standard [JSONPath](https://ietf-wg-jsonpath.github.io/draft-ietf-jsonpath-base/draft-ietf-jsonpath-base.html#name-normalized-paths) syntax, where the root identifier `"$"` corresponds to the `ref` attribute above.
+* The `chk` section in the JSON content accesses the `toggle` member of the reference object `obj` via its `path` property using standard [JSONPath](https://ietf-wg-jsonpath.github.io/draft-ietf-jsonpath-base/draft-ietf-jsonpath-base.html#name-normalized-paths) syntax, where the root identifier `"$"` corresponds to the `ref` attribute content above.
 * The `out` section is monitoring the reference object in JSON text format.
 * The `autoupdate` attribute of the `<ctrl-ing>` instance enables monitoring sections to be updated automatically. 
 * `ctrling.js` is inserted via CDN to the page.
@@ -101,6 +101,40 @@ The generated encapsulated shadow DOM structure for this example is quite clear.
     </section>
 </main>
 ```
+
+## `<ctrl-ing>` Element
+
+The default width of the `<ctrl-ing>` menu is `200px`, which can be modified by the element's `width` attribute. Its default position is the top right corner of the HTML page. This might be fine-adjusted via `top` and `right` attributes.
+
+We can use multiple `<ctrl-ing>` per page. In this case the elements should be encapsulated via 
+
+```html
+<div style="position:relative;">
+    <ctrl-ing>...</ctrl-ing>
+</div>
+```
+
+If the `<ctrl-ing>` element should be positioned side-by-side with another element &ndash; which is frequently the case, the following markup might be used
+
+```html
+<div style="display:flex; position:relative;">
+    <div>...</div>
+    <ctrl-ing>...</ctrl-ing>
+</div>
+```
+
+Following attributes are supported:
+
+| Attribute | Default | Meaning |
+|:--:|:--:|:--|
+|`ref`  | `window` | Referencing a global object variable of the name indicated by this attribute.  |
+|`width`  | `200px` | Width of the GUI menu.  |
+|`top`  | `0` | Distance relative to top edge of parent element. |
+|`right`  | `0` | Distance relative to right edge of parent element. |
+|`darkmode`  | - | Display GUI menu in dark mode. |
+|`autoupdate`  | - | Automatically update monitoring sections. |
+|`tickspersecond`  | `4` | How often updating monitoring sections per second. |
+|`callback`  | - | If present, will be called with each value change of input sections. The attribute value must obey the [JSONPath](https://ietf-wg-jsonpath.github.io/draft-ietf-jsonpath-base/draft-ietf-jsonpath-base.html#name-normalized-paths) syntax rules and might be a global function or an object method. |
 
 
 
