@@ -106,7 +106,7 @@ The generated encapsulated shadow DOM structure for this example is quite clear.
 
 The default width of the `<ctrl-ing>` menu is `200px`, which can be modified by the element's `width` attribute. Its default position is the top right corner of the HTML page. This might be fine-adjusted via `top` and `right` attributes.
 
-We can use multiple `<ctrl-ing>` per page. In this case the elements should be encapsulated via 
+We can use multiple `<ctrl-ing>`s per page. In this case the elements should be encapsulated via 
 
 ```html
 <div style="position:relative;">
