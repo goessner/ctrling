@@ -2,7 +2,7 @@
 
 ## What is it ... ?
 
-`ctrl-ing` is a tiny HTML custom element (18.4 kB uncompressed) used to interactively control your Web-App parameters or JavaScript/JSON object values in a comfortable way with a pleasing GUI [[1]](#1).
+`ctrl-ing` is a tiny HTML custom element (18.4 kB uncompressed) used to interactively control your Web-App parameters or JavaScript/JSON object values in a comfortable way with low effort while getting a pleasing GUI.
 
 <figure style="text-align:center"> 
    <img src="./docs/lissajous.gif">
