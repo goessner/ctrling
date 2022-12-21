@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset='utf-8'>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ctrl-todeg</title>
+</head>
+<body>
+    <h2>ctrl-todeg</h2>
+    <div style="display: flex; flex-wrap: nowrap; justify-content: space-between; background-color:#efefef; position:relative;">
+        <pre id="out"></pre>
+        <ctrl-ing ref="o" callback="window['callbk']">
+            [ {"sec":"hdr","text":"Array"},
+              {"sec":"num","label":"Angle","path":"$['deg']","unit":"[°]","fractions":2}
+            ]
+        </ctrl-ing>
+    </div>
+</body>
+<script>
+    const o = {
+        rad: Math.PI/2,
+        get deg() { return this.rad*180/Math.PI; },
+        set deg(q) { this.rad = q*Math.PI/180; }
+    }
+    function callbk(args) {
+        document.getElementById('out').innerHTML = "const o = "+Ctrling.stringify(o);
+    }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/ctrling/ctrling.min.js"></script>
+</html>

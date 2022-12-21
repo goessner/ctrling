@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset='utf-8'>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ctrl-variable</title>
+</head>
+<body>
+    <h2>ctrl-variable</h2>
+    <div style="display: flex; background-color:#efefef; position:relative;">
+        <pre id="out"></pre>
+        <ctrl-ing callback="globalThis['callbk']">
+            [ {"sec":"hdr","text":"Single Variable"},
+              {"sec":"chk","label":"x","path":"globalThis['x']"}
+            ]
+        </ctrl-ing>
+    </div>
+</body>
+<script>
+    var x = false;  // globalThis.x = false;  // alternatively
+    function callbk() { document.getElementById('out').innerHTML = "var x = "+Ctrling.stringify(x); }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/ctrling/ctrling.min.js"></script>
+</html>

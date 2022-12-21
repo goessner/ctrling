@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset='utf-8'>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ctrl-array</title>
+</head>
+<body>
+    <h2>ctrl-array</h2>
+    <div style="display: flex; flex-wrap: nowrap; justify-content: space-between; background-color:#efefef; position:relative;">
+        <pre id="out"></pre>
+        <ctrl-ing ref="arr" callback="window['callbk']">
+            [ {"sec":"hdr","text":"Array"},
+              {"sec":"num","label":"Number","path":"$[0]"},
+              {"sec":"txt","label":"string","path":"$[1]"}
+            ]
+        </ctrl-ing>
+    </div>
+</body>
+<script>
+    const arr = [ 3.14, "hello" ]
+    function callbk() { document.getElementById('out').innerHTML = "const arr = "+Ctrling.stringify(arr); }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/ctrling/ctrling.min.js"></script>
+</html>

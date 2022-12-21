@@ -71,7 +71,7 @@ class Ctrling extends HTMLElement {
    
             if (prop !== undefined  && "value" in prop && typeof obj[member] === 'function') {
                 this.setRefValueCallback = obj[member];
-                this.setRefValueCallback();  // call initially once ...
+                this.setRefValueCallback({});  // call initially once with empty arguments object ...
             }
         }
         if (this.hasAttribute('tickspersecond')) {
@@ -160,14 +160,13 @@ class Ctrling extends HTMLElement {
             else
                 return [refval];
         }
-
         return [];
     }
 
     getRefValue(obj, member, deflt) {
         return obj ? (member ? obj[member] : obj) : deflt;
     }
-    setRefValue(obj, member, value) {
+    setRefValue(obj, member, value, section, elem) {
         obj[member] = (value === true || 
                        value === false ||
                        value === null) ? value
@@ -175,7 +174,7 @@ class Ctrling extends HTMLElement {
                     : value;
 
         if (this.setRefValueCallback !== undefined)
-            this.setRefValueCallback(obj, member, value);
+            this.setRefValueCallback({obj, member, value, section, elem});
     }
 
     #addUpdateHandler(hdl) {
@@ -199,7 +198,7 @@ class Ctrling extends HTMLElement {
         const [obj, member] = this.getRef(args.path);
         elem.innerHTML = `<label>${args.label}<input type="checkbox" ${this.getRefValue(obj, member, args.value) ? "checked" : ""}${!!args.disabled ? " disabled" : ""}></label>`;
         elem.querySelector('input')
-            .addEventListener("input", (e) => this.setRefValue(obj, member, !!e.target.checked), true);
+            .addEventListener("input", (e) => this.setRefValue(obj, member, !!e.target.checked, args, elem), true);
         return elem;
     }
     col(elem, args) {  // args={label,value,path,disabled}
@@ -207,7 +206,7 @@ class Ctrling extends HTMLElement {
         const value = this.getRefValue(obj, member, (args.value || "#000000"));
         elem.innerHTML = `${args.label}<span><input type="color" value="${value}"${!!args.disabled ? " disabled" : ""}><output>${value}</output></span>`;
         elem.querySelector('input')
-            .addEventListener("input", (e) => { this.setRefValue(obj, member, e.target.value); Ctrling.updateNextSibling(e); }, true);
+            .addEventListener("input", (e) => { this.setRefValue(obj, member, e.target.value, args, elem); Ctrling.updateNextSibling(e); }, true);
         return elem;
     }
     num(elem, args) {  // args={label,value,min,max,step,fractions,unit,path,disabled}
@@ -216,16 +215,16 @@ class Ctrling extends HTMLElement {
         const round = (value, decimals) => decimals ? value.toFixed(decimals) : value;
         elem.innerHTML = `<label>${args.label}<span><input type="number" value="${round(value, args.fractions)}"${args.min !== undefined ? ` min="${args.min}"` : ''}${args.max !== undefined ? ` max="${args.max}"` : ''}${args.step !== undefined ? ` step="${args.step}"` : ''}${!!args.disabled ? " disabled" : ""}>${args.unit ? `<span>${args.unit}</span>` : ''}</span></label>`;
         elem.querySelector('input')
-            .addEventListener("input", (e) => this.setRefValue(obj, member, round(+e.target.value, args.fractions)), true);
+            .addEventListener("input", (e) => this.setRefValue(obj, member, round(+e.target.value, args.fractions), args, elem), true);
         elem.querySelector('input')
-            .addEventListener("change", (e) => this.setRefValue(obj, member, e.target.value=round(+e.target.value, args.fractions)), true);
+            .addEventListener("change", (e) => this.setRefValue(obj, member, e.target.value=round(+e.target.value, args.fractions), args, elem), true);
         return elem;
     }
     txt(elem, args) {  // args={label,value,path,disabled}
         const [obj, member] = this.getRef(args.path);
         elem.innerHTML = `<label>${args.label}<input type="text" value="${this.getRefValue(obj, member, args.value || "")}"${!!args.disabled ? " disabled" : ""}></label>`;
         elem.querySelector('input')
-            .addEventListener("input", (e) => this.setRefValue(obj, member, e.target.value), true);
+            .addEventListener("input", (e) => this.setRefValue(obj, member, e.target.value, args, elem), true);
         return elem;
     }
     rng(elem, args) {  // args={label,value,path,min,max,step,disabled}
@@ -233,7 +232,7 @@ class Ctrling extends HTMLElement {
         const value = this.getRefValue(obj, member, args.value);
         elem.innerHTML = `${args.label}<span><input type="range" value="${value}"${args.min !== undefined ? ` min="${args.min}"` : ''}${args.max !== undefined ? ` max="${args.max}"` : ''}${args.step !== undefined ? ` step="${args.step}"` : ''}${!!args.disabled ? " disabled" : ""}><output>${value}</output>${args.unit ? `<span>${args.unit}</span>` : ''}`;
         elem.querySelector('input')
-            .addEventListener("input", (e) => { this.setRefValue(obj, member, +e.target.value); Ctrling.updateNextSibling(e); }, true);
+            .addEventListener("input", (e) => { this.setRefValue(obj, member, +e.target.value, args, elem); Ctrling.updateNextSibling(e); }, true);
         return elem;
     }
     sel(elem, args) {  // args={label,options,path,disabled}
@@ -242,7 +241,7 @@ class Ctrling extends HTMLElement {
         const value =  this.getRefValue(obj, member, options[0][1]);
         elem.innerHTML = `${args.label}<select${!!args.disabled ? " disabled" : ""}>${options.map(o => `<option value="${o[1]}"${o[1]===value ? " selected" : ""}>${o[0]}</option>`).join('')}</select>`;
         elem.querySelector('select')
-            .addEventListener("input", (e) => this.setRefValue(obj, member, isNaN(e.target.value) ? e.target.value : +e.target.value), true);
+            .addEventListener("input", (e) => this.setRefValue(obj, member, isNaN(e.target.value) ? e.target.value : +e.target.value, args, elem), true);
         return elem;
     }
     sep(elem) {  // args={}
@@ -302,7 +301,7 @@ class Ctrling extends HTMLElement {
                 inputs[i]._ctrlpath = args.path[i];
                 inputs[i].addEventListener("input", (e) => {
                     const [obj, member] = this.getRef(e.target._ctrlpath);
-                    this.setRefValue(obj, member, isNaN(e.target.value) ? e.target.value : +e.target.value);
+                    this.setRefValue(obj, member, isNaN(e.target.value) ? e.target.value : +e.target.value, args, elem);
                 }, true);
             }
         }
