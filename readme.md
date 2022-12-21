@@ -34,13 +34,13 @@ The interactive menu for this example was created via:
 ```
 <figcaption>Listing 1: Structure of custom HTML element <code>ctrl-ing</code>.</figcaption><br><br>
 
-Beside implementing your web application, all you need to do for prototyping an appealing GUI, is inserting a `<ctrl-ing>` element to your HTML document (see Listing 1). Its content is compact JSON text, representing an array of section objects. Each section corresponds to a single line in the grid-like view structure of the `<ctrl-ing>` element's shadow DOM and is associated to either
+Beside implementing your web application, all you need to do for prototyping an appealing GUI, is inserting a `<ctrl-ing>` element to your HTML document (see Listing 1). Its content is compact JSON text, representing an array of section objects. Each section corresponds to a single line in the grid-like view structure of the `<ctrl-ing>` menu and is associated to either
 
 * *input* controlling application parameters.
 * *output* monitoring values.
 * *structuring* elements.
 
-All section objects are generating plain native HTML (form) elements in the background (shadow DOM). 
+All section objects are generating plain native HTML (form) elements in the background (shadow DOM). That markup is hidden and separated from other code on the page &mdash; thus avoiding code collisions.
 
 ## 2. Getting Started
 
@@ -86,7 +86,7 @@ With this example please take note of following points:
 * The `autoupdate` attribute of the `<ctrl-ing>` instance enables monitoring sections to be updated automatically. 
 * `ctrling.js` is inserted via CDN to the page.
 
-The generated encapsulated shadow DOM structure for this example is quite clear.
+The generated encapsulated shadow DOM structure for the `<ctrl-ing>` element in this example is quite clear.
 
 ```html
 <main>
@@ -102,11 +102,11 @@ The generated encapsulated shadow DOM structure for this example is quite clear.
 </main>
 ```
 
-## `<ctrl-ing>` Element
+## 3. `<ctrl-ing>` Element
 
 The default width of the `<ctrl-ing>` menu is `200px`, which can be modified by the element's `width` attribute. Its default position is the top right corner of the HTML page. This might be fine-adjusted via `top` and `right` attributes.
 
-We can use multiple `<ctrl-ing>`s per page. In this case the elements should be encapsulated via 
+We can use multiple `<ctrl-ing>`s per page &ndash; also right aligned each. In this case the elements should be encapsulated via 
 
 ```html
 <div style="position:relative;">
@@ -136,14 +136,59 @@ Following attributes are supported:
 |`tickspersecond`  | `4` | How often updating monitoring sections per second. |
 |`callback`  | - | If present, will be called with each value change of input sections. The attribute value must obey the [JSONPath](https://ietf-wg-jsonpath.github.io/draft-ietf-jsonpath-base/draft-ietf-jsonpath-base.html#name-normalized-paths) syntax rules and might be a global function or an object method. |
 
+The `callback` function or method will be handed over an argument object with the structure
 
+```js
+args = {
+    obj,     // parent object holding the member, whose value is to be set.
+    member,  // the member name, whose value is to be set.
+    value,   // the new member value.
+    section, // the current section object.
+    elem     // the current html <section> element.
+}
+```
 
+## 4. JSON Sections Overview
+
+| Type | HTML (shadow) | Task |
+|:--:|:--|:--|
+|`btn`  | `<button>` | Perform an action by calling a parameterless function or object method.  |
+|`chk`  | `<input type="checkbox">` | Display a checkbox for entering Boolean parameter values. |
+|`col`  | `<input type="color">` | Display a color menu for setting an RGB color parameter value. |
+|`hdr`  | text string | Header for menu structuring. |
+|`mtr`  | `<meter>` | Graphically monitoring a numerical value in a range. |
+|`num`  | `<input type="number">` | Display an input field for entering a numerical parameter value. |
+|`out`  | `<output>` | Monitoring any data. |
+|`rng`  | `<input type="range">` | Display a slider element for setting a numerical parameter value. |
+|`sel`  | `<select>` | Provides a drop down menu of options. |
+|`sep`  | `<hr>` | Display a separating line for menu structuring. |
+|`txt`  | `<input type="text">` | Display an input field for entering a textual parameter value. |
+|`vec`  | multiple<br>`<input type="text">` | Display a set of input fields for entering multiple related data values. |
 
 ## CDN
 
 Use a local instance or one of the following CDN links for `ctrling.js`.
 * `https://cdn.jsdelivr.net/npm/ctrling/ctrling.js`
 * `https://cdn.jsdelivr.net/npm/ctrling/ctrling.min.js`
+
+## FAQ
+
+* __Can I control a single global variable ?__
+  * In short ... yes.
+  * You only need to declare it using `var`, since `let` and `const` variables aren't accessible using `globalThis` or `window` object, which is used here for global variables. No restriction for objects or arrays though.
+  * See [`ctrl-variable.html`](./examples/ctrl-variable.html) for an example.
+* __Can I control an array ?__
+  * Yes, see [`ctrl-array.html`](./examples/ctrl-array.html) for an example.
+* __Can I convert values while setting ?__
+  * Yes.
+  * Either use getter/setter pair for get/set value ...
+  * ... or use `callback` function for setting value only.
+  * See [`ctrl-todeg.html`](./examples/ctrl-todeg.html) for an example.
+* __Can you implement feature X and possibly feature Y ?__
+  * `ctrling` serves my personal needs very well as it is.
+  * So ... no, I won't.
+  * Please go ahead and implement it by yourself.
+  * If you think, your enhancement is of common interest, you are very welcome, to send me a pull request.
 
 ## Changelog
 

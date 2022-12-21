@@ -152,12 +152,12 @@ Thanks to web component's encapsulation that markup is hidden and separated from
 So for each JSON section there is a HTML `<section>` element containing either plain visually representative or interactive form elements.
 
 
-| Type | Class | HTML | Task |
-|:--:|:--:|:--:|:--|
-|`btn`  | Input | `<button>` | Perform an action by calling a parameterless function or object method.  |
-|`chk`  | Input | `<input type="checkbox">` | Display a checkbox for setting Boolean parameter values. |
-|`col`  | Input | `<input type="color">` | Display a color menu for setting RGB color parameter values. |
-|`mtr`  | Input | Display a color menu for setting RGB color parameter values. |
+| Type | HTML | Task |
+|:--:|:--|:--|
+|`btn`  | `<button>` | Perform an action by calling a parameterless function or object method.  |
+|`chk`  | `<input type="checkbox">` | Display a checkbox for setting Boolean parameter values. |
+|`col`  | `<input type="color">` | Display a color menu for setting RGB color parameter values. |
+|`mtr`  | `<meter>` | Display a color menu for setting RGB color parameter values. |
 
 
 
@@ -496,7 +496,7 @@ The property value is mutated to JSON text for display. So only primitive object
 The `sel` section provides a drop down menu of options. It uses the HTML `<select>` element. Options can be represented either by object members or array elements.
 Then object member names are displayed in the drop down menu and member values are inserted as property values. Array elements (strings or numbers) are used as drop down items as well as target object property values.
 
-Please note that the HTML `<selects>`'s `multiple` attribute and `<optgroup>` elements are not supported.
+Please note that the HTML `<select>`'s `multiple` attribute and `<optgroup>` elements are not supported.
 
 ```json
 <ctrl-ing ref="sel" darkmode>
