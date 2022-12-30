@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset='utf-8'>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ctrl-callback</title>
+</head>
+<body>
+    <h2>ctrl-callback</h2>
+    <div style="display:flex; position:relative;">
+        <pre id="out1"></pre>
+        <ctrl-ing ref="o1" callback="window['callbk']">
+            [ {"sec":"hdr","text":"one"},
+              {"sec":"chk","label":"Check","path":"$['checked']"}
+            ]
+        </ctrl-ing>
+    </div>
+    <div style="display:flex; position:relative;">
+        <pre id="out2"></pre>
+        <ctrl-ing ref="o2" callback="$['callbk']">
+            [ {"sec":"hdr","text":"two"},
+              {"sec":"chk","label":"Check1","path":"$['check1']"},
+              {"sec":"chk","label":"Check2","path":"$['check2']"}
+            ]
+        </ctrl-ing>
+    </div>
+</body>
+<script>
+    const o1 = {
+        checked: false
+    }
+    function callbk() { document.getElementById('out1').innerHTML = "o1 = "+Ctrling.stringify(o1); }
+
+    const o2 = {
+        check1: true,
+        check2: false,
+        callbk({obj, member, value, section, elem}) {
+            if (member === 'check1')
+                obj['check2'] = !obj['check1']; 
+            else if (member === 'check2')
+                obj['check1'] = !obj['check2'];
+            document.getElementById('out2').innerHTML = "o2 = "+Ctrling.stringify(o2);
+        }
+    }
+</script>
+<script src="../ctrling.js"></script>
+</html>

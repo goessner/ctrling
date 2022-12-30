@@ -1,5 +1,5 @@
 /**
- * ctrling.js (c) 2022 Stefan Goessner
+ * ctrling.js (c) 2022/23 Stefan Goessner
  * @license MIT License
  */
 "use strict";
@@ -7,143 +7,163 @@
 // Custom element (Web Component)
 class Ctrling extends HTMLElement {
     static get observedAttributes() {
-        return ['ref','width','top','right','darkmode','autoupdate','tickspersecond','callback'];
-    }
-//    static secType = ['hdr','btn','chk','num','txt','rng','col','sel','sep','out','mtr','vec'];
-    static updateNextSibling(evt) {
-        evt.target.nextSibling.innerHTML = evt.target.value;
-    }
-    static stringify(value) {
-        return Array.isArray(value) ? JSON.stringify(value)
-             : typeof value === 'object' ? JSON.stringify(value).replaceAll(/\[.*?\]/gm, ($0) => $0.replaceAll(',',';'))
-                                                                .replaceAll(/\:\{([^}]*?)\}/gm, ($0) => $0.replaceAll(',',';'))
-                                                                .replace(/^\{/gm,'{\n  ')
-                                                                .replace(/\}$/gm,'\n}')
-                                                                .replaceAll(',',',\n  ')
-                                                                .replaceAll(';',',')
-             : typeof value === 'string' ? value
-             : JSON.stringify(value);
-    }
-    constructor() {
-        super().attachShadow({ mode:'open' });
+        return ['ref','width','top','right','darkmode','autoupdate','autogenerate','tickspersecond','callback'];
     }
 
-    get refRoot() {
-        const ref = this.ref;   // must conform to variable syntax rules (ASCII).
-        const refName = /[A-Za-z_][A-Za-z_0-9]*/.test(ref) ? ref : "";
-        // `globalThis` does not work with let and const, only with var ...
-        // see https://stackoverflow.com/questions/28776079/do-let-statements-create-properties-on-the-global-object
-        const refroot = globalThis[refName];
-        return refroot !== undefined ? refroot : eval(refName);  // ... so use 'eval'.
+    // private properties ...
+    #main;
+    #initialized = false;
+    #oninit;
+    #refObj;
+    #sections = [];
+    #timer = false;
+    #ticksPerSecond = 4;
+    #usrValueCallback;
+
+    constructor() {
+        super().attachShadow({ mode:'open' });
+        this.shadowRoot.innerHTML = Ctrling.template({ width: this.getAttribute('width') || '200px', 
+                                                       top: this.getAttribute('top') || '0px', 
+                                                       right: this.getAttribute('right') || '0px' });
+        this.#main = this.shadowRoot.querySelector('main');
     }
-    get ref() { return this.getAttribute('ref') || 'window'; }
-    set ref(q) { if (q) this.setAttribute('ref',q); }
-    get width() { return this.getAttribute('width') || '200px'; }
-    set width(q) { if (q) this.setAttribute('width',q); }
-    get top() { return this.getAttribute('top') || '0px'; }
-    get right() { return this.getAttribute('right') || '0px'; }
-    get darkmode() { return !!this.hasAttribute('darkmode') || false; }
-    get autoupdate() { return !!this.hasAttribute('autoupdate') || false; }
 
     // https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements
     connectedCallback() {
         // fires with opening tag complete only. No children available yet ... see ...
         // https://stackoverflow.com/questions/70949141/web-components-accessing-innerhtml-in-connectedcallback
         // https://github.com/WICG/webcomponents/issues/551
-        setTimeout(()=>this.init()); 
+        window.setTimeout(()=>this.#init());
     }
-    disconnectedCallback() {}  // perhaps remove event listeners required ... ?
-    attributeChangedCallback(name, oldval, val) {}  // todo implement ...
-
-    init() {
-        this.shadowRoot.innerHTML = Ctrling.template.main({ width:this.width, top:this.top, right:this.right, darkmode:this.darkmode});
-        this.main = this.shadowRoot.querySelector('main');
-
-        this.sections = this.innerHTML !== undefined ? this.sectionsFromJSON() : [];
-//console.log(this.main.innerHTML);
-        this.style.display = 'block';
-        this.style.width = this.main.offsetWidth + 'px';
-        this.style.height = this.main.offsetHeight + 'px';
-
-        if (this.hasAttribute('callback')) {
-            const [obj, member] = this.getRef(this.getAttribute('callback'));
-            const prop = obj && member && Object.getOwnPropertyDescriptor(obj, member);
-   
-            if (prop !== undefined  && "value" in prop && typeof obj[member] === 'function') {
-                this.setRefValueCallback = obj[member];
-                this.setRefValueCallback({});  // call initially once with empty arguments object ...
+    disconnectedCallback() {
+        for (const sec of this.#sections)
+            this.#removeListeners(sec);
+        window.clearInterval(this.#timer);
+    }
+    attributeChangedCallback(name, oldval, val) {
+        if (name === 'ref' && this.#initialized) {
+            const ref = /[A-Za-z_][A-Za-z_0-9]*/.test(val) ? val : "";  // must conform to variable syntax rules (ASCII).
+            // `globalThis` does not work with let and const, only with var ...
+            // see https://stackoverflow.com/questions/28776079/do-let-statements-create-properties-on-the-global-object
+            this.#refObj = ref && (globalThis[ref] || eval(ref));
+        }
+        else if (name === 'width') {
+            this.style.setProperty('width', val);  // set width of :host ...
+        }
+        else if (name === 'right') {
+            this.#main.style.setProperty('right', val);
+        }
+        else if (name === 'top') {
+            this.#main.style.setProperty('top', val);
+        }
+        else if (name === 'darkmode') {
+            if (this.getAttribute('darkmode') === '') {
+                this.style.setProperty("--bkg-1", "var(--dark-bkg-1)");
+                this.style.setProperty("--bkg-2", "var(--dark-bkg-2)");
+                this.style.setProperty("--bkg-3", "var(--dark-bkg-3)");
+                this.style.setProperty("--col-1", "var(--dark-col-1)");
+                this.style.setProperty("--col-2", "var(--dark-col-2)");
+                this.style.setProperty("--col-3", "var(--dark-col-3)");
+            }
+            else {
+                this.style.setProperty("--bkg-1", "var(--lite-bkg-1)");
+                this.style.setProperty("--bkg-2", "var(--lite-bkg-2)");
+                this.style.setProperty("--bkg-3", "var(--lite-bkg-3)");
+                this.style.setProperty("--col-1", "var(--lite-col-1)");
+                this.style.setProperty("--col-2", "var(--lite-col-2)");
+                this.style.setProperty("--col-3", "var(--lite-col-3)");
             }
         }
-        if (this.hasAttribute('tickspersecond')) {
-            const tps = +this.getAttribute('tickspersecond');
-            if (!Number.isNaN(tps))
-                Ctrling.timer.ticksPerSecond = tps;
+        else if (name === 'autoupdate' && this.#initialized) {
+            this.#timer = window.setInterval(() => this.updateControls(), 1000/this.#ticksPerSecond)
         }
+        else if (name === 'autogenerate' && this.#initialized) {
+            this.#autogenerateSections(val === 'src' || val === 'source');
+        }
+        else if (name === 'callback' && this.#initialized) {
+            const [obj, member] = this.#getRef(val);
+            const prop = obj && member && Object.getOwnPropertyDescriptor(obj, member);
+            if (prop !== undefined  && "value" in prop && typeof obj[member] === 'function')
+                this.#usrValueCallback = obj[member];
+        }
+        else if (name === 'tickspersecond') {
+            const tps = +val;
+            if (!Number.isNaN(tps)) {
+                this.#ticksPerSecond = Math.min(tps, 60);
+                if (!!this.#timer) {
+                    window.clearInterval(this.timer);
+                    this.#timer = window.setInterval(() => this.updateControls(), 1000/this.#ticksPerSecond)
+                }
+            }
+        }
+        // console.log(name + ' changed')
     }
 
-    sectionsFromJSON() {
-    //console.log(this.innerHTML)
+    #init() {
+        this.#initialized = true;
+
+        // lazy attribute initialization ...
+        if (this.hasAttribute('ref')) {
+            this.setAttribute('ref', this.getAttribute('ref'));
+        }
+        if (this.hasAttribute('callback')) {
+            this.setAttribute('callback', this.getAttribute('callback'));
+        }
+        if (this.hasAttribute('autogenerate')) {
+            this.setAttribute('autogenerate', this.getAttribute('autogenerate'));
+        }
+        if (this.hasAttribute('autoupdate')) {
+            this.setAttribute('autoupdate', this.getAttribute('autoupdate'));
+        }
+
+        const content = this.innerHTML.trim();
+        if (!!content)        // empty or not ?
+            this.#sectionsFromJSON(content);
+
+        if (this.#oninit && typeof this.#oninit === 'function')
+            this.#oninit();
+
+        this.style.display = 'block';
+        this.style.height = this.offsetHeight + 'px';
+        this.#main.style.width = this.offsetWidth + 'px';  // fill up to width of :host ... !
+    
+        if (this.#usrValueCallback)
+            this.#usrValueCallback({});  // call initially once with empty arguments object ...
+    }
+
+    #sectionsFromJSON(content) {
         try {
-            this.sections = JSON.parse(this.innerHTML);
-            for (let i=0; i<this.sections.length;i++)
-                this.main.append(this.#newHtmlSection(this.sections[i]));
-            return this.sections;
+            this.#sections.push(...JSON.parse(content));
+            for (let i=0; i<this.#sections.length;i++)
+                this.#main.append(this.#newHtmlSection(this.#sections[i]));
+            return this.#sections;
         }
-        catch (e) { this.sections = []; this.addSection({sec:'hdr',text:"Ctrling: " + e.message}); }
-        return this.sections;
+        catch (e) { this.#sections = []; this.addSection({sec:'hdr',text:"Ctrling: " + e.message}); }
+        return this.#sections;
+    }
+    #autogenerateSections(src) {
+        if (typeof this.#refObj === 'object') {
+            const obj = this.#refObj;
+            const members = Object.getOwnPropertyNames(obj);
+            const sectype = {"boolean":"chk","number":"num","string":"txt"};
+
+            this.addSection({"sec":"hdr","text":`Generated for: ${this.getAttribute('ref')}`});
+            for (const m of members) {
+                if (!m.startsWith('_') && ['boolean','number','string'].includes(typeof obj[m]))
+                    this.addSection({"sec":`${sectype[typeof obj[m]]}`,"label":m,"path":`$['${m}']`});
+            }
+            if (src) {
+                const str = JSON.stringify(this.#sections).replaceAll('},','},\n ')
+                                                          .replaceAll(/(,"_hdls":\[[^\]]*\])/gm,''); // skip private event handler array ...
+
+                this.addSection({"sec":"out","label":"src=","value":str});
+            }
+        }
     }
 
-    idxById(id) {
-        return this.sections.findIndex((sec) => sec.id === id);
-    }
-    sectionById(id) {
-        const idx = this.sections.findIndex((sec) => sec.id === id);
-        return idx >= 0 ? this.sections[idx] : undefined;
-    }
-
-    #newHtmlSection(args) {
-        if (args && args.sec && Object.hasOwn(Ctrling.prototype, args.sec)) {
-            const secElem = document.createElement('section');
-            secElem.setAttribute('class',args.sec);
-            this[args.sec](secElem,args);
-            return secElem;
-        }
-        return undefined;
-    }
-
-    addSection(args) {
-        const secElem = this.#newHtmlSection(args);
-        if (secElem) {
-            this.main.append(secElem);
-            this.sections.push(args);
-        }
-        return this;
-    }
-    removeSection(idx) {
-        this.main.getElementsByTagName('section')[idx]?.remove();
-        this.sections.splice(idx,1);
-        return this;
-    }
-    updateSection(args, idx) {
-        if (idx === undefined)
-            idx = this.sections.findIndex((sec) => sec === args);
-        if (idx >= 0) {
-            const secElem = this.#newHtmlSection(args);
-            if (secElem)
-                this.main.getElementsByTagName('section')[idx]?.replaceWith(secElem);
-        }
-        return this;
-    }
-    replaceSection(idx, args) {
-        const secElem = this.#newHtmlSection(args);
-        if (secElem) {
-            this.main.getElementsByTagName('section')[idx]?.replaceWith(secElem);
-            this.sections.splice(idx,1,args);
-        }
-        return this;
-    }
-    getRef(path) {
-        const root = path.startsWith('$') ? this.refRoot 
+    #getRef(path) {
+        const root = path === undefined ? undefined
+                   : path.startsWith('$') ? this.#refObj 
                    : path.match(/^(window|globalThis)/) ? globalThis
                    : undefined;
         if (root) {
@@ -163,30 +183,104 @@ class Ctrling extends HTMLElement {
         return [];
     }
 
-    getRefValue(obj, member, deflt) {
+    #getRefValue(obj, member, deflt) {
         return obj ? (member ? obj[member] : obj) : deflt;
     }
-    setRefValue(obj, member, value, section, elem) {
-        obj[member] = (value === true || 
-                       value === false ||
-                       value === null) ? value
-                    : !Number.isNaN(+value) ? +value
-                    : value;
+    #setRefValue(obj, member, value, section, elem) {
+        value = (value === true || 
+                 value === false ||
+                 value === null) ? value
+              : !Number.isNaN(+value) ? +value
+              : value;
+        obj[member] = value;
+        if (this.#usrValueCallback !== undefined)
+            this.#usrValueCallback({obj, member, value:obj[member], section, elem});
 
-        if (this.setRefValueCallback !== undefined)
-            this.setRefValueCallback({obj, member, value, section, elem});
+        return value;
     }
 
-    #addUpdateHandler(hdl) {
-        if (this.autoupdate)
-            Ctrling.timer.ontick(hdl);
-        else
-            (this.updators || (this.updators=[])).push(hdl);
+    #addListeners(args, handlers) {
+        for (const h of handlers)
+            h.elem.addEventListener(h.type, h.hdl, true);
+        args._hdls = handlers; 
     }
-    update() {
-        if (this.updators)
-            for (const hdl of this.updators)
-                hdl();
+    #removeListeners(args) {
+        if (args._hdls)
+            for (const h of args._hdls)
+                h.elem.removeEventListener(h.type, h.hdl, true);
+        delete args._hdls;
+    }
+
+    #newHtmlSection(args) {
+        if (args && args.sec && Object.hasOwn(Ctrling.prototype, args.sec)) {
+            const secElem = document.createElement('section');
+            secElem.setAttribute('class',args.sec);
+            this[args.sec](secElem,args);
+            return secElem;
+        }
+        return undefined;
+    }
+
+    oninit(fn) {
+        this.#oninit = fn;
+    }
+    setAttr(attr, value) {
+        this.setAttribute(attr, value);
+        return this;
+    }
+    removeAttr(attr) {
+        this.removeAttribute(attr);
+        return this;
+    }
+
+    section(idx) { return this.#sections[idx]; }
+
+    findIndex(fn) {
+        return this.#sections.findIndex(fn);
+    }
+
+    addSection(args) {
+        const secElem = this.#newHtmlSection(args);
+        if (secElem) {
+            this.#main.append(secElem);
+            this.#sections.push(args);
+        }
+        return this;
+    }
+    removeSection(idx) {
+        if (idx >= 0) {
+            this.#removeListeners(this.#sections[idx]);
+            this.#main.getElementsByTagName('section')[idx]?.remove();
+            this.#sections.splice(idx,1);
+        }
+        return this;
+    }
+    insertSection(idx, args) {
+        if (idx >= 0) {
+            const secElem = this.#newHtmlSection(args);
+            if (secElem) {
+                this.#main.getElementsByTagName('section')[idx]?.insertAdjacentElement('afterend', secElem);
+                this.#sections.splice(idx,0,args);
+            }
+        }
+        return this;
+    }
+    replaceSection(idx, args) {
+        if (idx >= 0) {
+            const secElem = this.#newHtmlSection(args);
+            if (secElem) {
+                this.#removeListeners(this.#sections[idx]);
+                this.#main.getElementsByTagName('section')[idx]?.replaceWith(secElem);
+                this.#sections.splice(idx,1,args);
+            }
+        }
+        return this;
+    }
+    updateControls() {
+        for (const sec of this.#sections)
+            if (sec._upd)
+                sec._upd();
+        return this;
     }
 
     // section element completion ...
@@ -195,53 +289,58 @@ class Ctrling extends HTMLElement {
         return elem;
     }
     chk(elem, args) {  // args={label,value,path,disabled}
-        const [obj, member] = this.getRef(args.path);
-        elem.innerHTML = `<label>${args.label}<input type="checkbox" ${this.getRefValue(obj, member, args.value) ? "checked" : ""}${!!args.disabled ? " disabled" : ""}></label>`;
-        elem.querySelector('input')
-            .addEventListener("input", (e) => this.setRefValue(obj, member, !!e.target.checked, args, elem), true);
+        const [obj, member] = this.#getRef(args.path);
+        elem.innerHTML = `<label>${args.label||'&nbsp;'}<input type="checkbox" ${this.#getRefValue(obj, member, args.value) ? "checked" : ""}${!!args.disabled ? " disabled" : ""}></label>`;
+        const input = elem.querySelector('input');
+        this.#addListeners(args, [{type:"input", elem:elem.querySelector('input'), hdl:(e) => this.#setRefValue(obj, member, !!e.target.checked, args, elem)}]);
+        args._upd = () => { input.checked = obj[member] ? 'checked' : '' };
         return elem;
     }
     col(elem, args) {  // args={label,value,path,disabled}
-        const [obj, member] = this.getRef(args.path);
-        const value = this.getRefValue(obj, member, (args.value || "#000000"));
-        elem.innerHTML = `${args.label}<span><input type="color" value="${value}"${!!args.disabled ? " disabled" : ""}><output>${value}</output></span>`;
-        elem.querySelector('input')
-            .addEventListener("input", (e) => { this.setRefValue(obj, member, e.target.value, args, elem); Ctrling.updateNextSibling(e); }, true);
+        const [obj, member] = this.#getRef(args.path);
+        const value = this.#getRefValue(obj, member, (args.value || "#000000"));
+        elem.innerHTML = `${args.label||'&nbsp;'}<span><input type="color" value="${value}"${!!args.disabled ? " disabled" : ""}><output>${value}</output></span>`;
+        const input = elem.querySelector('input');
+        this.#addListeners(args, [{type:"input", elem:input, hdl:(e) => { this.#setRefValue(obj, member, e.target.value, args, elem); Ctrling.updateNextSibling(e); }}]);
+        args._upd = () => { input.nextSibling.innerHTML = input.value = this.#getRefValue(obj, member, "#000000"); };
         return elem;
     }
     num(elem, args) {  // args={label,value,min,max,step,fractions,unit,path,disabled}
-        const [obj, member] = this.getRef(args.path);
-        const value = this.getRefValue(obj, member, (args.value || 0));
+        const [obj, member] = this.#getRef(args.path);
+        const value = this.#getRefValue(obj, member, (args.value || 0));
         const round = (value, decimals) => decimals ? value.toFixed(decimals) : value;
-        elem.innerHTML = `<label>${args.label}<span><input type="number" value="${round(value, args.fractions)}"${args.min !== undefined ? ` min="${args.min}"` : ''}${args.max !== undefined ? ` max="${args.max}"` : ''}${args.step !== undefined ? ` step="${args.step}"` : ''}${!!args.disabled ? " disabled" : ""}>${args.unit ? `<span>${args.unit}</span>` : ''}</span></label>`;
-        elem.querySelector('input')
-            .addEventListener("input", (e) => this.setRefValue(obj, member, round(+e.target.value, args.fractions), args, elem), true);
-        elem.querySelector('input')
-            .addEventListener("change", (e) => this.setRefValue(obj, member, e.target.value=round(+e.target.value, args.fractions), args, elem), true);
+        elem.innerHTML = `<label>${args.label||'&nbsp;'}<span><input type="number" value="${round(value, args.fractions)}"${args.min !== undefined ? ` min="${args.min}"` : ''}${args.max !== undefined ? ` max="${args.max}"` : ''}${args.step !== undefined ? ` step="${args.step}"` : ''}${!!args.disabled ? " disabled" : ""}>${args.unit ? `<span>${args.unit}</span>` : ''}</span></label>`;
+        const input = elem.querySelector('input');
+        this.#addListeners(args, [{type:"input", elem:input, hdl:(e) => this.#setRefValue(obj, member, round(+e.target.value, args.fractions), args, elem)},
+                                  {type:"change",elem:input, hdl:(e) => this.#setRefValue(obj, member, e.target.value=round(+e.target.value, args.fractions), args, elem)} ]);
+        args._upd = () => { input.value = this.#getRefValue(obj, member, 0); };
         return elem;
     }
     txt(elem, args) {  // args={label,value,path,disabled}
-        const [obj, member] = this.getRef(args.path);
-        elem.innerHTML = `<label>${args.label}<input type="text" value="${this.getRefValue(obj, member, args.value || "")}"${!!args.disabled ? " disabled" : ""}></label>`;
-        elem.querySelector('input')
-            .addEventListener("input", (e) => this.setRefValue(obj, member, e.target.value, args, elem), true);
+        const [obj, member] = this.#getRef(args.path);
+        elem.innerHTML = `<label>${args.label||'&nbsp;'}<input type="text" value="${this.#getRefValue(obj, member, args.value || "")}"${!!args.disabled ? " disabled" : ""}></label>`;
+        const input = elem.querySelector('input');
+        this.#addListeners(args, [{type:"input", elem:input, hdl:(e) => this.#setRefValue(obj, member, e.target.value, args, elem)}]);
+        args._upd = () => { input.value = this.#getRefValue(obj, member, "?"); };
         return elem;
     }
     rng(elem, args) {  // args={label,value,path,min,max,step,disabled}
-        const [obj, member] = this.getRef(args.path);
-        const value = this.getRefValue(obj, member, args.value);
-        elem.innerHTML = `${args.label}<span><input type="range" value="${value}"${args.min !== undefined ? ` min="${args.min}"` : ''}${args.max !== undefined ? ` max="${args.max}"` : ''}${args.step !== undefined ? ` step="${args.step}"` : ''}${!!args.disabled ? " disabled" : ""}><output>${value}</output>${args.unit ? `<span>${args.unit}</span>` : ''}`;
-        elem.querySelector('input')
-            .addEventListener("input", (e) => { this.setRefValue(obj, member, +e.target.value, args, elem); Ctrling.updateNextSibling(e); }, true);
+        const [obj, member] = this.#getRef(args.path);
+        const value = this.#getRefValue(obj, member, args.value);
+        elem.innerHTML = `${args.label||'&nbsp;'}<span><input type="range" value="${value}"${args.min !== undefined ? ` min="${args.min}"` : ''}${args.max !== undefined ? ` max="${args.max}"` : ''}${args.step !== undefined ? ` step="${args.step}"` : ''}${!!args.disabled ? " disabled" : ""}><output>${value}</output>${args.unit ? `<span>${args.unit}</span>` : ''}`;
+        const input = elem.querySelector('input');
+        this.#addListeners(args, [{type:"input", elem:input, hdl:(e) => { input.nextSibling.innerHTML = this.#setRefValue(obj, member, +e.target.value, args, elem) }}]);
+        args._upd = () => { input.nextSibling.innerHTML = input.value = this.#getRefValue(obj, member, 0); };
         return elem;
     }
     sel(elem, args) {  // args={label,options,path,disabled}
-        const [obj, member] = this.getRef(args.path);
+        const [obj, member] = this.#getRef(args.path);
         const options = Array.isArray(args.options) ? args.options.map(e => [e,e]) : Object.entries(args.options);
-        const value =  this.getRefValue(obj, member, options[0][1]);
-        elem.innerHTML = `${args.label}<select${!!args.disabled ? " disabled" : ""}>${options.map(o => `<option value="${o[1]}"${o[1]===value ? " selected" : ""}>${o[0]}</option>`).join('')}</select>`;
-        elem.querySelector('select')
-            .addEventListener("input", (e) => this.setRefValue(obj, member, isNaN(e.target.value) ? e.target.value : +e.target.value, args, elem), true);
+        const value =  this.#getRefValue(obj, member, options[0][1]);
+        elem.innerHTML = `${args.label||'&nbsp;'}<select${!!args.disabled ? " disabled" : ""}>${options.map(o => `<option value="${o[1]}"${o[1]===value ? " selected" : ""}>${o[0]}</option>`).join('')}</select>`;
+        const select = elem.querySelector('select');
+        this.#addListeners(args, [{type:"input", elem:select, hdl:(e) => this.#setRefValue(obj, member, isNaN(e.target.value) ? e.target.value : +e.target.value, args, elem)}]);
+        args._upd = () => { select.value = this.#getRefValue(obj, member, options[0][1]); };
         return elem;
     }
     sep(elem) {  // args={}
@@ -251,67 +350,111 @@ class Ctrling extends HTMLElement {
     btn(elem, args) {  // args={label,text,path,disabled} ... invoke getter or parameterless function ...
         elem.innerHTML = `${args.text && args.label || '&nbsp;'}<button type="button"${!!args.disabled ? " disabled" : ""}>${args.text || args.label}</button`;
         if (args.path && !args.disabled) {
-            const [obj, member] = this.getRef(args.path);
+            const [obj, member] = this.#getRef(args.path);
             const prop = obj && member && Object.getOwnPropertyDescriptor(obj, member);
-    
-            if (prop !== undefined  && "value" in prop && typeof obj[member] === 'function')
-                elem.querySelector('button')
-                    .addEventListener("click", obj[member], true);
+            if (prop !== undefined  && "value" in prop && typeof obj[member] === 'function') {
+                this.#addListeners(args, [{type:"click", elem:elem.querySelector('button'), hdl:obj[member]}]);
+            }
         }
         return elem;
     }
     out(elem, args) { // args={label,value,unit,path}
-        const [obj, member] = this.getRef(args.path);
-        const value =  Ctrling.stringify(this.getRefValue(obj, member, (args.value || "")));
+        const [obj, member] = this.#getRef(args.path);
+        const value =  Ctrling.stringify(this.#getRefValue(obj, member, (args.value || "")));
 
-        elem.innerHTML = `${args.label}<span><output>${value}</output>${args.unit ? `<span>${args.unit}</span>` : ''}</span>`;
+        elem.innerHTML = `${args.label||'&nbsp;'}<span><output>${value}</output>${args.unit ? `<span>${args.unit}</span>` : ''}</span>`;
         if (obj !== undefined) {
             const output = elem.querySelector('output');
-            this.#addUpdateHandler(() => {
+            args._upd = () => {
                 const refval = Ctrling.stringify(member ? obj[member] : obj);
                 if (output.innerHTML !== refval) 
                     output.innerHTML = refval;
-            });
+            };
         }
         return elem; 
     }
     mtr(elem, args) { // args={label,value,min,max,low,high,optimum,unit,path}
-        const [obj, member] = this.getRef(args.path);
-        const value = this.getRefValue(obj, member, (args.value || args.min || 0));
-        elem.innerHTML = `${args.label}<span><meter value="${value}"${args.min!==undefined ? ` min="${args.min}"` : ""}${args.max!==undefined ? ` max="${args.max}"` : ""}${args.low!==undefined ? ` low="${args.low}"` : ""}${args.high!==undefined ? ` high="${args.high}"` : ""}${args.optimum!==undefined ? ` optimum="${args.optimum}"` : ""}></meter><output>${value}</output>${args.unit ? `<span>${args.unit}</span>` : ''}</span>`;
+        const [obj, member] = this.#getRef(args.path);
+        const value = this.#getRefValue(obj, member, (args.value || args.min || 0));
+        elem.innerHTML = `${args.label||'&nbsp;'}<span><meter value="${value}"${args.min!==undefined ? ` min="${args.min}"` : ""}${args.max!==undefined ? ` max="${args.max}"` : ""}${args.low!==undefined ? ` low="${args.low}"` : ""}${args.high!==undefined ? ` high="${args.high}"` : ""}${args.optimum!==undefined ? ` optimum="${args.optimum}"` : ""}></meter><output>${value}</output>${args.unit ? `<span>${args.unit}</span>` : ''}</span>`;
         if (obj !== undefined) {
             const meter = elem.querySelector('meter');
             const output = elem.querySelector('output');
-            this.#addUpdateHandler(() => {
+            args._upd = () => {
                 const refval = member ? obj[member] : obj;
                 if (meter.value !== refval)
                     meter.value = output.value = refval;
-            });
+            };
         }
-        return this; 
+        return elem; 
     }
     vec(elem, args) {  // args={label,width,unit,path,disabled}
         if (Array.isArray(args.path) && args.path.length > 0) {
-            elem.innerHTML = `${args.label}<span>${args.path.map(path => {
-                const [obj, member] = this.getRef(path);
+            elem.innerHTML = `${args.label||'&nbsp;'}<span>${args.path.map(path => {
+                const [obj, member] = this.#getRef(path);
                 return `<input type="text" ${obj ? ` value="${Ctrling.stringify(obj[member])}"` : ""}${!!args.disabled ? " disabled" : ""}${args.width ? ` style="width:${args.width}"` : ""}>`
             }).join('')}</span>${args.unit ? `<span>${args.unit}</span>` : ''}`;
             const inputs = elem.getElementsByTagName('input');
+            const listeners = [];
             for (let i=0; i<inputs.length; i++) {
                 inputs[i]._ctrlpath = args.path[i];
-                inputs[i].addEventListener("input", (e) => {
-                    const [obj, member] = this.getRef(e.target._ctrlpath);
-                    this.setRefValue(obj, member, isNaN(e.target.value) ? e.target.value : +e.target.value, args, elem);
-                }, true);
+                listeners.push({type:"input", elem:inputs[i], hdl:(e) => {
+                    const [obj, member] = this.#getRef(e.target._ctrlpath);
+                    this.#setRefValue(obj, member, isNaN(e.target.value) ? e.target.value : +e.target.value, args, elem)}});
+            }
+            this.#addListeners(args, listeners);
+            args._upd = () => {
+                for (let i=0; i<inputs.length; i++) {
+                    const [obj, member] = this.#getRef(inputs[i]._ctrlpath);
+                    inputs[i].value = this.#getRefValue(obj, member, 0);
+                }
             }
         }
         return elem;
     }
 
-    static template = {
-        main({width, top, right, darkmode}) {
-            return `
+    static stringify(value) {
+        return Array.isArray(value) ? JSON.stringify(value)
+             : typeof value === 'object' ? JSON.stringify(value).replaceAll(/\[.*?\]/gm, ($0) => $0.replaceAll(',',';'))
+                                                                .replaceAll(/\:\{([^}]*?)\}/gm, ($0) => $0.replaceAll(',',';'))
+                                                                .replace(/^\{/gm,'{\n  ')
+                                                                .replace(/\}$/gm,'\n}')
+                                                                .replaceAll(',',',\n  ')
+                                                                .replaceAll(';',',')
+             : typeof value === 'string' ? value
+             : JSON.stringify(value);
+    }
+    static template({width, top, right}) {
+        return `
 <style>
+:host {
+    --dark-bkg-1: #555;
+    --dark-bkg-2: #666;
+    --dark-bkg-3: #777;
+
+    --dark-col-1: #fff;
+    --dark-col-2: #eee;
+    --dark-col-3: #777;
+
+    --lite-bkg-1: #dadada;
+    --lite-bkg-2: #efefef;
+    --lite-bkg-3: #c0c0c0;
+
+    --lite-col-1: #444;
+    --lite-col-2: #222;
+    --lite-col-3: #c6c6c6;
+
+    --bkg-1: var(--lite-bkg-1);
+    --bkg-2: var(--lite-bkg-2);
+    --bkg-3: var(--lite-bkg-3);
+
+    --col-1: var(--lite-col-1);
+    --col-2: var(--lite-col-2);
+    --col-3: var(--lite-col-3);
+
+    width: ${width};
+}
+
 main {
     /* grid layout */
     display: grid;
@@ -320,7 +463,7 @@ main {
     padding: 0 2px 0 2px;
     width: ${width};
     min-width: 200px;
-    background-color: ${darkmode?'#444':'#dadada'};
+    background-color: var(--bkg-1);
     overflow: hidden;
 
     font-family: monospace;
@@ -338,8 +481,8 @@ main > section {
 main > section.hdr {
     text-align: center;
     font-weight: bold;
-    color: ${darkmode?'#eee':'#444'};
-    background-color: ${darkmode?'#666':'#bbb'};
+    color: var(--col-1);
+    background-color: var(--bkg-3);
     border-radius: 5px 5px 0 0;
 }
 main > section.btn, 
@@ -356,7 +499,7 @@ main > section > label  {
     align-items: center;
     gap: 0.25em;
 
-    color: ${darkmode?'#ddd':'#222'};
+    color: var(--col-2);
 
     border-radius: 0px;
     border: none;
@@ -369,17 +512,28 @@ main > section > span {
     gap: 0.1em;
 }
 main > section input:hover {
-    background-color: ${darkmode?'#666':'#fff'};
+    background-color: var(--bkg-3);
 }
 main > section input:focus-visible {
-    color: ${darkmode?'#eee':'#111'};
-    outline: 1px solid ${darkmode?'#ddd':'#222'}
+    color: var(--col-1);
+    outline: 1px solid var(--col-2);
 }
 main > section input {
-    background-color: ${darkmode?'#555':'#efefef'};
-    color: ${darkmode?'#ddd':'#222'};
+    background-color: var(--bkg-2);
+    color: var(--col-1);
     border: none;
 }
+main > section output {
+    background-color: var(--bkg-1);
+    padding: 0 0.25em;
+    font-family: monospace;
+    white-space: pre;
+}
+main > section select, 
+main > section button {
+    font-family: monospace;
+}
+
 main > section.num input {
     width: 5em;
 }
@@ -397,53 +551,25 @@ main > section.vec > span {
     flex-flow: row wrap;
     justify-content: end;
     gap: 1px;
-    /*background-color: ${darkmode?'#444':'#cdcdcd'};*/
 }
 main > section.out {
     min-width: 2em;
     max-width: 100%;
     overflow: hidden;
 }
+main > section.out output {
+    user-select: text;
+}
 main > section.rng output {
     width: 1.5em;
     text-align: right;
 }
 main > section.sep > hr {
-    color: ${darkmode?'#666':'#ccc'};
+    color: var(--bkg-3);
     width: 90%;
-}
-main > section output {
-    background-color: ${darkmode?'#555':'#e6e6e6'};
-    padding: 0 0.25em;
-    font-family: monospace;
-    white-space: pre;
-}
-main > section select, 
-main > section button {
-    font-family: monospace;
 }
 </style>
 <main></main>`
-        }
-    }
-    static timer = {
-        t: 0,
-        handler: [],
-        rafid: false,
-        ticksPerSecond: 4,
-        ontick(fn) { 
-            this.handler.push(fn);
-            if (!this.rafid)
-                this.tick();
-        },
-        tick() {
-            Ctrling.timer.t = (Ctrling.timer.t++) % (60/4);
-            if (Ctrling.timer.t === 0 ) { 
-                for (const hdl of Ctrling.timer.handler) 
-                    hdl();
-            }
-            Ctrling.timer.rafid = requestAnimationFrame(Ctrling.timer.tick);   // request next tick ...
-        }
     }
 }
 

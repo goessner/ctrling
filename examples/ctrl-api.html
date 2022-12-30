@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <title>ctrl-api</title>
+    <script src="../ctrling.js"></script>
+</head>
+<body>
+    <h2>ctrl-api</h2>
+    <div style="display:flex; position:relative;">
+        <pre id="out"></pre>
+        <ctrl-ing id="ctrl">
+            [ {"sec":"hdr","text":"API"}]
+        </ctrl-ing>
+    </div>
+    <script>
+        const obj = {
+            toggle: true,
+            number: 246,
+            str: 'hello'
+        }
+
+        const ctrl = document.getElementById('ctrl');
+        ctrl.oninit(() => {
+            ctrl.setAttr('ref', 'obj')
+                .setAttr('autoupdate', true)
+                .setAttr('darkmode', '')
+                .setAttr('top', '1em')
+                .setAttr('right', '2em')
+                .setAttr('width', '400px')
+                .setAttr('callback', "window['callbk']")
+                .addSection({"sec":"hdr","text":"API-Test"})
+                .addSection({"sec":"chk","label":"Toggle","path":"$['tiggle']"})  // intentional wrong path
+                .addSection({"sec":"num","label":"number","path":"$['number']"})
+                .addSection({"sec":"out","label":"obj=","path":"$"})
+                .removeSection(3)
+                .insertSection(2, {"sec":"txt","label":"string","path":"$['str']"})
+                .replaceSection(2, {"sec":"chk","label":"Toggle","path":"$['toggle']"}) // correcting path
+                .removeAttr('darkmode')
+        })
+        
+        function callbk() { document.getElementById('out').innerHTML = "obj = "+Ctrling.stringify(obj); }
+    </script>
+    </body>
+</html>

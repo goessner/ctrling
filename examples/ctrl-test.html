@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <title>Getting Started</title>
+    <script src="../ctrling.js"></script>
+</head>
+<body>
+    <ctrl-ing id="ctrl"></ctrl-ing>
+    <script>
+        const obj = {
+            toggle: false
+        }
+
+        const ctrl = document.getElementById('ctrl');
+
+        ctrl.setAttr('ref', 'obj')
+            .setAttr('autoupdate', true)
+            .setAttr('top', '1em')
+            .setAttr('right', '2em')
+            .setAttr('width', '400px')
+            .addSection({"sec":"hdr","text":"Getting Started"})
+            .addSection({"sec":"chk","label":"Toggle","path":"$['tiggle']"})  // intentional wrong path
+            .addSection({"sec":"out","label":"obj=","path":"$"})
+            .updateSection(1, Object.assign(ctrl.section(1), {"path":"$['toggle']"})) // correcting path
+
+    </script>
+    </body>
+</html>

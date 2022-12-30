@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1,user-scalable=no">
-<meta name="description" content="Interactively control your Web-App, JSON Values or JavaScript objects">
-<meta name="author" content="Stefan Gössner<sup>1</sup>,<a href='https://github.com/goessner/ctrlr'><svg height='16' width='16' viewBox='0 0 16 16'><path fill-rule='evenodd' fill='#1f3939' clip-rule='evenodd' d='M8 0C3.58 0 0 3.58 0 8C0 11.54 2.29 14.53 5.47 15.59C5.87 15.66 6.02 15.42 6.02 15.21C6.02 15.02 6.01 14.39 6.01 13.72C4 14.09 3.48 13.23 3.32 12.78C3.23 12.55 2.84 11.84 2.5 11.65C2.22 11.5 1.82 11.13 2.49 11.12C3.12 11.11 3.57 11.7 3.72 11.94C4.44 13.15 5.59 12.81 6.05 12.6C6.12 12.08 6.33 11.73 6.56 11.53C4.78 11.33 2.92 10.64 2.92 7.58C2.92 6.71 3.23 5.99 3.74 5.43C3.66 5.23 3.38 4.41 3.82 3.31C3.82 3.31 4.49 3.1 6.02 4.13C6.66 3.95 7.34 3.86 8.02 3.86C8.7 3.86 9.38 3.95 10.02 4.13C11.55 3.09 12.22 3.31 12.22 3.31C12.66 4.41 12.38 5.23 12.3 5.43C12.81 5.99 13.12 6.7 13.12 7.58C13.12 10.65 11.25 11.33 9.47 11.53C9.76 11.78 10.01 12.26 10.01 13.01C10.01 14.08 10 14.94 10 15.21C10 15.42 10.15 15.67 10.55 15.59C13.71 14.53 16 11.53 16 8C16 3.58 12.42 0 8 0Z'></path></svg></a>">
+<meta name="description" content="A tiny HTML custom element for interactively controlling your Web-App parameters">
+<meta name="author" content="Stefan Gössner<sup>1</sup>,<a href='https://github.com/goessner/ctrling'><svg height='16' width='16' viewBox='0 0 16 16'><path fill-rule='evenodd' fill='#1f3939' clip-rule='evenodd' d='M8 0C3.58 0 0 3.58 0 8C0 11.54 2.29 14.53 5.47 15.59C5.87 15.66 6.02 15.42 6.02 15.21C6.02 15.02 6.01 14.39 6.01 13.72C4 14.09 3.48 13.23 3.32 12.78C3.23 12.55 2.84 11.84 2.5 11.65C2.22 11.5 1.82 11.13 2.49 11.12C3.12 11.11 3.57 11.7 3.72 11.94C4.44 13.15 5.59 12.81 6.05 12.6C6.12 12.08 6.33 11.73 6.56 11.53C4.78 11.33 2.92 10.64 2.92 7.58C2.92 6.71 3.23 5.99 3.74 5.43C3.66 5.23 3.38 4.41 3.82 3.31C3.82 3.31 4.49 3.1 6.02 4.13C6.66 3.95 7.34 3.86 8.02 3.86C8.7 3.86 9.38 3.95 10.02 4.13C11.55 3.09 12.22 3.31 12.22 3.31C12.66 4.41 12.38 5.23 12.3 5.43C12.81 5.99 13.12 6.7 13.12 7.58C13.12 10.65 11.25 11.33 9.47 11.53C9.76 11.78 10.01 12.26 10.01 13.01C10.01 14.08 10 14.94 10 15.21C10 15.42 10.15 15.67 10.55 15.59C13.71 14.53 16 11.53 16 8C16 3.58 12.42 0 8 0Z'></path></svg></a>">
 <meta name="date" content="Thu Dec 01 2022 00:00:00 GMT+0100 (Mitteleuropäische Normalzeit)">
-<meta name="keywords" content="controlling,webapp,JSON,javascript,object,custom element">
+<meta name="keywords" content="prototypical,GUI,controlling,JSON,javascript,object,JSONPath,HTML,custom element">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js/styles/vs.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/markdown-it-texmath/css/texmath.min.css">
@@ -17,22 +17,55 @@
 <body id="top">
 <header>
 <h1>ctrl-ing</h1>
-<h3>Interactively control your Web-App, JSON or JavaScript Object Values</h3>
-<h4>Stefan Gössner<sup>1</sup>, <a href='https://github.com/goessner/ctrlr'><svg height='16' width='16' viewBox='0 0 16 16'><path fill-rule='evenodd' fill='#1f3939' clip-rule='evenodd' d='M8 0C3.58 0 0 3.58 0 8C0 11.54 2.29 14.53 5.47 15.59C5.87 15.66 6.02 15.42 6.02 15.21C6.02 15.02 6.01 14.39 6.01 13.72C4 14.09 3.48 13.23 3.32 12.78C3.23 12.55 2.84 11.84 2.5 11.65C2.22 11.5 1.82 11.13 2.49 11.12C3.12 11.11 3.57 11.7 3.72 11.94C4.44 13.15 5.59 12.81 6.05 12.6C6.12 12.08 6.33 11.73 6.56 11.53C4.78 11.33 2.92 10.64 2.92 7.58C2.92 6.71 3.23 5.99 3.74 5.43C3.66 5.23 3.38 4.41 3.82 3.31C3.82 3.31 4.49 3.1 6.02 4.13C6.66 3.95 7.34 3.86 8.02 3.86C8.7 3.86 9.38 3.95 10.02 4.13C11.55 3.09 12.22 3.31 12.22 3.31C12.66 4.41 12.38 5.23 12.3 5.43C12.81 5.99 13.12 6.7 13.12 7.58C13.12 10.65 11.25 11.33 9.47 11.53C9.76 11.78 10.01 12.26 10.01 13.01C10.01 14.08 10 14.94 10 15.21C10 15.42 10.15 15.67 10.55 15.59C13.71 14.53 16 11.53 16 8C16 3.58 12.42 0 8 0Z'></path></svg></a></h4>
+<h3>An appealing GUI for controlling your Web-App, JSON or JavaScript Object Values</h3>
+<h4>Stefan Gössner<sup>1</sup>, <a href='https://github.com/goessner/ctrling'><svg height='16' width='16' viewBox='0 0 16 16'><path fill-rule='evenodd' fill='#1f3939' clip-rule='evenodd' d='M8 0C3.58 0 0 3.58 0 8C0 11.54 2.29 14.53 5.47 15.59C5.87 15.66 6.02 15.42 6.02 15.21C6.02 15.02 6.01 14.39 6.01 13.72C4 14.09 3.48 13.23 3.32 12.78C3.23 12.55 2.84 11.84 2.5 11.65C2.22 11.5 1.82 11.13 2.49 11.12C3.12 11.11 3.57 11.7 3.72 11.94C4.44 13.15 5.59 12.81 6.05 12.6C6.12 12.08 6.33 11.73 6.56 11.53C4.78 11.33 2.92 10.64 2.92 7.58C2.92 6.71 3.23 5.99 3.74 5.43C3.66 5.23 3.38 4.41 3.82 3.31C3.82 3.31 4.49 3.1 6.02 4.13C6.66 3.95 7.34 3.86 8.02 3.86C8.7 3.86 9.38 3.95 10.02 4.13C11.55 3.09 12.22 3.31 12.22 3.31C12.66 4.41 12.38 5.23 12.3 5.43C12.81 5.99 13.12 6.7 13.12 7.58C13.12 10.65 11.25 11.33 9.47 11.53C9.76 11.78 10.01 12.26 10.01 13.01C10.01 14.08 10 14.94 10 15.21C10 15.42 10.15 15.67 10.55 15.59C13.71 14.53 16 11.53 16 8C16 3.58 12.42 0 8 0Z'></path></svg></a></h4>
 <h5><sup>1</sup>Dortmund University of Applied Sciences. Department of Mechanical Engineering</h5>
 <h5>December 2022</h5>
-<h5><b>Keywords:</b> controlling, webapp, JSON, javascript, object, custom element</h5>
+<h5><b>Keywords:</b> prototypical, GUI, controlling, JSON, javascript, object, JSONPath, HTML, custom element</h5>
 </header>
 <main>
 
-<h2 id="1-overview">1. Overview</h2>
-<p><code>ctrl-ing</code> is a tiny HTML custom element (18.4 kB uncompressed) used to interactively control your Web-App parameters or JavaScript/JSON object values in a comfortable way with a pleasing GUI <a href="#1">[1]</a>.</p>
+<h3 id="abstract">Abstract</h3>
+<p>Many webapplications are of small to medium size. Equipping these with a pleasing user control menu usually is comparatively costly. For this purpose, presented is a simple solution concept to rapidly prototype a pleasing GUI even without programming.</p>
+<h2 id="content">Content</h2>
+<ul>
+<li><a href="#1-what-is-it">1. What is It ?</a></li>
+<li><a href="#2-getting-started">2. Getting Started</a></li>
+<li><a href="#3-ctrl-ing-element">3. <code>&lt;ctrl-ing&gt;</code> Element</a></li>
+<li><a href="#4-sections-reference">4. Sections Reference</a>
+<ul>
+<li><a href="#41-button">4.1 Button</a></li>
+<li><a href="#42-checkbox">4.2 Checkbox</a></li>
+<li><a href="#43-color">4.3 Color</a></li>
+<li><a href="#44-header">4.4 Header</a></li>
+<li><a href="#45-meter">4.5 Meter</a></li>
+<li><a href="#46-number">4.6 Number</a></li>
+<li><a href="#47-output">4.7 Output</a></li>
+<li><a href="#48-range">4.8 Range</a></li>
+<li><a href="#49-selection">4.9 Selection</a></li>
+<li><a href="#410-separator">4.10 Separator</a></li>
+<li><a href="#411-text">4.11 Text</a></li>
+<li><a href="#412-vector">4.12 Vector</a></li>
+</ul>
+</li>
+<li><a href="#5-conclusion">5. Conclusion</a></li>
+<li><a href="#references">References</a></li>
+</ul>
+<h2 id="1-what-is-it">1. What is It ?</h2>
+<p><code>ctrl-ing</code> is a tiny HTML custom element used to interactively control your Web-App parameters or JavaScript/JSON object values in a comfortable way with the following characteristics:</p>
+<ul>
+<li>tiny footprint <code>18.7/11.3 kB</code> un/compressed.</li>
+<li>dependency free.</li>
+<li>easy prototypical generation with low effort.</li>
+<li>no programming required.</li>
+<li>getting a pleasing GUI.</li>
+</ul>
 <div  ></div>
-<figure> 
+<figure style="text-align:center"> 
    <img src="./lissajous.gif">
 </figure>  
-<figcaption>Fig. 1: Controlling an Animation.</figcaption><br>
-<p>The interactive menu for this example was created via:</p>
+<figcaption style="font-size:0.95em;text-align:center">Fig. 1: Controlling an Animation.</figcaption><br>
+<p>Here is the <a href="../examples/ctrl-lissajous.html">live version</a> of the Lissajous example. Its interactive menu was created via:</p>
 <pre><code class="code-line language-html"><div><span class="hljs-tag">&lt;<span class="hljs-name">ctrl-ing</span> <span class="hljs-attr">ref</span>=<span class="hljs-string">&quot;app&quot;</span> <span class="hljs-attr">darkmode</span>&gt;</span>
   [ {&quot;sec&quot;:&quot;hdr&quot;,&quot;text&quot;:&quot;Parameters&quot;},
     {&quot;sec&quot;:&quot;num&quot;,&quot;label&quot;:&quot;a&quot;,&quot;min&quot;:0,&quot;max&quot;:10,&quot;step&quot;:1,&quot;path&quot;:&quot;$[&#x27;a&#x27;]&quot;,&quot;unit&quot;:&quot;[-]&quot;},
@@ -48,27 +81,27 @@
 </div></code></pre>
 <div  ></div>
 <figcaption>Listing 1: Structure of custom HTML element <code>ctrl-ing</code>.</figcaption><br>
-<p>Beside implementing your web application, all you need to do for creating an appealing GUI, is inserting a <code>&lt;ctrl-ing&gt;</code> element to your HTML document (see Listing 1). Its content is compact JSON text, representing an array of section objects. Each section corresponds to a single line in the grid-like view structure of the <code>&lt;ctrl-ing&gt;</code> element's shadow DOM and is associated to either</p>
+<p>Beside implementing your web application, all you need to do for prototyping an appealing GUI, is inserting a <code>&lt;ctrl-ing&gt;</code> element to your HTML document (see Listing 1). Its content is compact JSON text, representing an array of section objects. Each section corresponds to a single line in the grid-like view structure of the <code>&lt;ctrl-ing&gt;</code> menu and is associated to either</p>
 <ul>
 <li><em>input</em> controlling application parameters.</li>
 <li><em>output</em> monitoring values.</li>
 <li><em>structuring</em> elements.</li>
 </ul>
-<p>All section objects are generating plain native HTML (form) elements in the background (shadow DOM).</p>
+<p>All section objects are generating plain native HTML (form) elements in the background (shadow DOM). That markup is hidden and separated from other code on the page — thus avoiding code collisions.</p>
 <h2 id="2-getting-started">2. Getting Started</h2>
-<p>Let's start with a minimal example resulting in this controlling menu.</p>
+<p>You might want to start with a minimal example. Let's say, we want to create this controlling menu.</p>
 <div  ></div>
-<figure> 
+<figure style="text-align:center"> 
    <img src="./gettingstarted.gif">
 </figure>  
-<figcaption>Fig. 2: Minimal <code>&lt;ctrl-ing&gt;</code> Example.</figcaption><br>
-<p>Here is the HTML code.</p>
+<figcaption style="font-size:0.95em;text-align:center">Fig. 2: Minimal <code>&lt;ctrl-ing&gt;</code> Example.</figcaption><br>
+<p>Here is the complete HTML code (<a href="./gettingstarted.html">Live version</a>)</p>
 <pre><code class="code-line language-html"><div><span class="hljs-meta">&lt;!doctype <span class="hljs-keyword">html</span>&gt;</span>
 <span class="hljs-tag">&lt;<span class="hljs-name">html</span>&gt;</span>
 <span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">&#x27;utf-8&#x27;</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>Getting Started<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;./ctrling.js&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;https://cdn.jsdelivr.net/npm/ctrling/ctrling.min.js&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
 <span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-name">ctrl-ing</span> <span class="hljs-attr">ref</span>=<span class="hljs-string">&quot;obj&quot;</span> <span class="hljs-attr">autoupdate</span>&gt;</span>
@@ -90,12 +123,12 @@
 <p>With this example please take note of following points:</p>
 <ul>
 <li>By its <code>ref=&quot;obj&quot;</code> attribute the <code>&lt;ctrl-ing&gt;</code> instance references a global object <code>obj</code>.</li>
-<li>The <code>chk</code> section in the JSON content accesses the <code>toggle</code> member of the reference object <code>obj</code> via its <code>path</code> property using standard <a href="https://ietf-wg-jsonpath.github.io/draft-ietf-jsonpath-base/draft-ietf-jsonpath-base.html#name-normalized-paths">JSONPath</a> syntax, where the root identifier <code>&quot;$&quot;</code> corresponds to the <code>ref</code> attribute above.</li>
+<li>The <code>chk</code> section in the JSON content accesses the <code>toggle</code> member of the reference object <code>obj</code> via its <code>path</code> property using standard <a href="https://ietf-wg-jsonpath.github.io/draft-ietf-jsonpath-base/draft-ietf-jsonpath-base.html#name-normalized-paths">JSONPath</a> syntax, where the root identifier <code>&quot;$&quot;</code> corresponds to the <code>ref</code> attribute content above.</li>
 <li>The <code>out</code> section is monitoring the reference object in JSON text format.</li>
 <li>The <code>autoupdate</code> attribute of the <code>&lt;ctrl-ing&gt;</code> instance enables monitoring sections to be updated automatically.</li>
 <li><code>ctrling.js</code> is inserted via CDN to the page.</li>
 </ul>
-<p>The generated encapsulated shadow DOM structure for this example is quite clear.</p>
+<p>The generated encapsulated shadow DOM structure for the <code>&lt;ctrl-ing&gt;</code> element in this example is quite clear.</p>
 <pre><code class="code-line language-html"><div><span class="hljs-tag">&lt;<span class="hljs-name">main</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-name">section</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;hdr&quot;</span>&gt;</span>Getting Started<span class="hljs-tag">&lt;/<span class="hljs-name">section</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-name">section</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;chk&quot;</span>&gt;</span>
@@ -108,108 +141,199 @@
     <span class="hljs-tag">&lt;/<span class="hljs-name">section</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-name">main</span>&gt;</span>
 </div></code></pre>
-<h2 id="2-implementation-aspects">2. Implementation Aspects</h2>
-<p>The connection from JSON sections to application parameter values is established via their section object's <code>path</code> members, whose values obey the syntax of <em>Normalized Paths</em> according to <a href="https://ietf-wg-jsonpath.github.io/draft-ietf-jsonpath-base/draft-ietf-jsonpath-base.html#name-normalized-paths">Internet standard <em>JSONPath</em></a> (IETF). Herein the <em>root identifier</em> <code>$</code> will be replaced by the object variable name indicated by the <code>&lt;ctrl-ing&gt;</code> element's <code>ref</code> attribute.</p>
-<p>Each JSON section creates a HTML <code>&lt;section&gt;</code> element at initialization time. Let's take a simple example</p>
-<div  ></div>
-<div style="display: flex; flex-wrap: nowrap; justify-content: space-between; font-size:0.8em;background-color:#efefef; position:relative;">
-    <pre id="out"></pre>
-    <ctrl-ing ref="obj" callback="window['callbk']">
-        [ {"sec":"hdr","text":"Toggle Example"},
-          {"sec":"chk","label":"Toggle","path":"$['toggle']"}
-        ]
-    </ctrl-ing>
-</div>
-<script>
-    const obj = {
-        toggle: false
-    }
-    function callbk() { document.getElementById('out').innerHTML = "const obj = "+Ctrling.stringify(obj); }
-</script>
-<p>which, by using</p>
-<pre><code class="code-line language-json"><div>&lt;ctrl-ing ref=<span class="hljs-string">&quot;obj&quot;</span>&gt;
-    <span class="hljs-punctuation">[</span> <span class="hljs-punctuation">{</span><span class="hljs-attr">&quot;sec&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;hdr&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;text&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;Toggle Example&quot;</span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
-      <span class="hljs-punctuation">{</span><span class="hljs-attr">&quot;sec&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;chk&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;label&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;Toggle&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;path&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;$[&#x27;toggle&#x27;]&quot;</span><span class="hljs-punctuation">}</span>
-    <span class="hljs-punctuation">]</span>
-&lt;/ctrl-ing&gt;
+<h2 id="3-ctrl-ing-element">3. <code>&lt;ctrl-ing&gt;</code> Element</h2>
+<p>The default width of the <code>&lt;ctrl-ing&gt;</code> menu is <code>200px</code>, which can be modified by the element's <code>width</code> attribute. Its default position is the top right corner of the HTML page. This might be fine-adjusted via <code>top</code> and <code>right</code> attributes.</p>
+<p>We can use multiple <code>&lt;ctrl-ing&gt;</code>s per page – also right aligned each. In this case the elements should be encapsulated via</p>
+<pre><code class="code-line language-html"><div><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">style</span>=<span class="hljs-string">&quot;position:relative;&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">ctrl-ing</span>&gt;</span>...<span class="hljs-tag">&lt;/<span class="hljs-name">ctrl-ing</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
 </div></code></pre>
-<p>will create a GUI menu with a simple shadow DOM structure represented as</p>
-<pre><code class="code-line language-html"><div><span class="hljs-tag">&lt;<span class="hljs-name">main</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-name">section</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;hdr&quot;</span>&gt;</span>Toggle Example<span class="hljs-tag">&lt;/<span class="hljs-name">section</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-name">section</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;chk&quot;</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">label</span>&gt;</span>Toggle<span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;checkbox&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span>
-  <span class="hljs-tag">&lt;/<span class="hljs-name">section</span>&gt;</span>
-<span class="hljs-tag">&lt;/<span class="hljs-name">main</span>&gt;</span>
+<p>If the <code>&lt;ctrl-ing&gt;</code> element should be positioned side-by-side with another element – which is frequently the case, the following markup might be used</p>
+<pre><code class="code-line language-html"><div><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">style</span>=<span class="hljs-string">&quot;display:flex; position:relative;&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>...<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">ctrl-ing</span>&gt;</span>...<span class="hljs-tag">&lt;/<span class="hljs-name">ctrl-ing</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
 </div></code></pre>
-<p>Thanks to web component's encapsulation that markup is hidden and separated from other code on the page — avoiding code collisions [1].</p>
-<p>So for each JSON section there is a HTML <code>&lt;section&gt;</code> element containing either plain visually representative or interactive form elements.</p>
+<p>The connection from <code>&lt;ctrl-ing&gt;</code> element and its content to application parameter values is established via element attributes and section members representing paths pointing into an application object. These path strings MUST start with one of</p>
+<ul>
+<li><code>globalThis</code> or <code>window</code></li>
+<li>the root identifier <code>$</code>, referencing an application object name indicated by the <code>&lt;ctrl-ing&gt;</code> element's <code>ref</code> attribute.</li>
+</ul>
+<p>Thus the reference object MUST be an object (JavaScript arrays are objects).</p>
+<p>The rest of the path string MUST obey the syntax of <em>Normalized Paths</em> according to <a href="https://ietf-wg-jsonpath.github.io/draft-ietf-jsonpath-base/draft-ietf-jsonpath-base.html#name-normalized-paths">Internet standard <em>JSONPath</em></a> (IETF), i.e.</p>
+<ul>
+<li>using the bracket syntax <code>[...]</code> exclusively.</li>
+<li>enclosing member names in single quotation marks.</li>
+</ul>
+<p>For an <code>&lt;ctrl-ing&gt;</code> element following optional attributes are supported:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Attribute</th>
+<th style="text-align:center">Default</th>
+<th style="text-align:left">Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><code>ref</code></td>
+<td style="text-align:center"><code>window</code></td>
+<td style="text-align:left">Referencing a global object variable of the name indicated by this attribute.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>width</code></td>
+<td style="text-align:center"><code>200px</code></td>
+<td style="text-align:left">Width of the GUI menu.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>top</code></td>
+<td style="text-align:center"><code>0</code></td>
+<td style="text-align:left">Distance relative to top edge of parent element.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>right</code></td>
+<td style="text-align:center"><code>0</code></td>
+<td style="text-align:left">Distance relative to right edge of parent element.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>darkmode</code></td>
+<td style="text-align:center">-</td>
+<td style="text-align:left">Display GUI menu in dark mode.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>autoupdate</code></td>
+<td style="text-align:center">-</td>
+<td style="text-align:left">Automatically update monitoring sections.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>tickspersecond</code></td>
+<td style="text-align:center"><code>4</code></td>
+<td style="text-align:left">How often updating monitoring sections per second.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>callback</code></td>
+<td style="text-align:center">-</td>
+<td style="text-align:left">If present, will be called with each value change of input sections. The attribute value must obey the syntax rules of paths and might point to a global function or an object method.</td>
+</tr>
+</tbody>
+</table>
+<p>On invocation the <code>callback</code> function or method will be handed over an argument object with the structure</p>
+<pre><code class="code-line language-js"><div>args = {
+    obj,     <span class="hljs-comment">// parent object holding the member, whose value is to be set.</span>
+    member,  <span class="hljs-comment">// the member name, whose value is to be set.</span>
+    value,   <span class="hljs-comment">// the new member value.</span>
+    section, <span class="hljs-comment">// the current section object.</span>
+    elem     <span class="hljs-comment">// the current html &lt;section&gt; element.</span>
+}
+</div></code></pre>
+<h2 id="4-sections-reference">4. Sections Reference</h2>
+<p>For each section in the JSON content of the <code>&lt;ctrl-ing&gt;</code> element there is a HTML <code>&lt;section&gt;</code> element containing either plain visually structuring, data monitoring or interactive form elements. Here is an overview of the twelve different section types.</p>
 <table>
 <thead>
 <tr>
 <th style="text-align:center">Type</th>
-<th style="text-align:center">Class</th>
-<th style="text-align:center">HTML</th>
+<th style="text-align:left">HTML (shadow)</th>
 <th style="text-align:left">Task</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align:center"><code>btn</code></td>
-<td style="text-align:center">Input</td>
-<td style="text-align:center"><code>&lt;button&gt;</code></td>
+<td style="text-align:center"><a href="#41-button"><code>btn</code></a></td>
+<td style="text-align:left"><code>&lt;button&gt;</code></td>
 <td style="text-align:left">Perform an action by calling a parameterless function or object method.</td>
 </tr>
 <tr>
-<td style="text-align:center"><code>chk</code></td>
-<td style="text-align:center">Input</td>
-<td style="text-align:center"><code>&lt;input type=&quot;checkbox&quot;&gt;</code></td>
-<td style="text-align:left">Display a checkbox for setting Boolean parameter values.</td>
+<td style="text-align:center"><a href="#42-checkbox"><code>chk</code></a></td>
+<td style="text-align:left"><code>&lt;input type=&quot;checkbox&quot;&gt;</code></td>
+<td style="text-align:left">Display a checkbox for entering Boolean parameter values.</td>
 </tr>
 <tr>
-<td style="text-align:center"><code>col</code></td>
-<td style="text-align:center">Input</td>
-<td style="text-align:center"><code>&lt;input type=&quot;color&quot;&gt;</code></td>
-<td style="text-align:left">Display a color menu for setting RGB color parameter values.</td>
+<td style="text-align:center"><a href="#43-color"><code>col</code></a></td>
+<td style="text-align:left"><code>&lt;input type=&quot;color&quot;&gt;</code></td>
+<td style="text-align:left">Display a color menu for setting an RGB color parameter value.</td>
 </tr>
 <tr>
-<td style="text-align:center"><code>mtr</code></td>
-<td style="text-align:center">Input</td>
-<td style="text-align:center">Display a color menu for setting RGB color parameter values.</td>
-<td style="text-align:left"></td>
+<td style="text-align:center"><a href="#44-header"><code>hdr</code></a></td>
+<td style="text-align:left">text string</td>
+<td style="text-align:left">Header for menu structuring.</td>
+</tr>
+<tr>
+<td style="text-align:center"><a href="#45-meter"><code>mtr</code></a></td>
+<td style="text-align:left"><code>&lt;meter&gt;</code></td>
+<td style="text-align:left">Graphically monitoring a numerical value in a range.</td>
+</tr>
+<tr>
+<td style="text-align:center"><a href="#46-number"><code>num</code></a></td>
+<td style="text-align:left"><code>&lt;input type=&quot;number&quot;&gt;</code></td>
+<td style="text-align:left">Display an input field for entering a numerical parameter value.</td>
+</tr>
+<tr>
+<td style="text-align:center"><a href="#47-output"><code>out</code></a></td>
+<td style="text-align:left"><code>&lt;output&gt;</code></td>
+<td style="text-align:left">Monitoring any data.</td>
+</tr>
+<tr>
+<td style="text-align:center"><a href="#48-range"><code>rng</code></a></td>
+<td style="text-align:left"><code>&lt;input type=&quot;range&quot;&gt;</code></td>
+<td style="text-align:left">Display a slider element for setting a numerical parameter value.</td>
+</tr>
+<tr>
+<td style="text-align:center"><a href="#49-select"><code>sel</code></a></td>
+<td style="text-align:left"><code>&lt;select&gt;</code></td>
+<td style="text-align:left">Provides a drop down menu of options.</td>
+</tr>
+<tr>
+<td style="text-align:center"><a href="#410-separator"><code>sep</code></a></td>
+<td style="text-align:left"><code>&lt;hr&gt;</code></td>
+<td style="text-align:left">Display a separating line for menu structuring.</td>
+</tr>
+<tr>
+<td style="text-align:center"><a href="#411-text"><code>txt</code></a></td>
+<td style="text-align:left"><code>&lt;input type=&quot;text&quot;&gt;</code></td>
+<td style="text-align:left">Display an input field for entering a textual parameter value.</td>
+</tr>
+<tr>
+<td style="text-align:center"><a href="#412-vector"><code>vec</code></a></td>
+<td style="text-align:left">multiple<br><code>&lt;input type=&quot;text&quot;&gt;</code></td>
+<td style="text-align:left">Display a set of input fields for entering multiple related data values.</td>
 </tr>
 </tbody>
 </table>
-<h2 id="3-sections">3. Sections</h2>
-<h3 id="button-btn">Button (<code>btn</code>)</h3>
+<h3 id="41-button">4.1 Button</h3>
 <p>The <code>btn</code> section is used to trigger an action of some kind, so it supports the invocation of a parameterless object method or a global function. You can specify a <code>label</code> and/or a <code>text</code> property. If one of them is missing, the other one is taken as the button text.</p>
-<pre><code class="code-line language-json"><div>&lt;ctrl-ing ref=<span class="hljs-string">&quot;btn&quot;</span> darkmode&gt;
+<pre><code class="code-line language-json"><div>&lt;ctrl-ing ref=<span class="hljs-string">&quot;btn&quot;</span>&gt;
   <span class="hljs-punctuation">[</span> <span class="hljs-punctuation">{</span><span class="hljs-attr">&quot;sec&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;hdr&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;text&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;Buttons&quot;</span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
-    <span class="hljs-punctuation">{</span><span class="hljs-attr">&quot;sec&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;btn&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;label&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;Object method&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;text&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;call&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;path&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;$[&#x27;method&#x27;]&quot;</span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
-    <span class="hljs-punctuation">{</span><span class="hljs-attr">&quot;sec&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;btn&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;label&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;Global function&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;text&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;call&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;path&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;window[&#x27;fnc&#x27;]&quot;</span><span class="hljs-punctuation">}</span>
+    <span class="hljs-punctuation">{</span><span class="hljs-attr">&quot;sec&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;btn&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;label&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;Method&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;text&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;green&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;path&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;$[&#x27;method&#x27;]&quot;</span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-punctuation">{</span><span class="hljs-attr">&quot;sec&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;btn&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;label&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;Function&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;text&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;red&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;path&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;window[&#x27;fnc&#x27;]&quot;</span><span class="hljs-punctuation">}</span>
   <span class="hljs-punctuation">]</span>
 &lt;/ctrl-ing&gt;
 </div></code></pre>
 <div  ></div>
-<div style="display: flex; flex-wrap: nowrap; justify-content: space-between; position:relative;font-size:0.8em;background-color:#efefef;">
-<pre>
-function fnc() { alert("'function' called."); }
-var btn = {
-  method() { alert("'method' called."); }
-}
+<div style="display:flex; position:relative; font-size:0.8em;">
+<pre id="src">
+function fnc() { ... }
+const btn = { method() { ... } }
 </pre>
-<ctrl-ing ref="btn" darkmode>
+<ctrl-ing ref="btn">
   [ {"sec":"hdr","text":"Buttons"},
-    {"sec":"btn","label":"Object method","text":"call","path":"$['method']"},
-    {"sec":"btn","label":"Global function","text":"call","path":"window['fnc']"}
+    {"sec":"btn","label":"Method","text":"green","path":"$['method']"},
+    {"sec":"btn","label":"Function","text":"red","path":"window['fnc']"}
   ]
 </ctrl-ing>
 </div>
  <script>
-function fnc() { alert("'function' called."); }
-const btn = {
-  method() { alert("'method' called."); }
+const src=document.getElementById('src');
+function fnc() { src.style.backgroundColor='red'; }
+var btn = {
+  method() { src.style.backgroundColor='green'; }
 }
 </script>
+<p><strong>HTML in Shadow DOM</strong></p>
+<pre><code class="code-line language-html"><div><span class="hljs-tag">&lt;<span class="hljs-name">section</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;btn&quot;</span>&gt;</span>
+  Method
+  <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;button&quot;</span>&gt;</span>green<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">section</span>&gt;</span>
+</div></code></pre>
 <p><strong>Properties</strong></p>
 <table>
 <thead>
@@ -221,8 +345,8 @@ const btn = {
 </thead>
 <tbody>
 <tr>
-<td style="text-align:left"><code>label</code></td>
-<td style="text-align:center">-</td>
+<td style="text-align:left"><code>[label]</code></td>
+<td style="text-align:center">''</td>
 <td style="text-align:left">Label text.</td>
 </tr>
 <tr>
@@ -242,14 +366,8 @@ const btn = {
 </tr>
 </tbody>
 </table>
-<p><strong>HTML in Shadow DOM</strong></p>
-<pre><code class="code-line language-html"><div><span class="hljs-tag">&lt;<span class="hljs-name">section</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;btn&quot;</span>&gt;</span>
-  Object method
-  <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;button&quot;</span>&gt;</span>call<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
-<span class="hljs-tag">&lt;/<span class="hljs-name">section</span>&gt;</span>
-</div></code></pre>
-<h3 id="checkbox-chk">Checkbox (<code>chk</code>)</h3>
-<p>The <code>chk</code> section is usually assigned to a boolean property of the object to be controlled.</p>
+<h3 id="42-checkbox">4.2 Checkbox</h3>
+<p>The <code>chk</code> section is usually assigned to a boolean object property to be controlled.</p>
 <pre><code class="code-line language-json"><div>&lt;ctrl-ing ref=<span class="hljs-string">&quot;chk&quot;</span> darkmode&gt;
   <span class="hljs-punctuation">[</span> <span class="hljs-punctuation">{</span><span class="hljs-attr">&quot;sec&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;hdr&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;text&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;Checkbox&quot;</span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
     <span class="hljs-punctuation">{</span><span class="hljs-attr">&quot;sec&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;chk&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;label&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;Checkbox&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;path&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;$[&#x27;toggle&#x27;]&quot;</span><span class="hljs-punctuation">}</span>
@@ -257,7 +375,7 @@ const btn = {
 &lt;/ctrl-ing&gt;
 </div></code></pre>
 <div  ></div>
-<div style="display: flex; flex-wrap: nowrap; justify-content: space-between; position:relative;font-size:0.8em;">
+<div style="display: flex; position:relative; font-size:0.8em;">
 <pre id="outchk"></pre>
 <ctrl-ing ref="chk" darkmode callback="window['cbchk']">
   [ {"sec":"hdr","text":"Checkbox"},
@@ -269,7 +387,7 @@ const btn = {
     const chk = {
         toggle:true
     }
-    function cbchk() { document.getElementById('outchk').innerHTML = "chk = "+Ctrling.stringify(chk); }
+    function cbchk() { document.getElementById('outchk').innerHTML = "const chk = "+Ctrling.stringify(chk); }
 </script>
 <p><strong>Properties</strong></p>
 <table>
@@ -282,8 +400,8 @@ const btn = {
 </thead>
 <tbody>
 <tr>
-<td style="text-align:left"><code>label</code></td>
-<td style="text-align:center">-</td>
+<td style="text-align:left"><code>[label]</code></td>
+<td style="text-align:center">''</td>
 <td style="text-align:left">Label text.</td>
 </tr>
 <tr>
@@ -311,18 +429,18 @@ const btn = {
   <span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-name">section</span>&gt;</span>
 </div></code></pre>
-<h3 id="color-col">Color (<code>col</code>)</h3>
+<h3 id="43-color">4.3 Color</h3>
 <p>The <code>col</code> section provides a user interface to assign a RGB color to an object property.</p>
-<pre><code class="code-line language-json"><div>&lt;ctrl-ing ref=<span class="hljs-string">&quot;chk&quot;</span> darkmode&gt;
+<pre><code class="code-line language-json"><div>&lt;ctrl-ing ref=<span class="hljs-string">&quot;col&quot;</span>&gt;
   <span class="hljs-punctuation">[</span> <span class="hljs-punctuation">{</span><span class="hljs-attr">&quot;sec&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;hdr&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;text&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;Color&quot;</span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
     <span class="hljs-punctuation">{</span><span class="hljs-attr">&quot;sec&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;col&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;label&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;Color&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;path&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;$[&#x27;color&#x27;]&quot;</span><span class="hljs-punctuation">}</span>
   <span class="hljs-punctuation">]</span>
 &lt;/ctrl-ing&gt;
 </div></code></pre>
 <div  ></div>
-<div style="display: flex; flex-wrap: nowrap; justify-content: space-between; position:relative;font-size:0.8em;background-color:#efefef;">
+<div style="display:flex; position:relative; font-size:0.8em;">
 <pre id="outcol"></pre>
-<ctrl-ing ref="col" darkmode callback="cbcol">
+<ctrl-ing ref="col" callback="window['cbcol']">
   [ {"sec":"hdr","text":"Color"},
     {"sec":"col","label":"Color","path":"$['color']"}
   ]
@@ -345,8 +463,8 @@ const btn = {
 </thead>
 <tbody>
 <tr>
-<td style="text-align:left"><code>label</code></td>
-<td style="text-align:center">-</td>
+<td style="text-align:left"><code>[label]</code></td>
+<td style="text-align:center">''</td>
 <td style="text-align:left">Label text.</td>
 </tr>
 <tr>
@@ -375,14 +493,15 @@ const btn = {
   <span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-name">section</span>&gt;</span>
 </div></code></pre>
-<h3 id="header-hdr">Header (<code>hdr</code>)</h3>
-<pre><code class="code-line language-json"><div>&lt;ctrl-ing darkmode&gt;
+<h3 id="44-header">4.4 Header</h3>
+<p>The <code>hdr</code> section is used for menu structuring. We can use multiple headers for visually subdivide sections.</p>
+<pre><code class="code-line language-json"><div>&lt;ctrl-ing&gt;
   <span class="hljs-punctuation">[</span> <span class="hljs-punctuation">{</span><span class="hljs-attr">&quot;sec&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;hdr&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;text&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;Header Only&quot;</span><span class="hljs-punctuation">}</span> <span class="hljs-punctuation">]</span>
 &lt;/ctrl-ing&gt;
 </div></code></pre>
 <div  ></div>
-<div style="display: flex; flex-wrap: nowrap; justify-content: space-between; position:relative;font-size:0.8em;;background-color:#efefef;">
-<ctrl-ing darkmode>
+<div style="display:flex; position:relative; font-size:0.8em;">
+<ctrl-ing>
   [ {"sec":"hdr","text":"Header Only"} ]
 </ctrl-ing>
 </div>
@@ -391,9 +510,25 @@ const btn = {
   Header Only
 <span class="hljs-tag">&lt;/<span class="hljs-name">section</span>&gt;</span>
 </div></code></pre>
-<p>We can use multiple headers for visually combining sections.</p>
-<h3 id="meter-mtr">Meter (<code>mtr</code>)</h3>
-<p>The <code>mtr</code> section provides a graphic view of a scalar object property value within a known range. It displays the value in its initial state and is not aware of value changes, unless either/or the</p>
+<p><strong>Properties</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left"><code>hdr</code></th>
+<th style="text-align:center">Default</th>
+<th style="text-align:left">Comment</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>text</code></td>
+<td style="text-align:center">-</td>
+<td style="text-align:left">Header text.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="45-meter">4.5 Meter</h3>
+<p>The monitoring <code>mtr</code> section provides a graphic view of a scalar object property value within a known range. It displays the value in its initial state and is not aware of value changes, unless either the</p>
 <ul>
 <li><code>&lt;ctrl-ing&gt;</code>'s <code>autoupdate</code> property is set.</li>
 <li>API method <code>update()</code> is called.</li>
@@ -406,9 +541,12 @@ const btn = {
 &lt;/ctrl-ing&gt;
 </div></code></pre>
 <div  ></div>
-<div style="display: flex; flex-wrap: nowrap; justify-content: space-between; position:relative;font-size:0.8em;background-color:#efefef;">
-<pre id="outmtr"></pre>
-<ctrl-ing ref="mtr" darkmode callback="cbmtr">
+<div style="display:flex; position:relative; font-size:0.8em;">
+<pre id="outmtr">const mtr = {
+  volumn:40
+}
+</pre>
+<ctrl-ing ref="mtr" darkmode>
   [ {"sec":"hdr","text":"Meter"},
     {"sec":"mtr","label":"Volumn","path":"$['volumn']","min":20,"max":80,
                  "low":45,"high":70,"optimum":40,"value":50,"unit":"m&sup3;"}
@@ -419,8 +557,17 @@ const btn = {
     const mtr = {
         volumn:40
     }
-    function cbmtr() { document.getElementById('outmtr').innerHTML = "var mtr = "+Ctrling.stringify(mtr); }
 </script>
+<p><strong>HTML in Shadow DOM</strong></p>
+<pre><code class="code-line language-html"><div><span class="hljs-tag">&lt;<span class="hljs-name">section</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;mtr&quot;</span>&gt;</span>
+    Volumn
+    <span class="hljs-tag">&lt;<span class="hljs-name">span</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">meter</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;40&quot;</span> <span class="hljs-attr">min</span>=<span class="hljs-string">&quot;20&quot;</span> <span class="hljs-attr">max</span>=<span class="hljs-string">&quot;80&quot;</span> <span class="hljs-attr">low</span>=<span class="hljs-string">&quot;45&quot;</span> <span class="hljs-attr">high</span>=<span class="hljs-string">&quot;70&quot;</span> <span class="hljs-attr">optimum</span>=<span class="hljs-string">&quot;30&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">meter</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">output</span>&gt;</span>40<span class="hljs-tag">&lt;/<span class="hljs-name">output</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">span</span>&gt;</span>m&amp;sup3;<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">section</span>&gt;</span>
+</div></code></pre>
 <p><strong>Properties</strong></p>
 <table>
 <thead>
@@ -432,8 +579,8 @@ const btn = {
 </thead>
 <tbody>
 <tr>
-<td style="text-align:left"><code>label</code></td>
-<td style="text-align:center">-</td>
+<td style="text-align:left"><code>[label]</code></td>
+<td style="text-align:center">''</td>
 <td style="text-align:left">Label text.</td>
 </tr>
 <tr>
@@ -443,7 +590,7 @@ const btn = {
 </tr>
 <tr>
 <td style="text-align:left"><code>[value]</code></td>
-<td style="text-align:center">[<code>min</code> | 0]</td>
+<td style="text-align:center"><code>min</code> | 0</td>
 <td style="text-align:left">Used as value, if reference value is not available.</td>
 </tr>
 <tr>
@@ -478,17 +625,7 @@ const btn = {
 </tr>
 </tbody>
 </table>
-<p><strong>HTML in Shadow DOM</strong></p>
-<pre><code class="code-line language-html"><div><span class="hljs-tag">&lt;<span class="hljs-name">section</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;mtr&quot;</span>&gt;</span>
-  Volumn
-  <span class="hljs-tag">&lt;<span class="hljs-name">span</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">meter</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;40&quot;</span> <span class="hljs-attr">min</span>=<span class="hljs-string">&quot;20&quot;</span> <span class="hljs-attr">max</span>=<span class="hljs-string">&quot;80&quot;</span> <span class="hljs-attr">low</span>=<span class="hljs-string">&quot;45&quot;</span> <span class="hljs-attr">high</span>=<span class="hljs-string">&quot;70&quot;</span> <span class="hljs-attr">optimum</span>=<span class="hljs-string">&quot;30&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">meter</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">output</span>&gt;</span>40<span class="hljs-tag">&lt;/<span class="hljs-name">output</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">span</span>&gt;</span>m&amp;sup2;<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
-  <span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
-<span class="hljs-tag">&lt;/<span class="hljs-name">section</span>&gt;</span>
-</div></code></pre>
-<h3 id="number-num">Number (<code>num</code>)</h3>
+<h3 id="46-number">4.6 Number</h3>
 <p>The <code>num</code> section provides a user interface to enter a numerical value and assign it to an object property. It uses the HTML <code>&lt;input type=&quot;number&quot;&gt;</code> element and supports its <code>min</code>, <code>max</code> and <code>step</code> attributes.</p>
 <p><strong>Example</strong></p>
 <pre><code class="code-line language-json"><div>&lt;ctrl-ing ref=<span class="hljs-string">&quot;num&quot;</span> darkmode&gt;
@@ -499,9 +636,9 @@ const btn = {
 &lt;/ctrl-ing&gt;
 </div></code></pre>
 <div  ></div>
-<div style="display: flex; flex-wrap: nowrap; justify-content: space-between; position:relative;font-size:0.8em;background-color:#efefef;">
+<div style="display:flex; position:relative; font-size:0.8em;">
 <pre id="outnum"></pre>
-<ctrl-ing ref="num" darkmode callback="cbnum">
+<ctrl-ing ref="num" darkmode callback="window['cbnum']">
   [ {"sec":"hdr","text":"Number"},
     {"sec":"num","label":"Number","min":1,"max":2,"step":0.2,
                  "path":"$['number']","unit":"[s]"}
@@ -520,7 +657,7 @@ const btn = {
         Number
         <span class="hljs-tag">&lt;<span class="hljs-name">span</span>&gt;</span>
             <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;number&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;0&quot;</span> <span class="hljs-attr">min</span>=<span class="hljs-string">&quot;1&quot;</span> <span class="hljs-attr">max</span>=<span class="hljs-string">&quot;2&quot;</span> <span class="hljs-attr">step</span>=<span class="hljs-string">&quot;0.2&quot;</span>&gt;</span>
-            <span class="hljs-tag">&lt;<span class="hljs-name">span</span>&gt;</span>[-]<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">span</span>&gt;</span>[s]<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
         <span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
     <span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-name">section</span>&gt;</span>
@@ -536,8 +673,8 @@ const btn = {
 </thead>
 <tbody>
 <tr>
-<td style="text-align:left"><code>label</code></td>
-<td style="text-align:center"></td>
+<td style="text-align:left"><code>[label]</code></td>
+<td style="text-align:center">''</td>
 <td style="text-align:left">Label text.</td>
 </tr>
 <tr>
@@ -582,23 +719,26 @@ const btn = {
 </tr>
 </tbody>
 </table>
-<h3 id="output-out">Output (<code>out</code>)</h3>
-<p>The <code>out</code> section displays an object property value in its initial state. It is not aware of value changes, unless either/or the</p>
+<h3 id="47-output">4.7 Output</h3>
+<p>The <code>out</code> section displays an object property value in its initial state. It is not aware of object value changes, unless either the</p>
 <ul>
 <li><code>&lt;ctrl-ing&gt;</code>'s <code>autoupdate</code> property is set.</li>
 <li>API method <code>update()</code> is called.</li>
 </ul>
 <p>The property value is mutated to JSON text for display. So only primitive object properties and getters are shown in case of structured property values.</p>
-<pre><code class="code-line language-json"><div>&lt;ctrl-ing ref=<span class="hljs-string">&quot;mtr&quot;</span> darkmode&gt;
+<pre><code class="code-line language-json"><div>&lt;ctrl-ing ref=<span class="hljs-string">&quot;out&quot;</span>&gt;
   <span class="hljs-punctuation">[</span> <span class="hljs-punctuation">{</span><span class="hljs-attr">&quot;sec&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;hdr&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;text&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;Output&quot;</span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
-    <span class="hljs-punctuation">{</span><span class="hljs-attr">&quot;sec&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;out&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;label&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;sub&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;path&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;$[&#x27;sub&#x27;]&quot;</span><span class="hljs-punctuation">}</span>
+    <span class="hljs-punctuation">{</span><span class="hljs-attr">&quot;sec&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;out&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;label&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;Point&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;path&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;$[&#x27;pnt&#x27;]&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;unit&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;[mm]&quot;</span><span class="hljs-punctuation">}</span>
   <span class="hljs-punctuation">]</span>
 &lt;/ctrl-ing&gt;
 </div></code></pre>
 <div  ></div>
-<div style="display: flex; flex-wrap: nowrap; justify-content: space-between; position:relative;font-size:0.8em;background-color:#efefef;">
-<pre id="outout"></pre>
-<ctrl-ing ref="out" darkmode callback="cbout">
+<div style="display:flex; position:relative; font-size:0.8em;">
+<pre id="outout">const out = {
+  pnt: {x:5, y:7}
+}
+</pre>
+<ctrl-ing ref="out">
   [ {"sec":"hdr","text":"Output"},
     {"sec":"out","label":"Point","path":"$['pnt']","unit":"[mm]"}
   ]
@@ -608,8 +748,19 @@ const btn = {
     const out = {
         pnt: {x:5, y:7}
     }
-    function cbout() { document.getElementById('outout').innerHTML = "var out = "+Ctrling.stringify(out); }
 </script>
+<p><strong>HTML in Shadow DOM</strong></p>
+<pre><code class="code-line language-html"><div><span class="hljs-tag">&lt;<span class="hljs-name">section</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;out&quot;</span>&gt;</span>
+    Point
+    <span class="hljs-tag">&lt;<span class="hljs-name">span</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">output</span>&gt;</span>{
+          &quot;x&quot;:5,
+          &quot;y&quot;:7
+        }<span class="hljs-tag">&lt;/<span class="hljs-name">output</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">span</span>&gt;</span>[mm]<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">section</span>&gt;</span>
+</div></code></pre>
 <p><strong>Properties</strong></p>
 <table>
 <thead>
@@ -621,8 +772,8 @@ const btn = {
 </thead>
 <tbody>
 <tr>
-<td style="text-align:left"><code>label</code></td>
-<td style="text-align:center">-</td>
+<td style="text-align:left"><code>[label]</code></td>
+<td style="text-align:center">''</td>
 <td style="text-align:left">Label text.</td>
 </tr>
 <tr>
@@ -642,23 +793,99 @@ const btn = {
 </tr>
 </tbody>
 </table>
+<h3 id="48-range">4.8 Range</h3>
+<p>The <code>rng</code> section provides a user interface to enter a numerical value in a range by a slider. It uses the HTML <code>&lt;input type=&quot;range&quot;&gt;</code> element and supports its <code>min</code>, <code>max</code> and <code>step</code> attributes.</p>
+<p><strong>Example</strong></p>
+<pre><code class="code-line language-json"><div>&lt;ctrl-ing ref=<span class="hljs-string">&quot;rng&quot;</span> darkmode&gt;
+  <span class="hljs-punctuation">[</span> <span class="hljs-punctuation">{</span><span class="hljs-attr">&quot;sec&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;hdr&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;text&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;Range&quot;</span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-punctuation">{</span><span class="hljs-attr">&quot;sec&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;rng&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;label&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;Weight&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;min&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-number">10</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;max&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-number">100</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;step&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-number">5</span><span class="hljs-punctuation">,</span>
+                 <span class="hljs-attr">&quot;path&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;$[&#x27;value&#x27;]&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;unit&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;kg&quot;</span><span class="hljs-punctuation">}</span>
+  <span class="hljs-punctuation">]</span>
+&lt;/ctrl-ing&gt;
+</div></code></pre>
+<div  ></div>
+<div style="display:flex; position:relative; font-size:0.8em;">
+<pre id="outrng"></pre>
+<ctrl-ing ref="rng" darkmode callback="window['cbrng']">
+  [ {"sec":"hdr","text":"Range"},
+    {"sec":"rng","label":"Weight","min":10,"max":100,"step":5,
+                 "path":"$['value']","unit":"kg"}
+  ]
+</ctrl-ing>
+</div>
+<script>
+    const rng = {
+        value: 40
+    }
+    function cbrng() { document.getElementById('outrng').innerHTML = "const rng = "+Ctrling.stringify(rng); }
+</script>
 <p><strong>HTML in Shadow DOM</strong></p>
-<pre><code class="code-line language-html"><div><span class="hljs-tag">&lt;<span class="hljs-name">section</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;out&quot;</span>&gt;</span>
-  Point
-  <span class="hljs-tag">&lt;<span class="hljs-name">span</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">output</span>&gt;</span>{
-      &quot;x&quot;:5,
-      &quot;y&quot;:7
-    }<span class="hljs-tag">&lt;/<span class="hljs-name">output</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">span</span>&gt;</span>[mm]<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
-  <span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+<pre><code class="code-line language-html"><div><span class="hljs-tag">&lt;<span class="hljs-name">section</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;rng&quot;</span>&gt;</span>
+    Weight
+    <span class="hljs-tag">&lt;<span class="hljs-name">span</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;range&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;40&quot;</span> <span class="hljs-attr">min</span>=<span class="hljs-string">&quot;10&quot;</span> <span class="hljs-attr">max</span>=<span class="hljs-string">&quot;100&quot;</span> <span class="hljs-attr">step</span>=<span class="hljs-string">&quot;5&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">output</span>&gt;</span>40<span class="hljs-tag">&lt;/<span class="hljs-name">output</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">span</span>&gt;</span>kg<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-name">section</span>&gt;</span>
 </div></code></pre>
-<h3 id="selection-sel">Selection (<code>sel</code>)</h3>
+<p><strong>Properties</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left"><code>num</code></th>
+<th style="text-align:center">Default</th>
+<th style="text-align:left">Comment</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>[label]</code></td>
+<td style="text-align:center">''</td>
+<td style="text-align:left">Label text.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>[min]</code></td>
+<td style="text-align:center">-</td>
+<td style="text-align:left">Minimum value.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>[max]</code></td>
+<td style="text-align:center">-</td>
+<td style="text-align:left">Maximum value.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>[step]</code></td>
+<td style="text-align:center"><code>1</code></td>
+<td style="text-align:left">Step size.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>[value]</code></td>
+<td style="text-align:center">reference value</td>
+<td style="text-align:left">Only used as value, if reference value is not available.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>path</code></td>
+<td style="text-align:center"></td>
+<td style="text-align:left">Location of reference value within reference object.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>[unit]</code></td>
+<td style="text-align:center">-</td>
+<td style="text-align:left">Unit string.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>[disabled]</code></td>
+<td style="text-align:center">-</td>
+<td style="text-align:left">Disabled input.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="49-selection">4.9 Selection</h3>
 <p>The <code>sel</code> section provides a drop down menu of options. It uses the HTML <code>&lt;select&gt;</code> element. Options can be represented either by object members or array elements.
 Then object member names are displayed in the drop down menu and member values are inserted as property values. Array elements (strings or numbers) are used as drop down items as well as target object property values.</p>
-<p>Please note that the HTML <code>&lt;selects&gt;</code>'s <code>multiple</code> attribute and <code>&lt;optgroup&gt;</code> elements are not supported.</p>
-<pre><code class="code-line language-json"><div>&lt;ctrl-ing ref=<span class="hljs-string">&quot;sel&quot;</span> darkmode&gt;
+<p>Please note that the HTML <code>&lt;select&gt;</code>'s <code>multiple</code> attribute and <code>&lt;optgroup&gt;</code> elements are not supported.</p>
+<pre><code class="code-line language-json"><div>&lt;ctrl-ing ref=<span class="hljs-string">&quot;sel&quot;</span>&gt;
   <span class="hljs-punctuation">[</span> <span class="hljs-punctuation">{</span><span class="hljs-attr">&quot;sec&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;hdr&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;text&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;Select&quot;</span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
     <span class="hljs-punctuation">{</span><span class="hljs-attr">&quot;sec&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;sel&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;label&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;Linestyle&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;path&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;$[&#x27;lineStyle&#x27;]&quot;</span><span class="hljs-punctuation">,</span>
      <span class="hljs-attr">&quot;options&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-punctuation">[</span><span class="hljs-string">&quot;solid&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-string">&quot;dashed&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-string">&quot;dotted&quot;</span><span class="hljs-punctuation">]</span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
@@ -668,22 +895,40 @@ Then object member names are displayed in the drop down menu and member values a
 &lt;/ctrl-ing&gt;
 </div></code></pre>
 <div  ></div>
-<div style="display: flex; flex-wrap: nowrap; justify-content: space-between; position:relative;font-size:0.8em;background-color:#efefef;">
+<div style="display:flex; position:relative; font-size:0.8em;">
 <pre id="outsel"></pre>
-<ctrl-ing ref="sel" darkmode callback="cbsel">
+<ctrl-ing ref="sel" callback="window['cbsel']">
   [ {"sec":"hdr","text":"Output"},
     {"sec":"sel","label":"Linestyle","options":["solid","dashed","dotted"],"path":"$['lineStyle']"},
     {"sec":"sel","label":"Thickness","options":{"thin":1,"medium":2,"thick":3},"path":"$['thickness']"}
   ]
 </ctrl-ing>
 </div>
- <script>
+<script>
     const sel = {
       lineStyle: "dashed",
       thickness: 1
     }
-    function cbsel() { document.getElementById('outsel').innerHTML = "var sel = "+Ctrling.stringify(sel); }
+    function cbsel() { document.getElementById('outsel').innerHTML = "const sel = "+Ctrling.stringify(sel); }
 </script>
+<p><strong>HTML in Shadow DOM</strong></p>
+<pre><code class="code-line language-html"><div><span class="hljs-tag">&lt;<span class="hljs-name">section</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;sel&quot;</span>&gt;</span>
+  Linestyle
+  <span class="hljs-tag">&lt;<span class="hljs-name">select</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">option</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;solid&quot;</span>&gt;</span>solid<span class="hljs-tag">&lt;/<span class="hljs-name">option</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">option</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;dashed&quot;</span> <span class="hljs-attr">selected</span>&gt;</span>dashed<span class="hljs-tag">&lt;/<span class="hljs-name">option</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">option</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;dotted&quot;</span>&gt;</span>dotted<span class="hljs-tag">&lt;/<span class="hljs-name">option</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">select</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">section</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">section</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;sel&quot;</span>&gt;</span>
+  Thickness
+  <span class="hljs-tag">&lt;<span class="hljs-name">select</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">option</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;1&quot;</span> <span class="hljs-attr">selected</span>&gt;</span>thin<span class="hljs-tag">&lt;/<span class="hljs-name">option</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">option</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;2&quot;</span>&gt;</span>medium<span class="hljs-tag">&lt;/<span class="hljs-name">option</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">option</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;3&quot;</span>&gt;</span>thick<span class="hljs-tag">&lt;/<span class="hljs-name">option</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">select</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">section</span>&gt;</span>
+</div></code></pre>
 <p><strong>Properties</strong></p>
 <table>
 <thead>
@@ -695,12 +940,12 @@ Then object member names are displayed in the drop down menu and member values a
 </thead>
 <tbody>
 <tr>
-<td style="text-align:left"><code>label</code></td>
-<td style="text-align:center">-</td>
+<td style="text-align:left"><code>[label]</code></td>
+<td style="text-align:center">''</td>
 <td style="text-align:left">Label text.</td>
 </tr>
 <tr>
-<td style="text-align:left"><code>[options]</code></td>
+<td style="text-align:left"><code>options</code></td>
 <td style="text-align:center">-</td>
 <td style="text-align:left">Object as member name/value pairs or array elements.</td>
 </tr>
@@ -721,7 +966,7 @@ Then object member names are displayed in the drop down menu and member values a
 </tr>
 </tbody>
 </table>
-<h3 id="separator-sep">Separator (<code>sep</code>)</h3>
+<h3 id="410-separator">4.10 Separator</h3>
 <p>The <code>sep</code> section displays a separation line using the HTML <code>&lt;hr&gt;</code> element. It has no properties.</p>
 <pre><code class="code-line language-json"><div>&lt;ctrl-ing darkmode&gt;
   <span class="hljs-punctuation">[</span> <span class="hljs-punctuation">{</span><span class="hljs-attr">&quot;sec&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;hdr&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;text&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;Separator&quot;</span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
@@ -730,20 +975,19 @@ Then object member names are displayed in the drop down menu and member values a
 &lt;/ctrl-ing&gt;
 </div></code></pre>
 <div  ></div>
-<div style="display: flex; flex-wrap: nowrap; justify-content: space-between; position:relative;font-size:0.8em;background-color:#efefef;">
-<pre id="outsep"></pre>
-<ctrl-ing darkmode>
-  [ {"sec":"hdr","text":"Output"},
-    {"sec":"sep"}
-  ]
-</ctrl-ing>
+<div style="display:flex; position:relative; font-size:0.8em;">
+  <ctrl-ing>
+    [ {"sec":"hdr","text":"Separator"},
+      {"sec":"sep"}
+    ]
+  </ctrl-ing>
 </div>
 <p><strong>HTML in Shadow DOM</strong></p>
 <pre><code class="code-line language-html"><div><span class="hljs-tag">&lt;<span class="hljs-name">section</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;sep&quot;</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-name">hr</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">hr</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-name">section</span>&gt;</span>
 </div></code></pre>
-<h3 id="text-txt">Text (<code>txt</code>)</h3>
+<h3 id="411-text">4.11 Text</h3>
 <p>The <code>txt</code> section provides a user interface to enter a text string and assign it to an object property. It uses the HTML <code>&lt;input type=&quot;text&quot;&gt;</code> element.</p>
 <p>Please note that multiline text is not supported.</p>
 <p><strong>Example</strong></p>
@@ -756,7 +1000,7 @@ Then object member names are displayed in the drop down menu and member values a
 <div  ></div>
 <div style="display: flex; flex-wrap: nowrap; justify-content: space-between; position:relative;font-size:0.8em;background-color:#efefef;">
 <pre id="outtxt"></pre>
-<ctrl-ing ref="txt" darkmode callback="cbtxt">
+<ctrl-ing ref="txt" callback="window['cbtxt']">
   [ {"sec":"hdr","text":"Text"},
     {"sec":"txt","label":"Text","path":"$['text']"}
   ]
@@ -770,10 +1014,10 @@ Then object member names are displayed in the drop down menu and member values a
 </script>
 <p><strong>HTML in Shadow DOM</strong></p>
 <pre><code class="code-line language-html"><div><span class="hljs-tag">&lt;<span class="hljs-name">section</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;txt&quot;</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-name">label</span>&gt;</span>
-    Text
-    <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;something ...&quot;</span>&gt;</span>
-  <span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">label</span>&gt;</span>
+        Text
+        <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;something ...&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-name">section</span>&gt;</span>
 </div></code></pre>
 <p><strong>Properties</strong></p>
@@ -787,7 +1031,7 @@ Then object member names are displayed in the drop down menu and member values a
 </thead>
 <tbody>
 <tr>
-<td style="text-align:left"><code>label</code></td>
+<td style="text-align:left"><code>[label]</code></td>
 <td style="text-align:center"></td>
 <td style="text-align:left">Label text.</td>
 </tr>
@@ -808,49 +1052,58 @@ Then object member names are displayed in the drop down menu and member values a
 </tr>
 </tbody>
 </table>
-<h3 id="vector-vec">Vector (<code>vec</code>)</h3>
-<p>The <code>vec</code> section provides a user interface for object/array structures. It offers for each member/element an individual input field using HTML <code>&lt;input type=&quot;text&quot;&gt;</code> elements in grid-like structure. The <code>path</code> member in this section is an array holding multiple pathes, rather than a singular path.</p>
+<h3 id="412-vector">4.12 Vector</h3>
+<p>The <code>vec</code> section provides a user interface for object/array structures. It offers for each member/element an individual input field using HTML <code>&lt;input type=&quot;text&quot;&gt;</code> elements in a grid-like structure. The <code>path</code> member in this section is an array holding multiple pathes, rather than a singular path.</p>
 <p>Size of the input fields might be controlled by <code>width</code> member accepting CSS units. Input elements on the grid lines are wrapped onto a new line in case of overflow. They are always right aligned.</p>
 <p><strong>Example</strong></p>
 <pre><code class="code-line language-json"><div>&lt;ctrl-ing ref=<span class="hljs-string">&quot;vec&quot;</span> darkmode&gt;
   <span class="hljs-punctuation">[</span> <span class="hljs-punctuation">{</span><span class="hljs-attr">&quot;sec&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;hdr&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;text&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;Vector&quot;</span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
     <span class="hljs-punctuation">{</span><span class="hljs-attr">&quot;sec&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;vec&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;label&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;Array&quot;</span><span class="hljs-punctuation">,</span>
-     <span class="hljs-attr">&quot;path&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-punctuation">[</span><span class="hljs-string">&quot;$[&#x27;arr&#x27;][0]&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-string">&quot;$[&#x27;arr&#x27;][1]&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-string">&quot;$[&#x27;arr&#x27;][2]&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-string">&quot;$[&#x27;arr&#x27;][3]&quot;</span><span class="hljs-punctuation">]</span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+                 <span class="hljs-attr">&quot;path&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-punctuation">[</span><span class="hljs-string">&quot;$[&#x27;arr&#x27;][0]&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-string">&quot;$[&#x27;arr&#x27;][1]&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-string">&quot;$[&#x27;arr&#x27;][2]&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-string">&quot;$[&#x27;arr&#x27;][3]&quot;</span><span class="hljs-punctuation">]</span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
     <span class="hljs-punctuation">{</span><span class="hljs-attr">&quot;sec&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;vec&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;label&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;Object (x,y,z)&quot;</span><span class="hljs-punctuation">,</span>
-     <span class="hljs-attr">&quot;path&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-punctuation">[</span><span class="hljs-string">&quot;$[&#x27;vec&#x27;][&#x27;x&#x27;]&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-string">&quot;$[&#x27;vec&#x27;][&#x27;y&#x27;]&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-string">&quot;$[&#x27;vec&#x27;][&#x27;z&#x27;]&quot;</span><span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span>
-     <span class="hljs-attr">&quot;unit&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;[mm]&quot;</span><span class="hljs-punctuation">}</span>
+                 <span class="hljs-attr">&quot;path&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-punctuation">[</span><span class="hljs-string">&quot;$[&#x27;vec&#x27;][&#x27;x&#x27;]&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-string">&quot;$[&#x27;vec&#x27;][&#x27;y&#x27;]&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-string">&quot;$[&#x27;vec&#x27;][&#x27;z&#x27;]&quot;</span><span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span>
+                 <span class="hljs-attr">&quot;unit&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;mm&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;width&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;1em&quot;</span><span class="hljs-punctuation">}</span>
   <span class="hljs-punctuation">]</span>
 &lt;/ctrl-ing&gt;
 </div></code></pre>
 <div  ></div>
-<div style="display: flex; flex-wrap: nowrap; justify-content: space-between; position:relative;font-size:0.8em;background-color:#efefef;">
-<pre id="outvec"></pre>
-<ctrl-ing ref="vec" darkmode callback="cbvec">
-  [ {"sec":"hdr","text":"Vector"},
-    {"sec":"vec","label":"Array",
-     "path":["$['arr'][0]","$['arr'][1]","$['arr'][2]","$['arr'][3]"]},
-    {"sec":"vec","label":"Object (x,y,z)",
-     "path":["$['vec']['x']","$['vec']['y']","$['vec']['z']"],
-     "unit":"[mm]"}
-  ]
-</ctrl-ing>
+<div style="display:flex; position:relative; font-size:0.8em;">
+  <pre id="outvec"></pre>
+  <ctrl-ing ref="vec" darkmode callback="window['cbvec']">
+    [ {"sec":"hdr","text":"Vector"},
+      {"sec":"vec","label":"Array",
+      "path":["$['arr'][0]","$['arr'][1]","$['arr'][2]","$['arr'][3]"]},
+      {"sec":"vec","label":"Object (x,y,z)",
+      "path":["$['vec']['x']","$['vec']['y']","$['vec']['z']"],
+      "unit":"mm","width":"1em"}
+    ]
+  </ctrl-ing>
 </div>
 <script>
     const vec = {
-        arr: ["string",3.14,true,null,[1,2]],
+        arr: ["string",3.14,true,null],
         vec: {x:1,y:2,z:3}
     }
-    function cbvec() { document.getElementById('outvec').innerHTML = "var vec = "+Ctrling.stringify(vec); }
+    function cbvec() { document.getElementById('outvec').innerHTML = "const vec = "+Ctrling.stringify(vec); }
 </script>
 <p><strong>HTML in Shadow DOM</strong></p>
 <pre><code class="code-line language-html"><div><span class="hljs-tag">&lt;<span class="hljs-name">section</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;vec&quot;</span>&gt;</span>
-  Vector
-  <span class="hljs-tag">&lt;<span class="hljs-name">span</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;1&quot;</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;2&quot;</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;3&quot;</span>&gt;</span>
-  <span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-name">span</span>&gt;</span>[mm]<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+    Array
+    <span class="hljs-tag">&lt;<span class="hljs-name">span</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;string&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;3.14&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;true&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;null&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">section</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">section</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;vec&quot;</span>&gt;</span>
+    Object (x,y,z)
+    <span class="hljs-tag">&lt;<span class="hljs-name">span</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;1&quot;</span> <span class="hljs-attr">style</span>=<span class="hljs-string">&quot;width:1em&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;2&quot;</span> <span class="hljs-attr">style</span>=<span class="hljs-string">&quot;width:1em&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;3&quot;</span> <span class="hljs-attr">style</span>=<span class="hljs-string">&quot;width:1em&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">span</span>&gt;</span>mm<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-name">section</span>&gt;</span>
 </div></code></pre>
 <p><strong>Properties</strong></p>
@@ -875,7 +1128,7 @@ Then object member names are displayed in the drop down menu and member values a
 </tr>
 <tr>
 <td style="text-align:left"><code>[width]</code></td>
-<td style="text-align:center">-</td>
+<td style="text-align:center">24%</td>
 <td style="text-align:left">Input fields width in CSS units.</td>
 </tr>
 <tr>
@@ -890,244 +1143,9 @@ Then object member names are displayed in the drop down menu and member values a
 </tr>
 </tbody>
 </table>
-<h2 id="2-how-to-use">2. How to Use ?</h2>
-<pre><code class="code-line language-json"><div>&lt;ctrl-ing ref=<span class="hljs-string">&quot;obj1&quot;</span> darkmode&gt;
-  <span class="hljs-punctuation">[</span> <span class="hljs-punctuation">{</span><span class="hljs-attr">&quot;sec&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;hdr&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;text&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;Demo-1&quot;</span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
-    <span class="hljs-punctuation">{</span><span class="hljs-attr">&quot;sec&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;num&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;label&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;Numbers&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;path&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;$[&#x27;numbers&#x27;][0]&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;unit&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;[-]&quot;</span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
-    <span class="hljs-punctuation">{</span><span class="hljs-attr">&quot;sec&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;chk&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;label&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;Toggle&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;path&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;$[&#x27;toggle&#x27;]&quot;</span><span class="hljs-punctuation">}</span>
-  <span class="hljs-punctuation">]</span>
-&lt;/ctrl-ing&gt;
-</div></code></pre>
-<div  ></div>
-<figcaption>Listing 1: Constructor &ndash; cartesian coordinates with origin centered.</figcaption><br>
-<div  ></div>
-<div style="display: flex; flex-wrap: nowrap; justify-content: space-between; position:relative;">
-    <pre id="out1"></pre>
-    <ctrl-ing ref="obj1" darkmode callback="callbk1">
-        [ {"sec":"hdr","text":"Demo-1"},
-            {"sec":"num","label":"Numbers[0]","path":"$['numbers'][0]","unit":"[-]"},
-            {"sec":"chk","label":"Toggle","path":"$['toggle']"}
-        ]
-    </ctrl-ing>
-</div>
-<p>View coordinates provided by events can be controlled in the constructor by an additional view argument <code>{x=0,y=0,scl=1,cartesian=false}</code> beside the canvas <code>RenderingContext2D</code> object.</p>
-<ul>
-<li><code>x,y</code> … view's origin location.</li>
-<li><code>scl</code> …  view's scaling.</li>
-<li><code>cartesian</code> … cartesian coordinate system (y-axis up).</li>
-</ul>
-<h2 id="3-handling-events">3. Handling Events</h2>
-<p>Each <code>canvasInteractor</code> instance handles DOM pointer events and some custom events.</p>
-<div  ></div>
-<figcaption> Table 1: Supported Events </figcaption>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">Event</th>
-<th style="text-align:left">Comment</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left"><code>pointermove</code></td>
-<td style="text-align:left">Pointer moved.</td>
-</tr>
-<tr>
-<td style="text-align:left"><code>pointerdown</code></td>
-<td style="text-align:left">Pointer device button pressed.</td>
-</tr>
-<tr>
-<td style="text-align:left"><code>pointerup</code></td>
-<td style="text-align:left">Pointer device button released.</td>
-</tr>
-<tr>
-<td style="text-align:left"><code>pointerenter</code></td>
-<td style="text-align:left">Pointer enters canvas.</td>
-</tr>
-<tr>
-<td style="text-align:left"><code>pointerleave</code></td>
-<td style="text-align:left">Pointer leaves canvas.</td>
-</tr>
-<tr>
-<td style="text-align:left"><code>pointercancel</code></td>
-<td style="text-align:left">DOM event forwarded.</td>
-</tr>
-<tr>
-<td style="text-align:left"><code>click</code></td>
-<td style="text-align:left">Pointer device button pressed and released at the same location.</td>
-</tr>
-<tr>
-<td style="text-align:left"><code>wheel</code></td>
-<td style="text-align:left">Pointer device wheel event.</td>
-</tr>
-<tr>
-<td style="text-align:left"><code>tick</code></td>
-<td style="text-align:left">Throttled timer event. At most every 60 milliseconds.</td>
-</tr>
-<tr>
-<td style="text-align:left"><code>pan</code></td>
-<td style="text-align:left">Pan by pointer device. Occuring only with (left) button pressed.</td>
-</tr>
-<tr>
-<td style="text-align:left"><code>drag</code></td>
-<td style="text-align:left">Drag by pointer device. Occuring only with (left) button pressed and something was signalled as 'hit'.</td>
-</tr>
-</tbody>
-</table>
-<div  ></div>
-<br>
-<p>Instead of registering events via well known <code>addEventListener</code>, an application registers events to a <code>canvasInteractor</code> instance using thats <code>on</code> method.</p>
-<pre><code class="code-line language-js"><div><span class="hljs-comment">// ...</span>
-interactor.<span class="hljs-title function_">on</span>(<span class="hljs-string">&#x27;pointermove&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> { <span class="hljs-comment">/* do stuff */</span> })
-          .<span class="hljs-title function_">on</span>(<span class="hljs-string">&#x27;tick&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> { <span class="hljs-comment">/* do other stuff */</span> })
-          .<span class="hljs-title function_">on</span>(<span class="hljs-string">&#x27;pan&#x27;</span>,  <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> { <span class="hljs-comment">/* do yet other stuff */</span> })
-          .<span class="hljs-title function_">startTimer</span>();
-</div></code></pre>
-<div  ></div>
-<figcaption>Listing 2: Registering events and starting tick timer.</figcaption><br>
-<p>The <code>pointermove</code> event in combination with (left) pointer device button pressed also notifies the application of a <code>drag</code> or <code>pan</code> event, whether an underlying element is <code>hit</code> or not. See the example how to control that behavior.</p>
-<p>Callback functions registered via <code>on</code> recieve an extended event object <code>e</code>.</p>
-<div  ></div>
-<figcaption> Table 2: Event object properties </figcaption>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">Property</th>
-<th style="text-align:center">Type</th>
-<th style="text-align:left">Comment</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left"><code>type</code></td>
-<td style="text-align:center"><code>string</code></td>
-<td style="text-align:left">Event type.</td>
-</tr>
-<tr>
-<td style="text-align:left"><code>x</code>, <code>y</code></td>
-<td style="text-align:center"><code>number</code></td>
-<td style="text-align:left">Canvas coordinates with respect to upper left or lower left (<code>cartesian</code>) corner.</td>
-</tr>
-<tr>
-<td style="text-align:left"><code>dx</code>, <code>dy</code></td>
-<td style="text-align:center"><code>number</code></td>
-<td style="text-align:left">Pointer location displacement from previous position.</td>
-</tr>
-<tr>
-<td style="text-align:left"><code>xusr</code>, <code>yusr</code></td>
-<td style="text-align:center"><code>number</code></td>
-<td style="text-align:left">Coordinates with respect to user defined view origin and scaling.</td>
-</tr>
-<tr>
-<td style="text-align:left"><code>dxusr</code>, <code>dyusr</code></td>
-<td style="text-align:center"><code>number</code></td>
-<td style="text-align:left">Pointer location displacement with respect to user defined view scaling.</td>
-</tr>
-<tr>
-<td style="text-align:left"><code>btn</code></td>
-<td style="text-align:center"><code>number</code></td>
-<td style="text-align:left">Pointer device button identifier on button press<br> (left: <code>1</code>, right: <code>2</code>, middle: <code>4</code>).</td>
-</tr>
-<tr>
-<td style="text-align:left"><code>dbtn</code></td>
-<td style="text-align:center"><code>number</code></td>
-<td style="text-align:left">Pointer device button difference on button release<br> (left: <code>-1</code>, right: <code>-2</code>, middle: <code>-4</code>).</td>
-</tr>
-<tr>
-<td style="text-align:left"><code>eps</code></td>
-<td style="text-align:center"><code>number</code></td>
-<td style="text-align:left">Some pixel tolerance for selecting/hitting<br> (default = <code>5</code>).</td>
-</tr>
-<tr>
-<td style="text-align:left"><code>inside</code></td>
-<td style="text-align:center"><code>boolean</code></td>
-<td style="text-align:left">Is pointer currently inside canvas.</td>
-</tr>
-<tr>
-<td style="text-align:left"><code>delta</code></td>
-<td style="text-align:center"><code>number</code></td>
-<td style="text-align:left">Wheel delta.</td>
-</tr>
-<tr>
-<td style="text-align:left"><code>hit</code></td>
-<td style="text-align:center"><code>boolean</code></td>
-<td style="text-align:left">Needs to be set by application within <code>pointermove</code> event. Can be treated then within <code>tick</code> event.</td>
-</tr>
-</tbody>
-</table>
-<div  ></div>
-<br>
-<h2 id="4-example">4. Example</h2>
-<p>The example shows how to use <code>canvasInteractor</code>.
-Rectangles can be <code>drag</code>ged, whereas the origin symbol can not, which induces the <code>pan</code> event. <code>zoom</code>ing is done by the pointer device' wheel operation.</p>
-<p><canvas id="c" width="601" height="301" style="border:1px solid black;background-color:snow"></canvas><br>
-<span id="fps">fps: -</span> <b>|</b>
-<label><input id="cartesian" type="checkbox" onchange="interactor.view.cartesian = !interactor.view.cartesian"> cartesian</label> <b>|</b>
-<span id="zoom">zoom-scale: 1</span> <b>|</b>
-<span id="coords">pos: ./.</span> <b>|</b> <span id="state">state: -</span> <b>|</b></p>
-<div  ></div>
-<br>
-<h3 id="example-code">Example Code</h3>
-<pre><code class="code-line language-html"><div><span class="hljs-meta">&lt;!doctype <span class="hljs-keyword">html</span>&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-name">html</span>&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>canvasInteractor example<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span>
-<span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
-
-<span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>canvasInteractor example<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">canvas</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;c&quot;</span> <span class="hljs-attr">width</span>=<span class="hljs-string">&quot;601&quot;</span> <span class="hljs-attr">height</span>=<span class="hljs-string">&quot;301&quot;</span> 
-            <span class="hljs-attr">style</span>=<span class="hljs-string">&quot;border:1px solid black;background-color:snow&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">canvas</span>&gt;</span>
-
-    <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;https://cdn.jsdelivr.net/gh/goessner/canvasinteractor/canvasInteractor.js&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="language-javascript">
-    <span class="hljs-keyword">const</span> ctx = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">getElementById</span>(<span class="hljs-string">&#x27;c&#x27;</span>).<span class="hljs-title function_">getContext</span>(<span class="hljs-string">&#x27;2d&#x27;</span>);
-    <span class="hljs-keyword">const</span> interactor = canvasInteractor.<span class="hljs-title function_">create</span>(ctx, {<span class="hljs-attr">x</span>:<span class="hljs-number">200</span>,
-                                                     <span class="hljs-attr">y</span>:<span class="hljs-number">100</span>,
-                                                     <span class="hljs-attr">scl</span>:<span class="hljs-number">1</span>,
-                                                     <span class="hljs-attr">cartesian</span>:<span class="hljs-literal">true</span>});
-    <span class="hljs-keyword">const</span> rec1 = {<span class="hljs-attr">x</span>:<span class="hljs-number">50</span>,<span class="hljs-attr">y</span>:<span class="hljs-number">50</span>,<span class="hljs-attr">b</span>:<span class="hljs-number">80</span>,<span class="hljs-attr">h</span>:<span class="hljs-number">60</span>,<span class="hljs-attr">fs</span>:<span class="hljs-string">&#x27;orange&#x27;</span>,<span class="hljs-attr">lw</span>:<span class="hljs-number">4</span>};
-    <span class="hljs-keyword">const</span> rec2 = {<span class="hljs-attr">x</span>:<span class="hljs-number">150</span>,<span class="hljs-attr">y</span>:<span class="hljs-number">50</span>,<span class="hljs-attr">b</span>:<span class="hljs-number">100</span>,<span class="hljs-attr">h</span>:<span class="hljs-number">40</span>,<span class="hljs-attr">fs</span>:<span class="hljs-string">&#x27;cyan&#x27;</span>,<span class="hljs-attr">lw</span>:<span class="hljs-number">4</span>};
-
-    <span class="hljs-keyword">function</span> <span class="hljs-title function_">render</span>(<span class="hljs-params"></span>) {
-        <span class="hljs-comment">// ...</span>
-    }
-
-    <span class="hljs-keyword">function</span> <span class="hljs-title function_">hitRec</span>(<span class="hljs-params">x,y,rec</span>) {
-        <span class="hljs-keyword">return</span> (x &gt; rec.<span class="hljs-property">x</span> &amp;&amp; x &lt; rec.<span class="hljs-property">x</span> + rec.<span class="hljs-property">b</span> &amp;&amp; y &gt; rec.<span class="hljs-property">y</span> &amp;&amp; y &lt; rec.<span class="hljs-property">y</span> + rec.<span class="hljs-property">h</span>);
-    }
-    interactor
-        .<span class="hljs-title function_">on</span>(<span class="hljs-string">&#x27;tick&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
-            <span class="hljs-title function_">render</span>();
-        })
-        .<span class="hljs-title function_">on</span>(<span class="hljs-string">&#x27;pointermove&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
-            rec1.<span class="hljs-property">sel</span> = <span class="hljs-title function_">hitRec</span>(e.<span class="hljs-property">xusr</span>,e.<span class="hljs-property">yusr</span>,rec1) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>; 
-            rec2.<span class="hljs-property">sel</span> = <span class="hljs-title function_">hitRec</span>(e.<span class="hljs-property">xusr</span>,e.<span class="hljs-property">yusr</span>,rec2) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;
-            e.<span class="hljs-property">hit</span> = rec1.<span class="hljs-property">sel</span> || rec2.<span class="hljs-property">sel</span>;
-        })
-        .<span class="hljs-title function_">on</span>(<span class="hljs-string">&#x27;wheel&#x27;</span>,  <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {   <span class="hljs-comment">// zooming about pointer location ...</span>
-            interactor.<span class="hljs-property">view</span>.<span class="hljs-property">x</span> = e.<span class="hljs-property">x</span> + e.<span class="hljs-property">dscl</span>*(interactor.<span class="hljs-property">view</span>.<span class="hljs-property">x</span> - e.<span class="hljs-property">x</span>);
-            interactor.<span class="hljs-property">view</span>.<span class="hljs-property">y</span> = e.<span class="hljs-property">y</span> + e.<span class="hljs-property">dscl</span>*(interactor.<span class="hljs-property">view</span>.<span class="hljs-property">y</span> - e.<span class="hljs-property">y</span>);
-            interactor.<span class="hljs-property">view</span>.<span class="hljs-property">scl</span> *= e.<span class="hljs-property">dscl</span>;
-        })
-        .<span class="hljs-title function_">on</span>(<span class="hljs-string">&#x27;pan&#x27;</span>,  <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> { 
-            interactor.<span class="hljs-property">view</span>.<span class="hljs-property">x</span> += e.<span class="hljs-property">dx</span>; 
-            interactor.<span class="hljs-property">view</span>.<span class="hljs-property">y</span> += e.<span class="hljs-property">dy</span>;
-        })
-        .<span class="hljs-title function_">on</span>(<span class="hljs-string">&#x27;drag&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
-            <span class="hljs-keyword">if</span> (rec1.<span class="hljs-property">sel</span>) { rec1.<span class="hljs-property">x</span> += e.<span class="hljs-property">dxusr</span>; rec1.<span class="hljs-property">y</span> += e.<span class="hljs-property">dyusr</span>; }
-            <span class="hljs-keyword">if</span> (rec2.<span class="hljs-property">sel</span>) { rec2.<span class="hljs-property">x</span> += e.<span class="hljs-property">dxusr</span>; rec2.<span class="hljs-property">y</span> += e.<span class="hljs-property">dyusr</span>; }
-        })
-        .<span class="hljs-title function_">startTimer</span>();
-    </span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
-<span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
-<span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span>
-</div></code></pre>
-<div  ></div>
-<figcaption>Listing 3: canvasInteractor example.</figcaption><br>
 <h2 id="5-conclusion">5. Conclusion</h2>
-<p><code>canvasInteractor</code> is a tiny JavaScript library enhancing and extending HTML canvas' event handling for performant animation and geometrical interaction.</p>
-<p>A global event loop (singleton) based on <code>requestAnimationFrame</code> provides assistance with event throttling via its custom <code>tick</code> event. Cartesian coordinates preferred in scientific and engineering applications are supported. <em>Pan</em>, <em>drag</em> and <em>zoom</em> based on user defined origins can be done.</p>
+<p><code>ctrl-ing</code> is a lightweight HTML custom element. It helps to rapidly prototype a pleasing GUI without programming. Web-App parameters or JavaScript/JSON object values can be monitored or interactively modified.</p>
+<p><code>ctrl-ing</code> does not depend on other libraries and is meant as a tiny helper for webapplications of small to medium size.</p>
 <div  ></div>
 <br>
 <h2 id="references">References</h2>
@@ -1140,7 +1158,7 @@ D. Corbacho, Debouncing and Throttling Explained Through Examples<br>
 <span id="4">[4] S. Goessner, Make your HTML canvas Interactive,
 <a href="https://www.researchgate.net/publication/360034117_Make_your_HTML_canvas_Interactive">Researchgate, DOI: 10.13140/RG.2.2.31978.39367</a></span></p>
 <div  ></div>
-<script src="https://cdn.jsdelivr.net/npm/ctrling/ctrling.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/ctrling/ctrling.min.js"></script>
 
 </main>
 </body>

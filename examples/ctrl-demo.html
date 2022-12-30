@@ -4,6 +4,7 @@
     <meta charset='utf-8'>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>ctrl-demo</title>
+    <script src="../ctrling.js"></script>
 </head>
 <body>
     <h2>Demo</h2>
@@ -18,16 +19,16 @@
             ]
         &lt;/ctrl-ing>
     </pre>
-    <div style="display: flex; flex-wrap: nowrap; justify-content: space-between; background-color:#efefef; position:relative;">
+    <div style="display:flex; position:relative;">
         <pre id="out"></pre>
-        <ctrl-ing id="ctrlr" ref="obj" autoupdate callback="callbk">
+        <ctrl-ing id="ctrlr" ref="obj" autoupdate width="300px" callback="window['callbk']" darkmode>
             [ {"sec":"hdr","text":"Demo"},
               {"sec":"num","label":"Numbers[0]","min":1,"max":20,"step":1.00,"path":"$['numbers'][0]","unit":"[-]"},
               {"sec":"chk","label":"Toggle","path":"$['toggle']"},
               {"sec":"txt","label":"Text","path":"$['text']"},
               {"sec":"sep"},
               {"sec":"col","label":"Color","path":"$['color']"},
-              {"sec":"sel","label":"Select","options":{"solid":1,"dashed":2,"dotted":"three"},"path":"$['lineStyle']"},
+              {"sec":"sel","label":"Select","options":{"solid":1,"dashed":2,"dotted":3},"path":"$['lineStyle']"},
               {"sec":"num","label":"x","path":"$['x']","unit":"[-]"},
               {"sec":"btn","label":"show current time","text":"press","path":"window['f']"},
               {"sec":"rng","label":"slide","path":"$['slide']"},
@@ -35,7 +36,7 @@
               {"sec":"mtr","label":"Meter","path":"$['volumn']","min":20,"max":80,
               "low":45,"high":70,"optimum":30,"value":50,"unit":"m&sup2;"},
               {"sec":"out","label":"obj=","path":"$"}
-              ]
+            ]
         </ctrl-ing>
     </div>
 </body>
@@ -58,5 +59,4 @@ const obj = {
     function f() { console.log('#'); document.body.style.color = "red"; }
 //    callbk1();
 </script>
-<script src="./ctrling.js"></script>
 </html>

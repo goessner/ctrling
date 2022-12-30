@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset='utf-8'>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ctrl-tst</title>
+    <style>
+/*
+  "initial"ized variables are like undefined variables and will resolve to
+  their fallback value.
+  Whitespaced variables (the space is required) will serve as an empty value
+  in chaining.
+*/
+/*
+@media (prefers-color-scheme: dark) {
+   :root {
+    --light: ;
+    --dark: initial;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+   :root {
+    --dark: ;
+    --light: initial;
+  }
+}
+*/
+:root.dark {
+  --light: ;
+  --dark: initial;
+}
+
+:root, 
+:root.light {
+  --dark: ;
+  --light: initial;
+}
+
+#content {
+  background-color: var(--dark, darkblue) var(--light, lightblue);
+  color: var(--dark, white) var(--light, black);
+  border: 5px solid var(--dark, blue) var(--light, yellow);
+}
+</style>
+</head>
+<body>
+    <div id="content">
+        Hello, world!
+        <button id="toggle-theme">Toggle theme</button>
+      </div>
+
+<script>
+var root = document.documentElement,
+  theme = window.getComputedStyle(root)
+  .getPropertyValue('--light') === ' ' ? 'dark' : 'light';
+
+document.getElementById('toggle-theme')
+  .addEventListener('click', toggleTheme);
+
+function toggleTheme() {
+  root.classList.remove(theme);
+  theme = (theme === 'dark') ? 'light' : 'dark';
+  root.classList.add(theme);
+}
+</script>
+
+</body>
+</html>

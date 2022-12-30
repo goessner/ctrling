@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset='utf-8'>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ctrl-minimal</title>
+</head>
+<body>
+    <h2>ctrl-minimal</h2>
+    <ctrl-ing ref="obj" darkmode>
+        [ {"sec":"hdr","text":"Minimal"},
+          {"sec":"chk","label":"Check","path":"$['checked']"}
+        ]
+    </ctrl-ing>
+</body>
+<script>
+    const ctrl = document.querySelector("ctrl-ing");
+    const obj = {
+        checked: true
+    }
+</script>
+<script src="../ctrling.js"></script>
+</html>

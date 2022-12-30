@@ -42,12 +42,10 @@ const app = {
     get run() { return this._run !== undefined ? this._run : true; },
     set run(q) {
         const ctrl = document.getElementById('ctrl');
-        console.log(ctrl)
         ctrl.sections[5].disabled = !q;
         ctrl.updateSection(ctrl.sections[5], 5);
         return this._run = q; 
     },
-
     crv() {
         if (!this._crv) this._crv = [];
         this._crv.length = 0;
@@ -59,16 +57,34 @@ const app = {
         this.dirty = false;
         return this._crv;
     },
-    get g() { 
-        return this._g || 
-              (this._g = g2().view({x:200,y:200,cartesian:true})
-                             .clr()
-                             .ply({ pts:this.crv(),closed:false,lw:5,ls:()=>this.ls,fs:()=>this.fs }));
+    draw(pts) {
+        const ctx = this.ctx;
+        // clr()
+        ctx.save();
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+        ctx.restore();
+        // view()
+        ctx.setTransform(1, 0, 0, 1, ctx.canvas.width/2, ctx.canvas.height/2);
+        // ply()
+        const len = pts.length;
+        if (len > 1) {
+            let   p = pts[0];
+            ctx.beginPath();
+            ctx.moveTo(p.x,p.y);
+            for (let i = 1; i < len; i++)
+                ctx.lineTo((p = pts[i]).x, p.y);
+            ctx.closePath();
+            ctx.fillStyle = this.fs;
+            ctx.strokeStyle = this.ls;
+            ctx.lineWidth = 5;
+            ctx.fill();
+            ctx.stroke();
+        }
     },
     tick() {
         if (app.run || app.dirty)
-            app.crv();
-        app.g.exe(app.ctx);
+           app.draw(app.crv())
         requestAnimationFrame(app.tick);
     },
     modify: function mdfy() { mdfy.dirty = true; },
@@ -81,7 +97,5 @@ const app = {
 window.addEventListener('load', () => app.tick(), false);
 
 </script>
-<script src="../../g2-ng/g2.core.js"></script>
-<script src="../../g2-ng/g2.hdl.canvas.js"></script>
-<script src="../ctrling.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/ctrling/ctrling.min.js"></script>
 </html>

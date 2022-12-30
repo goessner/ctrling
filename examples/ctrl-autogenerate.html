@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset='utf-8'>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ctrl-autogenerate</title>
+</head>
+<body>
+    <h2>ctrl-autogenerate</h2>
+    <div style="display:flex; position:relative;">
+        <pre id="out"></pre>
+        <ctrl-ing ref="obj" autogenerate="src" autoupdate callback="window['callbk']" width="400px" darkmode>
+
+        </ctrl-ing>
+    </div>
+</body>
+<script>
+    const ctrl = document.querySelector("ctrl-ing");
+    const obj = {
+        checked: true,
+        _priv: false,
+        name: "january",
+        number: 42,
+        get pi() { return this._pi || 3.14; },
+        set pi(q) { return this._pi = q; }
+    }
+
+    function callbk() { document.getElementById('out').innerHTML = "obj = "+Ctrling.stringify(obj); }
+</script>
+<script src="../ctrling.js"></script>
+</html>
