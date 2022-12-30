@@ -104,9 +104,9 @@ The generated encapsulated shadow DOM structure for the `<ctrl-ing>` element in 
 
 ## 3. `<ctrl-ing>` Element
 
-The default width of the `<ctrl-ing>` menu is `200px`, which can be modified by the element's `width` attribute. Its default position is the top right corner of the HTML page. This might be fine-adjusted via `top` and `right` attributes.
+The default width of the `<ctrl-ing>` menu is `200px`, which can be modified by the element's `width` attribute. Its default position is the top right corner of its parent element's area. This might be fine-adjusted via `top` and `right` attributes.
 
-We can use multiple `<ctrl-ing>`s per page &ndash; also right aligned each. In this case the elements should be encapsulated via 
+We can use multiple `<ctrl-ing>`s per page &ndash; always right aligned each. In this case the elements should be encapsulated via 
 
 ```html
 <div style="position:relative;">
@@ -114,7 +114,7 @@ We can use multiple `<ctrl-ing>`s per page &ndash; also right aligned each. In t
 </div>
 ```
 
-If the `<ctrl-ing>` element should be positioned side-by-side with another element &ndash; which is frequently the case, the following markup might be used
+If the `<ctrl-ing>` element should be positioned side-by-side with another (to be controlled) element &ndash; which is frequently the case, the following markup might be used
 
 ```html
 <div style="display:flex; position:relative;">
@@ -132,9 +132,9 @@ Following attributes are supported:
 |`top`  | `0` | Distance relative to top edge of parent element. |
 |`right`  | `0` | Distance relative to right edge of parent element. |
 |`darkmode`  | - | Display GUI menu in dark mode. |
-|`autoupdate`  | - | Automatically update monitoring sections. |
-|`tickspersecond`  | `4` | How often updating monitoring sections per second. |
-|`callback`  | - | If present, will be called with each value change of input sections. The attribute value must obey the [JSONPath](https://ietf-wg-jsonpath.github.io/draft-ietf-jsonpath-base/draft-ietf-jsonpath-base.html#name-normalized-paths) syntax rules and might be a global function or an object method. |
+|`autoupdate`  | - | Automatically update monitoring and input sections. |
+|`tickspersecond`  | `4` | How often to update sections per second. |
+|`callback`  | - | If present, will be called with each user value change by input sections. The attribute value must obey the [JSONPath](https://ietf-wg-jsonpath.github.io/draft-ietf-jsonpath-base/draft-ietf-jsonpath-base.html#name-normalized-paths) syntax rules and might be a global function or a static object method. |
 
 The `callback` function or method will be handed over an argument object with the structure
 
@@ -147,6 +147,7 @@ args = {
     elem     // the current html <section> element.
 }
 ```
+Please note, that during a single initial call of the `callback` function an empty `args` object will be passed as an argument.
 
 ## 4. JSON Sections Overview
 

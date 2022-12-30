@@ -38,7 +38,8 @@ class Ctrling extends HTMLElement {
     disconnectedCallback() {
         for (const sec of this.#sections)
             this.#removeListeners(sec);
-        window.clearInterval(this.#timer);
+        if (this.#timer)
+            window.clearInterval(this.#timer);
     }
     attributeChangedCallback(name, oldval, val) {
         if (name === 'ref' && this.#initialized) {
@@ -194,7 +195,7 @@ class Ctrling extends HTMLElement {
               : value;
         obj[member] = value;
         if (this.#usrValueCallback !== undefined)
-            this.#usrValueCallback({obj, member, value:obj[member], section, elem});
+            this.#usrValueCallback({obj, member, value, section, elem});
 
         return value;
     }
@@ -301,7 +302,7 @@ class Ctrling extends HTMLElement {
         const value = this.#getRefValue(obj, member, (args.value || "#000000"));
         elem.innerHTML = `${args.label||'&nbsp;'}<span><input type="color" value="${value}"${!!args.disabled ? " disabled" : ""}><output>${value}</output></span>`;
         const input = elem.querySelector('input');
-        this.#addListeners(args, [{type:"input", elem:input, hdl:(e) => { this.#setRefValue(obj, member, e.target.value, args, elem); Ctrling.updateNextSibling(e); }}]);
+        this.#addListeners(args, [{type:"input", elem:input, hdl:(e) => { input.nextSibling.innerHTML = this.#setRefValue(obj, member, e.target.value, args, elem) }}]);
         args._upd = () => { input.nextSibling.innerHTML = input.value = this.#getRefValue(obj, member, "#000000"); };
         return elem;
     }
@@ -544,7 +545,7 @@ main > section.rng input {
     width: 7em;
 }
 main > section.vec input {
-    width: 24%;
+    width: 23%;
 }
 main > section.vec > span {
     display: flex;

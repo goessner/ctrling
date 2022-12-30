@@ -142,13 +142,13 @@
 <span class="hljs-tag">&lt;/<span class="hljs-name">main</span>&gt;</span>
 </div></code></pre>
 <h2 id="3-ctrl-ing-element">3. <code>&lt;ctrl-ing&gt;</code> Element</h2>
-<p>The default width of the <code>&lt;ctrl-ing&gt;</code> menu is <code>200px</code>, which can be modified by the element's <code>width</code> attribute. Its default position is the top right corner of the HTML page. This might be fine-adjusted via <code>top</code> and <code>right</code> attributes.</p>
-<p>We can use multiple <code>&lt;ctrl-ing&gt;</code>s per page – also right aligned each. In this case the elements should be encapsulated via</p>
+<p>The default width of the <code>&lt;ctrl-ing&gt;</code> menu is <code>200px</code>, which can be modified by the element's <code>width</code> attribute. Its default position is the top right corner of its parent element's area. This might be fine-adjusted via <code>top</code> and <code>right</code> attributes.</p>
+<p>We can use multiple <code>&lt;ctrl-ing&gt;</code>s per page – always right aligned each. In this case the elements should be encapsulated via</p>
 <pre><code class="code-line language-html"><div><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">style</span>=<span class="hljs-string">&quot;position:relative;&quot;</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-name">ctrl-ing</span>&gt;</span>...<span class="hljs-tag">&lt;/<span class="hljs-name">ctrl-ing</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
 </div></code></pre>
-<p>If the <code>&lt;ctrl-ing&gt;</code> element should be positioned side-by-side with another element – which is frequently the case, the following markup might be used</p>
+<p>If the <code>&lt;ctrl-ing&gt;</code> element should be positioned side-by-side with another (to be controlled) element – which is frequently the case, the following markup might be used</p>
 <pre><code class="code-line language-html"><div><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">style</span>=<span class="hljs-string">&quot;display:flex; position:relative;&quot;</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>...<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-name">ctrl-ing</span>&gt;</span>...<span class="hljs-tag">&lt;/<span class="hljs-name">ctrl-ing</span>&gt;</span>
@@ -198,26 +198,31 @@
 <tr>
 <td style="text-align:center"><code>darkmode</code></td>
 <td style="text-align:center">-</td>
-<td style="text-align:left">Display GUI menu in dark mode.</td>
+<td style="text-align:left">Display GUI menu in dark mode (default: light).</td>
 </tr>
 <tr>
 <td style="text-align:center"><code>autoupdate</code></td>
 <td style="text-align:center">-</td>
-<td style="text-align:left">Automatically update monitoring sections.</td>
+<td style="text-align:left">Automatically update monitoring and input sections.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>autogenerate</code></td>
+<td style="text-align:center">-</td>
+<td style="text-align:left">Automatically generate a prototype menu from the object given by <code>ref</code> attribute.</td>
 </tr>
 <tr>
 <td style="text-align:center"><code>tickspersecond</code></td>
 <td style="text-align:center"><code>4</code></td>
-<td style="text-align:left">How often updating monitoring sections per second.</td>
+<td style="text-align:left">How often to update sections per second.</td>
 </tr>
 <tr>
 <td style="text-align:center"><code>callback</code></td>
 <td style="text-align:center">-</td>
-<td style="text-align:left">If present, will be called with each value change of input sections. The attribute value must obey the syntax rules of paths and might point to a global function or an object method.</td>
+<td style="text-align:left">If present, will be called with each user value change by input sections. The attribute value must obey the <a href="https://ietf-wg-jsonpath.github.io/draft-ietf-jsonpath-base/draft-ietf-jsonpath-base.html#name-normalized-paths">JSONPath</a> syntax rules and might be a global function or a static object method.</td>
 </tr>
 </tbody>
 </table>
-<p>On invocation the <code>callback</code> function or method will be handed over an argument object with the structure</p>
+<p>The <code>callback</code> function or method will be handed over an argument object with the structure</p>
 <pre><code class="code-line language-js"><div>args = {
     obj,     <span class="hljs-comment">// parent object holding the member, whose value is to be set.</span>
     member,  <span class="hljs-comment">// the member name, whose value is to be set.</span>
@@ -226,6 +231,7 @@
     elem     <span class="hljs-comment">// the current html &lt;section&gt; element.</span>
 }
 </div></code></pre>
+<p>Please note, that during a single initial call of the <code>callback</code> function an empty <code>args</code> object will be passed as an argument.</p>
 <h2 id="4-sections-reference">4. Sections Reference</h2>
 <p>For each section in the JSON content of the <code>&lt;ctrl-ing&gt;</code> element there is a HTML <code>&lt;section&gt;</code> element containing either plain visually structuring, data monitoring or interactive form elements. Here is an overview of the twelve different section types.</p>
 <table>
