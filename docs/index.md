@@ -156,7 +156,7 @@ If the `<ctrl-ing>` element should be positioned side-by-side with another (to b
 </div>
 ```
 
-The connection from `<ctrl-ing>` element and its content to application parameter values is established via element attributes and section members representing paths pointing into an application object. These path strings MUST start with one of
+The connection from the `<ctrl-ing>` element and its content to application parameter values is established via element attributes and section members representing paths pointing into an application object. These path strings MUST start with one of
 
 * `globalThis` or `window`
 * the root identifier `$`, referencing an application object name indicated by the `<ctrl-ing>` element's `ref` attribute.
@@ -713,7 +713,7 @@ Please note that multiline text is not supported.
 </ctrl-ing>
 ```
 
-<div style="display: flex; flex-wrap: nowrap; justify-content: space-between; position:relative;font-size:0.8em;background-color:#efefef;">
+<div style="display:flex; position:relative; font-size:0.8em;">
 <pre id="outtxt"></pre>
 <ctrl-ing ref="txt" callback="window['cbtxt']">
   [ {"sec":"hdr","text":"Text"},
@@ -817,7 +817,41 @@ Size of the input fields might be controlled by `width` member accepting CSS uni
 |`[unit]`  | - | Unit string.  |
 |`[disabled]`  | - | Disabled input fields.  |
 
-## 5. Conclusion
+## 5. API
+
+The `<ctrl-ing>` menu's internals are hidden behind the shadow DOM. For offering programmatical access an API is provided.
+
+```html
+<ctrl-ing id="ctrl"></ctrl-ing>
+<script>
+  const obj = {
+    chk: true,
+    num: 246,
+    str: 'hello'
+  }
+
+  const ctrl = document.getElementById('ctrl');
+  ctrl.oninit(() => {
+    ctrl.setAttr('ref', 'obj')
+        .setAttr('darkmode')
+        .addSection({"sec":"hdr","text":"API-Test"})
+        .addSection({"sec":"chk","label":"chk","path":"$['chok']"})  // intentional wrong path
+        .addSection({"sec":"num","label":"num","path":"$['num']"})
+        .addSection({"sec":"out","label":"obj=","path":"$"})
+        .removeSection(3)
+        .insertSection(2, {"sec":"txt","label":"str","path":"$['str']"})
+        .replaceSection(2, {"sec":"chk","label":"chk","path":"$['chk']"}) // correcting path
+  })
+</script>
+
+```
+
+
+A `<ctrl-ing>` menu can be completely built by few HTML/JSON text. Accessing its HTML element via JavaScript can be done via well known DOM methods. Accessing the hidden shadow DOM sections is not possible though. For enabling programmatical access to the internal menu structure, an API can be used.
+
+
+
+## 6. Conclusion
 
 `ctrl-ing` is a lightweight HTML custom element. It helps to rapidly prototype a pleasing GUI without programming. Web-App parameters or JavaScript/JSON object values can be monitored or interactively modified.
 
