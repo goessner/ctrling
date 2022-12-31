@@ -154,7 +154,7 @@
     <span class="hljs-tag">&lt;<span class="hljs-name">ctrl-ing</span>&gt;</span>...<span class="hljs-tag">&lt;/<span class="hljs-name">ctrl-ing</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
 </div></code></pre>
-<p>The connection from <code>&lt;ctrl-ing&gt;</code> element and its content to application parameter values is established via element attributes and section members representing paths pointing into an application object. These path strings MUST start with one of</p>
+<p>The connection from the <code>&lt;ctrl-ing&gt;</code> element and its content to application parameter values is established via element attributes and section members representing paths pointing into an application object. These path strings MUST start with one of</p>
 <ul>
 <li><code>globalThis</code> or <code>window</code></li>
 <li>the root identifier <code>$</code>, referencing an application object name indicated by the <code>&lt;ctrl-ing&gt;</code> element's <code>ref</code> attribute.</li>
@@ -1004,7 +1004,7 @@ Then object member names are displayed in the drop down menu and member values a
 &lt;/ctrl-ing&gt;
 </div></code></pre>
 <div  ></div>
-<div style="display: flex; flex-wrap: nowrap; justify-content: space-between; position:relative;font-size:0.8em;background-color:#efefef;">
+<div style="display:flex; position:relative; font-size:0.8em;">
 <pre id="outtxt"></pre>
 <ctrl-ing ref="txt" callback="window['cbtxt']">
   [ {"sec":"hdr","text":"Text"},
@@ -1149,9 +1149,35 @@ Then object member names are displayed in the drop down menu and member values a
 </tr>
 </tbody>
 </table>
-<h2 id="5-conclusion">5. Conclusion</h2>
+<h2 id="5-api">5. API</h2>
+<p>The <code>&lt;ctrl-ing&gt;</code> menu's internals are hidden behind the shadow DOM. For offering programmatical access an API is provided.</p>
+<pre><code class="code-line language-html"><div><span class="hljs-tag">&lt;<span class="hljs-name">ctrl-ing</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;ctrl&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">ctrl-ing</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="language-javascript">
+  <span class="hljs-keyword">const</span> obj = {
+    <span class="hljs-attr">chk</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">num</span>: <span class="hljs-number">246</span>,
+    <span class="hljs-attr">str</span>: <span class="hljs-string">&#x27;hello&#x27;</span>
+  }
+
+  <span class="hljs-keyword">const</span> ctrl = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">getElementById</span>(<span class="hljs-string">&#x27;ctrl&#x27;</span>);
+  ctrl.<span class="hljs-title function_">oninit</span>(<span class="hljs-function">() =&gt;</span> {
+    ctrl.<span class="hljs-title function_">setAttr</span>(<span class="hljs-string">&#x27;ref&#x27;</span>, <span class="hljs-string">&#x27;obj&#x27;</span>)
+        .<span class="hljs-title function_">setAttr</span>(<span class="hljs-string">&#x27;darkmode&#x27;</span>)
+        .<span class="hljs-title function_">addSection</span>({<span class="hljs-string">&quot;sec&quot;</span>:<span class="hljs-string">&quot;hdr&quot;</span>,<span class="hljs-string">&quot;text&quot;</span>:<span class="hljs-string">&quot;API-Test&quot;</span>})
+        .<span class="hljs-title function_">addSection</span>({<span class="hljs-string">&quot;sec&quot;</span>:<span class="hljs-string">&quot;chk&quot;</span>,<span class="hljs-string">&quot;label&quot;</span>:<span class="hljs-string">&quot;chk&quot;</span>,<span class="hljs-string">&quot;path&quot;</span>:<span class="hljs-string">&quot;$[&#x27;chok&#x27;]&quot;</span>})  <span class="hljs-comment">// intentional wrong path</span>
+        .<span class="hljs-title function_">addSection</span>({<span class="hljs-string">&quot;sec&quot;</span>:<span class="hljs-string">&quot;num&quot;</span>,<span class="hljs-string">&quot;label&quot;</span>:<span class="hljs-string">&quot;num&quot;</span>,<span class="hljs-string">&quot;path&quot;</span>:<span class="hljs-string">&quot;$[&#x27;num&#x27;]&quot;</span>})
+        .<span class="hljs-title function_">addSection</span>({<span class="hljs-string">&quot;sec&quot;</span>:<span class="hljs-string">&quot;out&quot;</span>,<span class="hljs-string">&quot;label&quot;</span>:<span class="hljs-string">&quot;obj=&quot;</span>,<span class="hljs-string">&quot;path&quot;</span>:<span class="hljs-string">&quot;$&quot;</span>})
+        .<span class="hljs-title function_">removeSection</span>(<span class="hljs-number">3</span>)
+        .<span class="hljs-title function_">insertSection</span>(<span class="hljs-number">2</span>, {<span class="hljs-string">&quot;sec&quot;</span>:<span class="hljs-string">&quot;txt&quot;</span>,<span class="hljs-string">&quot;label&quot;</span>:<span class="hljs-string">&quot;str&quot;</span>,<span class="hljs-string">&quot;path&quot;</span>:<span class="hljs-string">&quot;$[&#x27;str&#x27;]&quot;</span>})
+        .<span class="hljs-title function_">replaceSection</span>(<span class="hljs-number">2</span>, {<span class="hljs-string">&quot;sec&quot;</span>:<span class="hljs-string">&quot;chk&quot;</span>,<span class="hljs-string">&quot;label&quot;</span>:<span class="hljs-string">&quot;chk&quot;</span>,<span class="hljs-string">&quot;path&quot;</span>:<span class="hljs-string">&quot;$[&#x27;chk&#x27;]&quot;</span>}) <span class="hljs-comment">// correcting path</span>
+  })
+</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+
+</div></code></pre>
+<p>A <code>&lt;ctrl-ing&gt;</code> menu can be completely built by few HTML/JSON text. Accessing its HTML element via JavaScript can be done via well known DOM methods. Accessing the hidden shadow DOM sections is not possible though. For enabling programmatical access to the internal menu structure, an API can be used.</p>
+<h2 id="6-conclusion">6. Conclusion</h2>
 <p><code>ctrl-ing</code> is a lightweight HTML custom element. It helps to rapidly prototype a pleasing GUI without programming. Web-App parameters or JavaScript/JSON object values can be monitored or interactively modified.</p>
-<p><code>ctrl-ing</code> does not depend on other libraries and is meant as a tiny helper for webapplications of small to medium size.</p>
+<p><code>ctrl-ing</code> does not depend on other libraries and is meant as a helper for webapplications of small to medium size.</p>
 <div  ></div>
 <br>
 <h2 id="references">References</h2>

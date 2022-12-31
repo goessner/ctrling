@@ -6,40 +6,26 @@
     <script src="../ctrling.js"></script>
 </head>
 <body>
-    <h2>ctrl-api</h2>
-    <div style="display:flex; position:relative;">
-        <pre id="out"></pre>
-        <ctrl-ing id="ctrl">
-            [ {"sec":"hdr","text":"API"}]
-        </ctrl-ing>
-    </div>
+    <ctrl-ing id="ctrl"></ctrl-ing>
     <script>
         const obj = {
-            toggle: true,
-            number: 246,
+            chk: true,
+            num: 246,
             str: 'hello'
         }
 
         const ctrl = document.getElementById('ctrl');
-        ctrl.oninit(() => {
-            ctrl.setAttr('ref', 'obj')
-                .setAttr('autoupdate', true)
-                .setAttr('darkmode', '')
-                .setAttr('top', '1em')
-                .setAttr('right', '2em')
-                .setAttr('width', '400px')
-                .setAttr('callback', "window['callbk']")
-                .addSection({"sec":"hdr","text":"API-Test"})
-                .addSection({"sec":"chk","label":"Toggle","path":"$['tiggle']"})  // intentional wrong path
-                .addSection({"sec":"num","label":"number","path":"$['number']"})
+        ctrl.oninit(() => {                                                      // (1)
+            ctrl.setAttr('ref', 'obj')                                           // (2)
+                .setAttr('darkmode')
+                .addSection({"sec":"hdr","text":"API-Test"})                     // (3)
+                .addSection({"sec":"chk","label":"chk","path":"$['chok']"})      // (4)
+                .addSection({"sec":"num","label":"num","path":"$['num']"})
                 .addSection({"sec":"out","label":"obj=","path":"$"})
-                .removeSection(3)
-                .insertSection(2, {"sec":"txt","label":"string","path":"$['str']"})
-                .replaceSection(2, {"sec":"chk","label":"Toggle","path":"$['toggle']"}) // correcting path
-                .removeAttr('darkmode')
+                .removeSection(3)                                                // (5)
+                .insertSection(2, {"sec":"txt","label":"str","path":"$['str']"})
+                .updateSection(2, {"sec":"chk","label":"chk","path":"$['chk']"}) // (6)
         })
-        
-        function callbk() { document.getElementById('out').innerHTML = "obj = "+Ctrling.stringify(obj); }
     </script>
     </body>
 </html>

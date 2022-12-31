@@ -85,7 +85,9 @@ class Ctrling extends HTMLElement {
             const [obj, member] = this.#getRef(val);
             const prop = obj && member && Object.getOwnPropertyDescriptor(obj, member);
             if (prop !== undefined  && "value" in prop && typeof obj[member] === 'function')
-                this.#usrValueCallback = obj[member];
+                this.#usrValueCallback = obj === globalThis 
+                                       ? obj[member]
+                                       : obj[member].bind(obj);
         }
         else if (name === 'tickspersecond') {
             const tps = +val;
@@ -129,7 +131,7 @@ class Ctrling extends HTMLElement {
         this.#main.style.width = this.offsetWidth + 'px';  // fill up to width of :host ... !
     
         if (this.#usrValueCallback)
-            this.#usrValueCallback({});  // call initially once with empty arguments object ...
+            this.#usrValueCallback({ctrl:this});  // call initially once with empty arguments object ...
     }
 
     #sectionsFromJSON(content) {
@@ -195,7 +197,7 @@ class Ctrling extends HTMLElement {
               : value;
         obj[member] = value;
         if (this.#usrValueCallback !== undefined)
-            this.#usrValueCallback({obj, member, value, section, elem});
+            this.#usrValueCallback({ctrl:this, obj, member, value, section, elem});
 
         return value;
     }
@@ -222,6 +224,7 @@ class Ctrling extends HTMLElement {
         return undefined;
     }
 
+    // API
     oninit(fn) {
         this.#oninit = fn;
     }
@@ -266,18 +269,23 @@ class Ctrling extends HTMLElement {
         }
         return this;
     }
-    replaceSection(idx, args) {
+    updateSection(idx, args) {
         if (idx >= 0) {
+            if (args !== undefined) {
+                this.#removeListeners(this.#sections[idx]);
+                this.#sections.splice(idx,1,args);
+            }
+            else
+                args = this.#sections[idx];
+
             const secElem = this.#newHtmlSection(args);
             if (secElem) {
-                this.#removeListeners(this.#sections[idx]);
                 this.#main.getElementsByTagName('section')[idx]?.replaceWith(secElem);
-                this.#sections.splice(idx,1,args);
             }
         }
         return this;
     }
-    updateControls() {
+    updateControlValues() {
         for (const sec of this.#sections)
             if (sec._upd)
                 sec._upd();
@@ -354,7 +362,7 @@ class Ctrling extends HTMLElement {
             const [obj, member] = this.#getRef(args.path);
             const prop = obj && member && Object.getOwnPropertyDescriptor(obj, member);
             if (prop !== undefined  && "value" in prop && typeof obj[member] === 'function') {
-                this.#addListeners(args, [{type:"click", elem:elem.querySelector('button'), hdl:obj[member]}]);
+                this.#addListeners(args, [{type:"click", elem:elem.querySelector('button'), hdl:(obj === globalThis ? obj[member] : obj[member].bind(obj))}]);
             }
         }
         return elem;
@@ -435,7 +443,7 @@ class Ctrling extends HTMLElement {
 
     --dark-col-1: #fff;
     --dark-col-2: #eee;
-    --dark-col-3: #777;
+    --dark-col-3: #bbb;
 
     --lite-bkg-1: #dadada;
     --lite-bkg-2: #efefef;
@@ -443,7 +451,7 @@ class Ctrling extends HTMLElement {
 
     --lite-col-1: #444;
     --lite-col-2: #222;
-    --lite-col-3: #c6c6c6;
+    --lite-col-3: #777;
 
     --bkg-1: var(--lite-bkg-1);
     --bkg-2: var(--lite-bkg-2);
@@ -512,7 +520,7 @@ main > section > span {
     align-items: center;
     gap: 0.1em;
 }
-main > section input:hover {
+main > section input:not([disabled]):hover {
     background-color: var(--bkg-3);
 }
 main > section input:focus-visible {
@@ -523,6 +531,7 @@ main > section input {
     background-color: var(--bkg-2);
     color: var(--col-1);
     border: none;
+    font-family: monospace;
 }
 main > section output {
     background-color: var(--bkg-1);
@@ -568,6 +577,10 @@ main > section.rng output {
 main > section.sep > hr {
     color: var(--bkg-3);
     width: 90%;
+}
+main > section input:disabled {
+    background-color: var(--bkg-1);
+    color: var(--col-3);
 }
 </style>
 <main></main>`
