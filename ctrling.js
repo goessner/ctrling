@@ -197,8 +197,9 @@ class Ctrling extends HTMLElement {
               : value;
         obj[member] = value;
         if (this.#usrValueCallback !== undefined) {
-            console.log({ctrl:this, obj, member, value, section, elem})
-            this.#usrValueCallback({ctrl:this, obj, member, value, section, elem});
+            const that = this;
+            console.log({ctrl:that, obj, member, value, section, elem})
+            this.#usrValueCallback({ctrl:that, obj, member, value, section, elem});
         }
 
         return value;

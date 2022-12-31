@@ -7,7 +7,7 @@
 </head>
 <body>
     <h2>ctrl-self</h2>
-    <ctrl-ing id="ctrl" ref="obj" callback="$['callbk']">
+    <ctrl-ing id="ctrlr" ref="obj" callback="$['callbk']">
         [ {"sec":"hdr","text":"Self-Control"},
           {"sec":"chk","label":"Disable str","path":"$['disable']"},
           {"sec":"txt","label":"str","path":"$['str']"},
@@ -16,7 +16,7 @@
     </ctrl-ing>
 </body>
 <script>
-    document.getElementById('ctrl');
+    document.getElementById('ctrlr');
     const obj = {
         disable: false,
         str: "Hello",
