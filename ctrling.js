@@ -196,8 +196,10 @@ class Ctrling extends HTMLElement {
               : !Number.isNaN(+value) ? +value
               : value;
         obj[member] = value;
-        if (this.#usrValueCallback !== undefined)
+        if (this.#usrValueCallback !== undefined) {
+            console.log({ctrl:this, obj, member, value, section, elem})
             this.#usrValueCallback({ctrl:this, obj, member, value, section, elem});
+        }
 
         return value;
     }
