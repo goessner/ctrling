@@ -134,6 +134,7 @@ The generated encapsulated shadow DOM structure for the `<ctrl-ing>` element in 
     </section>
 </main>
 ```
+<figcaption>Listing 3: Internal DOM structure of the <code>ctrl-ing</code> element.</figcaption><br>
 
 ## 3. `<ctrl-ing>` Element
 
@@ -182,6 +183,8 @@ For an `<ctrl-ing>` element following optional attributes are supported:
 |`tickspersecond`  | `4` | How often to update sections per second. |
 |`callback`  | - | If present, will be called with each user value change by input sections. The attribute value must obey the [JSONPath](https://ietf-wg-jsonpath.github.io/draft-ietf-jsonpath-base/draft-ietf-jsonpath-base.html#name-normalized-paths) syntax rules and might be a global function or a static object method. |
 
+<figcaption>Table 1: Supported <code>ctrl-ing</code> attributes.</figcaption><br>
+
 The `callback` function or method will be handed over an argument object with the structure
 
 ```js
@@ -213,6 +216,8 @@ For each section in the JSON content of the `<ctrl-ing>` element there is a HTML
 |[`sep`](#410-separator)  | `<hr>` | Display a separating line for menu structuring. |
 |[`txt`](#411-text)  | `<input type="text">` | Display an input field for entering a textual parameter value. |
 |[`vec`](#412-vector)  | multiple<br>`<input type="text">` | Display a set of input fields for entering multiple related data values. |
+
+<figcaption>Table 2: Available section types.</figcaption><br>
 
 ### 4.1 Button
 
@@ -816,10 +821,11 @@ Size of the input fields might be controlled by `width` member accepting CSS uni
 |`[width]`  | 24% | Input fields width in CSS units.  |
 |`[unit]`  | - | Unit string.  |
 |`[disabled]`  | - | Disabled input fields.  |
+<br>
 
 ## 5. API
 
-The `<ctrl-ing>` menu's internals are hidden behind the shadow DOM. For offering programmatical access an API is provided.
+The `<ctrl-ing>` menu's internals are hidden behind the shadow DOM. For offering programmatical access to these internals, an API is provided. Here is an example.
 
 ```html
 <ctrl-ing id="ctrl"></ctrl-ing>
@@ -830,30 +836,105 @@ The `<ctrl-ing>` menu's internals are hidden behind the shadow DOM. For offering
     str: 'hello'
   }
 
-  const ctrl = document.getElementById('ctrl');
-  ctrl.oninit(() => {
-    ctrl.setAttr('ref', 'obj')
+  document.getElementById('ctrl').oninit((ctrl) => {                        // (1)
+    ctrl.setAttr('ref', 'obj')                                              // (2)
         .setAttr('darkmode')
-        .addSection({"sec":"hdr","text":"API-Test"})
-        .addSection({"sec":"chk","label":"chk","path":"$['chok']"})  // intentional wrong path
+        .setAttr('autoupdate')
+        .addSection({"sec":"hdr","text":"API-Test"})                        // (3)
+        .addSection({"sec":"chk","label":"chk","path":"$['chok']"})         // (4)
         .addSection({"sec":"num","label":"num","path":"$['num']"})
         .addSection({"sec":"out","label":"obj=","path":"$"})
-        .removeSection(3)
-        .insertSection(2, {"sec":"txt","label":"str","path":"$['str']"})
-        .replaceSection(2, {"sec":"chk","label":"chk","path":"$['chk']"}) // correcting path
+        .insertSection(2, {"sec":"txt","label":"str","path":"$['str']"})    // (5)
+        .updateSection(1, {"sec":"chk","label":"chk","path":"$['chk']"})    // (6)
+        .removeSection(2)                                                   // (7)
   })
 </script>
+```
+<figcaption>Listing 4: Control menu generation via API calls.</figcaption><br>
 
+Comments to the line numbers:
+
+1. The API works properly at the earliest, after the `<ctrl-ing>` element is completely initialized. In order to ensure this, we need to encapsulate the API method calls in a callback function `oninit((ctrl) => { ... })`. The callback function recieves the `<ctrl-ing>` element object as a single argument.
+2. The `setAttr` method is merely syntactic sugar for native `setAttribute` method. It additionally supports chaining of method calls only.
+3. `addSection` methods are used to sequentially build the control menu. They get a single object literal argument representing a section.
+4. Note the intentional typo with the `path` value. That will be corrected in (6).
+5. `insertSection` method inserts a new section after section with current index `2`, i.e. `{"sec":"num",...}`.
+6. `updateSection` method corrects the typo in line (4) and updates section with current index `1`, i.e. `{"sec":"chk",...}`.
+7. `removeSection` method removes the section with current index `2`, i.e. `{"sec":"num",...}`.
+
+**Properties**
+| Method | Returns | Comment |
+|:--|:--|:--|
+|`addSection(sec)` | `this` | Append a new section object `sec` to the sections array.  |
+|`findSectionIndex(fn)` | index | Locate the first section in the sections array, that fulfills the condition given by function `fn`. Returns the array index found or `-1` on failure. The condition function receives the current section during iteration as argument. |
+|`insertSection(idx,sec)` | `this` | Insert a new section object `sec` to the sections array after the section at index `idx`.  |
+|`oninit(fn)` | - | Invoking a callback function `fn`, while ensuring that the control menu object is completely initialized.  |
+|`removeAttr(attr)` | `this` | Remove `<ctrl-ing>`'s attribute `attr`.  |
+|`removeSection(idx)` | `this` | Remove the section at index `idx`. |
+|`setAttr(attr,value)` | `this` | Set `<ctrl-ing>`'s attribute `attr` to value `value`.  |
+|`section(idx)` | section | Select a section from the sections array by index `idx`.  |
+|`updateControlValues()` | `this` | When the `autoupdate` attribute is not set, this method might be used to programmatically update current values in the control elements instead. |
+|`updateSection(idx,sec)` | `this` | If `sec` is present, current section at index `idx` will be replaced by `sec`, otherwise current section is assumed to be modified and stays in place. The shadow DOM is getting updated hereafter. |
+
+<figcaption>Table 3: API Methods.</figcaption><br>
+
+### 5.1 Self-Control
+
+API methods may be used to modify the `<ctrl-ing>` menu itself. This is shown by a tiny example.
+
+
+```json
+<ctrl-ing id="ctrlslf" ref="obj" callback="$['callbk']">
+  [ {"sec":"hdr","text":"Self-Control"},
+    {"sec":"chk","label":"Disable str","path":"$['disable']"},
+    {"sec":"txt","label":"str","path":"$['str']"}
+  ]
+</ctrl-ing>
 ```
 
+<div style="display:flex; position:relative; font-size:0.8em;">
 
-A `<ctrl-ing>` menu can be completely built by few HTML/JSON text. Accessing its HTML element via JavaScript can be done via well known DOM methods. Accessing the hidden shadow DOM sections is not possible though. For enabling programmatical access to the internal menu structure, an API can be used.
+```js
+document.getElementById('ctrlslf');
+const objslf = {
+    disable: false,
+    str: "Hello",
+    callbk({ctrl, obj, member, value, section, elem}) {
+        if (member === 'disable') {
+            ctrl.section(2).disabled = value;
+            ctrl.updateSection(2);
+        }
+    }
+}
+```
 
-
+  <ctrl-ing id="ctrlslf" ref="objslf" callback="$['callbk']">
+    [ {"sec":"hdr","text":"Self-Control"},
+      {"sec":"chk","label":"Disable str","path":"$['disable']"},
+      {"sec":"txt","label":"str","path":"$['str']"}
+    ]
+  </ctrl-ing>
+</div>
+<script>
+    const ctrl = document.getElementById('ctrl');
+    const obj = {
+        disable: false,
+        str: "Hello",
+        callbk({ctrl,obj, member, value, section, elem}) {
+            if (member === 'disable') {
+                ctrl.section(2).disabled = value;
+                ctrl.updateSection(2);
+                console.log(this.str);
+            }
+        }
+    }
+</script>
 
 ## 6. Conclusion
 
 `ctrl-ing` is a lightweight HTML custom element. It helps to rapidly prototype a pleasing GUI without programming. Web-App parameters or JavaScript/JSON object values can be monitored or interactively modified.
+
+A `<ctrl-ing>` menu can be built by few HTML/JSON text alone. Accessing its HTML element via JavaScript can be done via well known DOM methods. Accessing the hidden shadow DOM sections is not possible though. For enabling programmatical access to the internal menu structure, an API is provided.
 
 `ctrl-ing` does not depend on other libraries and is meant as a helper for webapplications of small to medium size.
 

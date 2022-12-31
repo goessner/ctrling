@@ -1159,21 +1159,30 @@ Then object member names are displayed in the drop down menu and member values a
     <span class="hljs-attr">str</span>: <span class="hljs-string">&#x27;hello&#x27;</span>
   }
 
-  <span class="hljs-keyword">const</span> ctrl = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">getElementById</span>(<span class="hljs-string">&#x27;ctrl&#x27;</span>);
-  ctrl.<span class="hljs-title function_">oninit</span>(<span class="hljs-function">() =&gt;</span> {
-    ctrl.<span class="hljs-title function_">setAttr</span>(<span class="hljs-string">&#x27;ref&#x27;</span>, <span class="hljs-string">&#x27;obj&#x27;</span>)
+  <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">getElementById</span>(<span class="hljs-string">&#x27;ctrl&#x27;</span>).<span class="hljs-title function_">oninit</span>(<span class="hljs-function">(<span class="hljs-params">ctrl</span>) =&gt;</span> {                        <span class="hljs-comment">// (1)</span>
+    ctrl.<span class="hljs-title function_">setAttr</span>(<span class="hljs-string">&#x27;ref&#x27;</span>, <span class="hljs-string">&#x27;obj&#x27;</span>)                                              <span class="hljs-comment">// (2)</span>
         .<span class="hljs-title function_">setAttr</span>(<span class="hljs-string">&#x27;darkmode&#x27;</span>)
-        .<span class="hljs-title function_">addSection</span>({<span class="hljs-string">&quot;sec&quot;</span>:<span class="hljs-string">&quot;hdr&quot;</span>,<span class="hljs-string">&quot;text&quot;</span>:<span class="hljs-string">&quot;API-Test&quot;</span>})
-        .<span class="hljs-title function_">addSection</span>({<span class="hljs-string">&quot;sec&quot;</span>:<span class="hljs-string">&quot;chk&quot;</span>,<span class="hljs-string">&quot;label&quot;</span>:<span class="hljs-string">&quot;chk&quot;</span>,<span class="hljs-string">&quot;path&quot;</span>:<span class="hljs-string">&quot;$[&#x27;chok&#x27;]&quot;</span>})  <span class="hljs-comment">// intentional wrong path</span>
+        .<span class="hljs-title function_">setAttr</span>(<span class="hljs-string">&#x27;autoupdate&#x27;</span>)
+        .<span class="hljs-title function_">addSection</span>({<span class="hljs-string">&quot;sec&quot;</span>:<span class="hljs-string">&quot;hdr&quot;</span>,<span class="hljs-string">&quot;text&quot;</span>:<span class="hljs-string">&quot;API-Test&quot;</span>})                        <span class="hljs-comment">// (3)</span>
+        .<span class="hljs-title function_">addSection</span>({<span class="hljs-string">&quot;sec&quot;</span>:<span class="hljs-string">&quot;chk&quot;</span>,<span class="hljs-string">&quot;label&quot;</span>:<span class="hljs-string">&quot;chk&quot;</span>,<span class="hljs-string">&quot;path&quot;</span>:<span class="hljs-string">&quot;$[&#x27;chok&#x27;]&quot;</span>})         <span class="hljs-comment">// (4)</span>
         .<span class="hljs-title function_">addSection</span>({<span class="hljs-string">&quot;sec&quot;</span>:<span class="hljs-string">&quot;num&quot;</span>,<span class="hljs-string">&quot;label&quot;</span>:<span class="hljs-string">&quot;num&quot;</span>,<span class="hljs-string">&quot;path&quot;</span>:<span class="hljs-string">&quot;$[&#x27;num&#x27;]&quot;</span>})
         .<span class="hljs-title function_">addSection</span>({<span class="hljs-string">&quot;sec&quot;</span>:<span class="hljs-string">&quot;out&quot;</span>,<span class="hljs-string">&quot;label&quot;</span>:<span class="hljs-string">&quot;obj=&quot;</span>,<span class="hljs-string">&quot;path&quot;</span>:<span class="hljs-string">&quot;$&quot;</span>})
-        .<span class="hljs-title function_">removeSection</span>(<span class="hljs-number">3</span>)
-        .<span class="hljs-title function_">insertSection</span>(<span class="hljs-number">2</span>, {<span class="hljs-string">&quot;sec&quot;</span>:<span class="hljs-string">&quot;txt&quot;</span>,<span class="hljs-string">&quot;label&quot;</span>:<span class="hljs-string">&quot;str&quot;</span>,<span class="hljs-string">&quot;path&quot;</span>:<span class="hljs-string">&quot;$[&#x27;str&#x27;]&quot;</span>})
-        .<span class="hljs-title function_">replaceSection</span>(<span class="hljs-number">2</span>, {<span class="hljs-string">&quot;sec&quot;</span>:<span class="hljs-string">&quot;chk&quot;</span>,<span class="hljs-string">&quot;label&quot;</span>:<span class="hljs-string">&quot;chk&quot;</span>,<span class="hljs-string">&quot;path&quot;</span>:<span class="hljs-string">&quot;$[&#x27;chk&#x27;]&quot;</span>}) <span class="hljs-comment">// correcting path</span>
+        .<span class="hljs-title function_">insertSection</span>(<span class="hljs-number">2</span>, {<span class="hljs-string">&quot;sec&quot;</span>:<span class="hljs-string">&quot;txt&quot;</span>,<span class="hljs-string">&quot;label&quot;</span>:<span class="hljs-string">&quot;str&quot;</span>,<span class="hljs-string">&quot;path&quot;</span>:<span class="hljs-string">&quot;$[&#x27;str&#x27;]&quot;</span>})    <span class="hljs-comment">// (5)</span>
+        .<span class="hljs-title function_">updateSection</span>(<span class="hljs-number">1</span>, {<span class="hljs-string">&quot;sec&quot;</span>:<span class="hljs-string">&quot;chk&quot;</span>,<span class="hljs-string">&quot;label&quot;</span>:<span class="hljs-string">&quot;chk&quot;</span>,<span class="hljs-string">&quot;path&quot;</span>:<span class="hljs-string">&quot;$[&#x27;chk&#x27;]&quot;</span>})    <span class="hljs-comment">// (6)</span>
+        .<span class="hljs-title function_">removeSection</span>(<span class="hljs-number">2</span>)                                                   <span class="hljs-comment">// (7)</span>
   })
 </span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
-
 </div></code></pre>
+<p>Comments to the line numbers follow:</p>
+<ol>
+<li>The API works properly at the earliest, after the <code>&lt;ctrl-ing&gt;</code> element is completely initialized. In order to ensure this, we need to encapsulate the API method calls in a callback function <code>oninit((ctrl) =&gt; { ... })</code>. The callback function recieves the <code>&lt;ctrl-ing&gt;</code> element object as a single argument.</li>
+<li>The <code>setAttr</code> method is merely syntactic sugar for native <code>setAttribute</code> method. It additionally supports chaining of method calls only.</li>
+<li><code>addSection</code> methods are used to sequentially build the control menu. They get a single object literal argument representing a section.</li>
+<li>Note the intentional typo with the <code>path</code> value. That will be corrected in (6).</li>
+<li><code>insertSection</code> method inserts a new section after section with current index <code>2</code>, i.e. <code>{&quot;sec&quot;:&quot;num&quot;,...}</code>.</li>
+<li><code>updateSection</code> method corrects the typo in line (4) and updates section with current index <code>1</code>, i.e. <code>{&quot;sec&quot;:&quot;chk&quot;,...}</code>.</li>
+<li><code>removeSection</code> method removes the section with current index <code>2</code>, i.e. <code>{&quot;sec&quot;:&quot;num&quot;,...}</code>.</li>
+</ol>
 <p>A <code>&lt;ctrl-ing&gt;</code> menu can be completely built by few HTML/JSON text. Accessing its HTML element via JavaScript can be done via well known DOM methods. Accessing the hidden shadow DOM sections is not possible though. For enabling programmatical access to the internal menu structure, an API can be used.</p>
 <h2 id="6-conclusion">6. Conclusion</h2>
 <p><code>ctrl-ing</code> is a lightweight HTML custom element. It helps to rapidly prototype a pleasing GUI without programming. Web-App parameters or JavaScript/JSON object values can be monitored or interactively modified.</p>

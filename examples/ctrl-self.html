@@ -10,16 +10,17 @@
     <ctrl-ing id="ctrl" ref="obj" callback="$['callbk']">
         [ {"sec":"hdr","text":"Self-Control"},
           {"sec":"chk","label":"Disable str","path":"$['disable']"},
-          {"sec":"txt","label":"str","path":"$['str']"}
+          {"sec":"txt","label":"str","path":"$['str']"},
+          {"sec":"out","label":"obj=","path":"$"}
         ]
     </ctrl-ing>
 </body>
 <script>
-    const ctrlr = document.getElementById('ctrl');
+    document.getElementById('ctrl');
     const obj = {
         disable: false,
         str: "Hello",
-        callbk({obj, member, value, section, elem}) {
+        callbk({ctrl, obj, member, value, section, elem}) {
             if (member === 'disable') {
                 ctrl.section(2).disabled = value;
                 ctrl.updateSection(2);

@@ -14,17 +14,17 @@
             str: 'hello'
         }
 
-        const ctrl = document.getElementById('ctrl');
-        ctrl.oninit(() => {                                                      // (1)
+        document.getElementById('ctrl').oninit((ctrl) => {                       // (1)
             ctrl.setAttr('ref', 'obj')                                           // (2)
                 .setAttr('darkmode')
+                .setAttr('autoupdate')
                 .addSection({"sec":"hdr","text":"API-Test"})                     // (3)
                 .addSection({"sec":"chk","label":"chk","path":"$['chok']"})      // (4)
                 .addSection({"sec":"num","label":"num","path":"$['num']"})
                 .addSection({"sec":"out","label":"obj=","path":"$"})
-                .removeSection(3)                                                // (5)
-                .insertSection(2, {"sec":"txt","label":"str","path":"$['str']"})
-                .updateSection(2, {"sec":"chk","label":"chk","path":"$['chk']"}) // (6)
+                .insertSection(2, {"sec":"txt","label":"str","path":"$['str']"}) // (5)
+                .updateSection(1, {"sec":"chk","label":"chk","path":"$['chk']"}) // (6)
+                .removeSection(2)                                                // (7)
         })
     </script>
     </body>

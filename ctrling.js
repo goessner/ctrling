@@ -76,7 +76,7 @@ class Ctrling extends HTMLElement {
             }
         }
         else if (name === 'autoupdate' && this.#initialized) {
-            this.#timer = window.setInterval(() => this.updateControls(), 1000/this.#ticksPerSecond)
+            this.#timer = window.setInterval(() => this.updateControlValues(), 1000/this.#ticksPerSecond)
         }
         else if (name === 'autogenerate' && this.#initialized) {
             this.#autogenerateSections(val === 'src' || val === 'source');
@@ -123,12 +123,12 @@ class Ctrling extends HTMLElement {
         if (!!content)        // empty or not ?
             this.#sectionsFromJSON(content);
 
-        if (this.#oninit && typeof this.#oninit === 'function')
-            this.#oninit();
-
         this.style.display = 'block';
         this.style.height = this.offsetHeight + 'px';
         this.#main.style.width = this.offsetWidth + 'px';  // fill up to width of :host ... !
+
+        if (this.#oninit && typeof this.#oninit === 'function')
+            this.#oninit(this);
     
         if (this.#usrValueCallback)
             this.#usrValueCallback({ctrl:this});  // call initially once with empty arguments object ...
@@ -239,15 +239,25 @@ class Ctrling extends HTMLElement {
 
     section(idx) { return this.#sections[idx]; }
 
-    findIndex(fn) {
+    findSectionIndex(fn) {
         return this.#sections.findIndex(fn);
     }
 
-    addSection(args) {
-        const secElem = this.#newHtmlSection(args);
+    addSection(sec) {
+        const secElem = this.#newHtmlSection(sec);
         if (secElem) {
             this.#main.append(secElem);
-            this.#sections.push(args);
+            this.#sections.push(sec);
+        }
+        return this;
+    }
+    insertSection(idx, sec) {
+        if (idx >= 0) {
+            const secElem = this.#newHtmlSection(sec);
+            if (secElem) {
+                this.#main.getElementsByTagName('section')[idx]?.insertAdjacentElement('afterend', secElem);
+                this.#sections.splice(idx+1, 0, sec);
+            }
         }
         return this;
     }
@@ -255,30 +265,20 @@ class Ctrling extends HTMLElement {
         if (idx >= 0) {
             this.#removeListeners(this.#sections[idx]);
             this.#main.getElementsByTagName('section')[idx]?.remove();
-            this.#sections.splice(idx,1);
+            this.#sections.splice(idx, 1);
         }
         return this;
     }
-    insertSection(idx, args) {
+    updateSection(idx, sec) {
         if (idx >= 0) {
-            const secElem = this.#newHtmlSection(args);
-            if (secElem) {
-                this.#main.getElementsByTagName('section')[idx]?.insertAdjacentElement('afterend', secElem);
-                this.#sections.splice(idx,0,args);
-            }
-        }
-        return this;
-    }
-    updateSection(idx, args) {
-        if (idx >= 0) {
-            if (args !== undefined) {
+            if (sec !== undefined) {
                 this.#removeListeners(this.#sections[idx]);
-                this.#sections.splice(idx,1,args);
+                this.#sections.splice(idx, 1, sec);
             }
             else
-                args = this.#sections[idx];
+                sec = this.#sections[idx];
 
-            const secElem = this.#newHtmlSection(args);
+            const secElem = this.#newHtmlSection(sec);
             if (secElem) {
                 this.#main.getElementsByTagName('section')[idx]?.replaceWith(secElem);
             }
@@ -292,7 +292,7 @@ class Ctrling extends HTMLElement {
         return this;
     }
 
-    // section element completion ...
+    // section element generation ...
     hdr(elem, args) { // args={text}
         elem.innerHTML = `${args.text || ''}`;
         return elem;
