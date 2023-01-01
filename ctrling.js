@@ -1,6 +1,6 @@
 /**
  * ctrling.js (c) 2022/23 Stefan Goessner
- * ver. 0.8.14
+ * ver. 0.8.15
  * @license MIT License
  */
 "use strict";
@@ -27,6 +27,7 @@ class Ctrling extends HTMLElement {
                                                        top: this.getAttribute('top') || '0px', 
                                                        right: this.getAttribute('right') || '0px' });
         this.#main = this.shadowRoot.querySelector('main');
+        console.log(this.#main)
     }
 
     // https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements
@@ -132,7 +133,7 @@ class Ctrling extends HTMLElement {
             this.#oninit(this);
     
         if (this.#usrValueCallback)
-            this.#usrValueCallback({ctrl:this});  // call initially once with empty arguments object ...
+            this.#usrValueCallback({});  // call initially once with empty arguments object ...
     }
 
     #sectionsFromJSON(content) {
@@ -198,12 +199,8 @@ class Ctrling extends HTMLElement {
               : value;
         obj[member] = value;
         if (this.#usrValueCallback !== undefined) {
-            const that = this;
-            console.log('#')
-            console.log({ctrl:that, obj, member, value, section, elem})
-            this.#usrValueCallback({ctrl:that, obj, member, value, section, elem});
+            this.#usrValueCallback({obj, member, value, section, elem});
         }
-
         return value;
     }
 

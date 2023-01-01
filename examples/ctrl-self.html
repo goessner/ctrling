@@ -7,7 +7,7 @@
 </head>
 <body>
     <h2>ctrl-self</h2>
-    <ctrl-ing id="ctrlr" ref="obj" callback="$['callbk']">
+    <ctrl-ing id="ctrl" ref="obj" callback="$['callbk']">
         [ {"sec":"hdr","text":"Self-Control"},
           {"sec":"chk","label":"Disable str","path":"$['disable']"},
           {"sec":"txt","label":"str","path":"$['str']"},
@@ -16,19 +16,18 @@
     </ctrl-ing>
 </body>
 <script>
-    document.getElementById('ctrlr');
     const obj = {
         disable: false,
         str: "Hello",
-        callbk({ctrl, obj, member, value, section, elem}) {
-            console.log({ctrl, obj, member, value, section, elem})
+        callbk({obj, member, value, section, elem}) {
+            console.log({obj, member, value, section, elem})
             if (member === 'disable') {
+                const ctrl = document.getElementById('ctrl');
                 ctrl.section(2).disabled = value;
                 ctrl.updateSection(2);
-                console.log(this.str);
             }
         }
     }
 </script>
-<script src="https://cdn.jsdelivr.net/npm/ctrling/ctrling.min.js"></script>
+<script src="../ctrling.js"></script>
 </html>
