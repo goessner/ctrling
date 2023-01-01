@@ -1,5 +1,6 @@
 /**
  * ctrling.js (c) 2022/23 Stefan Goessner
+ * ver. 0.8.14
  * @license MIT License
  */
 "use strict";
@@ -198,6 +199,7 @@ class Ctrling extends HTMLElement {
         obj[member] = value;
         if (this.#usrValueCallback !== undefined) {
             const that = this;
+            console.log('#')
             console.log({ctrl:that, obj, member, value, section, elem})
             this.#usrValueCallback({ctrl:that, obj, member, value, section, elem});
         }
