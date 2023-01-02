@@ -4,6 +4,7 @@
     <meta charset='utf-8'>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>ctrl-self</title>
+    <script src="https://cdn.jsdelivr.net/npm/ctrling/ctrling.js"></script>
 </head>
 <body>
     <h2>ctrl-self</h2>
@@ -19,16 +20,16 @@
     const obj = {
         disable: false,
         str: "Hello",
-        callbk({obj, member, value, section, elem}) {
-            console.log({obj, member, value, section, elem})
+        callbk({ctrl, obj, member, value, section, elem}) {
+            console.log({ctrl, obj, member, value, section, elem})
             if (member === 'disable') {
                 const ctrl = document.getElementById('ctrl');
                 console.log(ctrl)
                 ctrl.section(2).disabled = value;
+                console.log(ctrl.section(2))
                 ctrl.updateSection(2);
             }
         }
     }
 </script>
-<script src="../ctrling.min.js"></script>
 </html>

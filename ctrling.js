@@ -1,6 +1,6 @@
 /**
  * ctrling.js (c) 2022/23 Stefan Goessner
- * ver. 0.8.16
+ * ver. 0.8.17
  * @license MIT License
  */
 "use strict";
@@ -271,7 +271,7 @@ class Ctrling extends HTMLElement {
         }
         return this;
     }
-    updateSection(idx, sec) {
+    replaceSection(idx, sec) {
         if (idx >= 0) {
             if (sec !== undefined) {
                 this.#removeListeners(this.#sections[idx]);
