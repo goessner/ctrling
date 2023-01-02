@@ -1,6 +1,6 @@
 {
   "name": "ctrling",
-  "version": "0.8.15",
+  "version": "0.8.16",
   "description": "An appealing prototypical GUI for controlling your Web-App, JSON or JavaScript Object Values",
   "keywords": [
     "prototypical",
@@ -14,6 +14,9 @@
     "custom element"
   ],
   "main": "ctrling.js",
+  "scripts": {
+    "minify": "uglifyjs ./ctrling.js -o ./ctrling.min.js --comments"
+  },
   "author": "Stefan Goessner <fang03@web.de>",
   "repository": {
     "type": "git",

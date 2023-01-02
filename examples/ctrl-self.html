@@ -23,11 +23,12 @@
             console.log({obj, member, value, section, elem})
             if (member === 'disable') {
                 const ctrl = document.getElementById('ctrl');
+                console.log(ctrl)
                 ctrl.section(2).disabled = value;
                 ctrl.updateSection(2);
             }
         }
     }
 </script>
-<script src="../ctrling.js"></script>
+<script src="../ctrling.min.js"></script>
 </html>
