@@ -1,6 +1,6 @@
 /**
  * ctrling.js (c) 2022/23 Stefan Goessner
- * ver. 0.8.17
+ * ver. 0.8.18
  * @license MIT License
  */
 "use strict";
