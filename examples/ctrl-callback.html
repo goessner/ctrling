@@ -34,7 +34,7 @@
     const o2 = {
         check1: true,
         check2: false,
-        callbk({obj, member, value, section, elem}) {
+        callbk({ctrl, obj, member, value, section, elem}) {
             if (member === 'check1')
                 obj['check2'] = !obj['check1']; 
             else if (member === 'check2')

@@ -9,20 +9,18 @@
     <h2>ctrl-autogenerate</h2>
     <div style="display:flex; position:relative;">
         <pre id="out"></pre>
-        <ctrl-ing ref="obj" autogenerate="src" autoupdate callback="window['callbk']" width="400px" darkmode>
-
-        </ctrl-ing>
+        <ctrl-ing ref="obj" autogenerate="src" autoupdate callback="window['callbk']" width="400px" darkmode></ctrl-ing>
     </div>
 </body>
 <script>
-    const ctrl = document.querySelector("ctrl-ing");
     const obj = {
         checked: true,
         _priv: false,
-        name: "january",
+        month: "january",
         number: 42,
-        get pi() { return this._pi || 3.14; },
-        set pi(q) { return this._pi = q; }
+        color: '#ff0000',
+        get phi() { return this._phi || 3.14; },
+        set phi(q) { return this._phi = q; }
     }
 
     function callbk() { document.getElementById('out').innerHTML = "obj = "+Ctrling.stringify(obj); }

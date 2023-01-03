@@ -36,11 +36,12 @@ Many webapplications are of small to medium size. Equipping these with a pleasin
 
 ## 1. What is It ?
 
-`ctrl-ing` is a tiny HTML custom element used to interactively control your Web-App parameters or JavaScript/JSON object values in a comfortable way with the following characteristics:
+`ctrl-ing` is a tiny HTML custom element used to interactively control your Web-App parameters or JavaScript/JSON/DOM object values in a comfortable way with the following characteristics:
 
 * tiny footprint `18.7/11.3 kB` un/compressed.
 * dependency free.
 * easy prototypical generation with low effort.
+* given an object, a menu template can even be created automatically.
 * no programming required.
 * getting a pleasing GUI.
 
@@ -169,6 +170,8 @@ The rest of the path string MUST obey the syntax of *Normalized Paths* according
 * using the bracket syntax `[...]` exclusively.
 * enclosing member names in single quotation marks.
 
+### 3.1 `<ctrl-ing>` Attributes
+
 For an `<ctrl-ing>` element following optional attributes are supported:
 
 | Attribute | Default | Meaning |
@@ -180,15 +183,16 @@ For an `<ctrl-ing>` element following optional attributes are supported:
 |`darkmode`  | - | Display GUI menu in dark mode (default: light). |
 |`autoupdate`  | - | Automatically update monitoring and input sections. |
 |`autogenerate`  | - | Automatically generate a prototype menu from the object given by `ref` attribute. |
-|`tickspersecond`  | `4` | How often to update sections per second. |
-|`callback`  | - | If present, will be called with each user value change by input sections. The attribute value must obey the [JSONPath](https://ietf-wg-jsonpath.github.io/draft-ietf-jsonpath-base/draft-ietf-jsonpath-base.html#name-normalized-paths) syntax rules and might be a global function or a static object method. |
+|`tickspersecond`  | `4` | How often to update sections per second (on external value change). |
+|`callback`  | - | If present, will be called with each user value change by input sections. The attribute value must obey the [JSONPath](https://ietf-wg-jsonpath.github.io/draft-ietf-jsonpath-base/draft-ietf-jsonpath-base.html#name-normalized-paths) syntax rules and might be a global function or an object method. |
 
 <figcaption>Table 1: Supported <code>ctrl-ing</code> attributes.</figcaption><br>
 
-The `callback` function or method will be handed over an argument object with the structure
+The `callback` function or method will be handed over an argument object with the structure:
 
 ```js
 args = {
+    ctrl,    // current `<ctrl-ing>` element object.
     obj,     // parent object holding the member, whose value is to be set.
     member,  // the member name, whose value is to be set.
     value,   // the new member value.
@@ -196,7 +200,17 @@ args = {
     elem     // the current html <section> element.
 }
 ```
-Please note, that during a single initial call of the `callback` function an empty `args` object will be passed as an argument.
+Please note, that a first initial call of the `callback` function &ndash; when exists &ndash; is automatically done during initialization time. A reduced object `args = {ctrl}` will be passed as an argument then.
+
+### 3.2 Automatical Menu Generation
+
+It is possible to let a `<ctrl-ing>` element automatically generate a GUI menu from a given JavaScript object.
+
+```html
+<ctrl-ing ref="obj" autogenerate></ctrl-ing>
+```
+
+
 
 ## 4. Sections Reference
 
@@ -825,7 +839,7 @@ Size of the input fields might be controlled by `width` member accepting CSS uni
 
 ## 5. API
 
-The `<ctrl-ing>` menu's internals are hidden behind the shadow DOM. For offering programmatical access to these internals, an API is provided. Here is an example.
+The `<ctrl-ing>` menu internals are hidden behind the shadow DOM. For offering programmatical access to these internals, an API is provided. Here is an example how to use it.
 
 ```html
 <ctrl-ing id="ctrl"></ctrl-ing>
@@ -854,21 +868,22 @@ The `<ctrl-ing>` menu's internals are hidden behind the shadow DOM. For offering
 
 Comments to the line numbers:
 
-1. The API works properly at the earliest, after the `<ctrl-ing>` element is completely initialized. In order to ensure this, we need to encapsulate the API method calls in a callback function `oninit((ctrl) => { ... })`. The callback function recieves the `<ctrl-ing>` element object as a single argument.
-2. The `setAttr` method is merely syntactic sugar for native `setAttribute` method. It additionally supports chaining of method calls only.
+1. Ensure to start with API calls when the `<ctrl-ing>` element is completely initialized.
+2. The `setAttr` method is merely syntactic sugar for the native `setAttribute` method. It additionally supports chaining of method calls only.
 3. `addSection` methods are used to sequentially build the control menu. They get a single object literal argument representing a section.
 4. Note the intentional typo with the `path` value. That will be corrected in (6).
 5. `insertSection` method inserts a new section after section with current index `2`, i.e. `{"sec":"num",...}`.
 6. `updateSection` method corrects the typo in line (4) and updates section with current index `1`, i.e. `{"sec":"chk",...}`.
 7. `removeSection` method removes the section with current index `2`, i.e. `{"sec":"num",...}`.
 
-**Properties**
+The API works properly at the earliest after the <ctrl-ing> element is completely initialized. In order to ensure this, we want to encapsulate the API method calls in a callback function oninit((ctrl) => { ... }). The callback function receives the <ctrl-ing> element object as a single argument.
+
 | Method | Returns | Comment |
 |:--|:--|:--|
 |`addSection(sec)` | `this` | Append a new section object `sec` to the sections array.  |
 |`findSectionIndex(fn)` | index | Locate the first section in the sections array, that fulfills the condition given by function `fn`. Returns the array index found or `-1` on failure. The condition function receives the current section during iteration as argument. |
 |`insertSection(idx,sec)` | `this` | Insert a new section object `sec` to the sections array after the section at index `idx`.  |
-|`oninit(fn)` | - | Invoking a callback function `fn`, while ensuring that the control menu object is completely initialized.  |
+|`oninit(fn)` | - | Invoking a callback function `fn`, while ensuring that the control menu object is completely initialized. The callback function receives the `<ctrl-ing>` element object as a single argument. |
 |`removeAttr(attr)` | `this` | Remove `<ctrl-ing>`'s attribute `attr`.  |
 |`removeSection(idx)` | `this` | Remove the section at index `idx`. |
 |`setAttr(attr,value)` | `this` | Set `<ctrl-ing>`'s attribute `attr` to value `value`.  |
@@ -880,7 +895,7 @@ Comments to the line numbers:
 
 ### 5.1 Self-Control
 
-API methods may be used to modify the `<ctrl-ing>` menu itself. This is shown by a tiny example.
+API methods may be used to modify the `<ctrl-ing>` menu itself. Here is an example, how to disable a section.
 
 
 ```json
@@ -907,7 +922,6 @@ const objslf = {
     }
 }
 ```
-
   <ctrl-ing id="ctrlslf" ref="objslf" callback="$['callbk']">
     [ {"sec":"hdr","text":"Self-Control"},
       {"sec":"chk","label":"Disable str","path":"$['disable']"},
@@ -916,7 +930,7 @@ const objslf = {
   </ctrl-ing>
 </div>
 <script>
-    const ctrl = document.getElementById('ctrl');
+    const ctrl = document.getElementById('ctrlslf');
     const obj = {
         disable: false,
         str: "Hello",

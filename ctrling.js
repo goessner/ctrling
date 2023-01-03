@@ -27,7 +27,6 @@ class Ctrling extends HTMLElement {
                                                        top: this.getAttribute('top') || '0px', 
                                                        right: this.getAttribute('right') || '0px' });
         this.#main = this.shadowRoot.querySelector('main');
-        console.log(this.#main)
     }
 
     // https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements
@@ -48,7 +47,10 @@ class Ctrling extends HTMLElement {
             const ref = /[A-Za-z_][A-Za-z_0-9]*/.test(val) ? val : "";  // must conform to variable syntax rules (ASCII).
             // `globalThis` does not work with let and const, only with var ...
             // see https://stackoverflow.com/questions/28776079/do-let-statements-create-properties-on-the-global-object
-            this.#refObj = ref && (globalThis[ref] || eval(ref));
+            try {
+                this.#refObj = ref && (globalThis[ref] || eval(ref));
+            }
+            catch (e) { this.addSection({sec:'hdr',text:"Ctrling: 'ref' object " + e.message}); }
         }
         else if (name === 'width') {
             this.style.setProperty('width', val);  // set width of :host ...
@@ -60,7 +62,7 @@ class Ctrling extends HTMLElement {
             this.#main.style.setProperty('top', val);
         }
         else if (name === 'darkmode') {
-            if (this.getAttribute('darkmode') === '') {
+            if (this.hasAttribute('darkmode')) {
                 this.style.setProperty("--bkg-1", "var(--dark-bkg-1)");
                 this.style.setProperty("--bkg-2", "var(--dark-bkg-2)");
                 this.style.setProperty("--bkg-3", "var(--dark-bkg-3)");
@@ -68,7 +70,7 @@ class Ctrling extends HTMLElement {
                 this.style.setProperty("--col-2", "var(--dark-col-2)");
                 this.style.setProperty("--col-3", "var(--dark-col-3)");
             }
-            else {
+            else {   // removed via API ... 
                 this.style.setProperty("--bkg-1", "var(--lite-bkg-1)");
                 this.style.setProperty("--bkg-2", "var(--lite-bkg-2)");
                 this.style.setProperty("--bkg-3", "var(--lite-bkg-3)");
@@ -97,7 +99,7 @@ class Ctrling extends HTMLElement {
                 this.#ticksPerSecond = Math.min(tps, 60);
                 if (!!this.#timer) {
                     window.clearInterval(this.timer);
-                    this.#timer = window.setInterval(() => this.updateControls(), 1000/this.#ticksPerSecond)
+                    this.#timer = window.setInterval(() => this.updateControlValues(), 1000/this.#ticksPerSecond)
                 }
             }
         }
@@ -131,7 +133,7 @@ class Ctrling extends HTMLElement {
 
         if (this.#oninit && typeof this.#oninit === 'function')
             this.#oninit(this);
-    
+
         if (this.#usrValueCallback)
             this.#usrValueCallback({ctrl:this});  // call initially once with empty arguments object ...
     }
@@ -149,13 +151,17 @@ class Ctrling extends HTMLElement {
     #autogenerateSections(src) {
         if (typeof this.#refObj === 'object') {
             const obj = this.#refObj;
-            const members = Object.getOwnPropertyNames(obj);
+            const members = Object.keys(obj); //Object.getOwnPropertyNames(obj);
             const sectype = {"boolean":"chk","number":"num","string":"txt"};
 
             this.addSection({"sec":"hdr","text":`Generated for: ${this.getAttribute('ref')}`});
             for (const m of members) {
-                if (!m.startsWith('_') && ['boolean','number','string'].includes(typeof obj[m]))
-                    this.addSection({"sec":`${sectype[typeof obj[m]]}`,"label":m,"path":`$['${m}']`});
+                if (!m.startsWith('_')) {
+                    if (typeof obj[m] === 'string' && obj[m].startsWith('#'))   // rgb color ...
+                        this.addSection({"sec":`col`,"label":m,"path":`$['${m}']`});
+                    else if (['boolean','number','string'].includes(typeof obj[m]))
+                        this.addSection({"sec":`${sectype[typeof obj[m]]}`,"label":m,"path":`$['${m}']`});
+                }
             }
             if (src) {
                 const str = JSON.stringify(this.#sections).replaceAll('},','},\n ')
@@ -191,7 +197,7 @@ class Ctrling extends HTMLElement {
     #getRefValue(obj, member, deflt) {
         return obj ? (member ? obj[member] : obj) : deflt;
     }
-    #setRefValue(obj, member, value, section, elem) {
+    #setRefValue(ctrl, obj, member, value, section, elem) {
         value = (value === true || 
                  value === false ||
                  value === null) ? value
@@ -199,7 +205,7 @@ class Ctrling extends HTMLElement {
               : value;
         obj[member] = value;
         if (this.#usrValueCallback !== undefined) {
-            this.#usrValueCallback({ctrl:this, obj, member, value, section, elem});
+            this.#usrValueCallback({ctrl, obj, member, value, section, elem});
         }
         return value;
     }
@@ -271,7 +277,7 @@ class Ctrling extends HTMLElement {
         }
         return this;
     }
-    replaceSection(idx, sec) {
+    updateSection(idx, sec) {
         if (idx >= 0) {
             if (sec !== undefined) {
                 this.#removeListeners(this.#sections[idx]);
@@ -303,7 +309,7 @@ class Ctrling extends HTMLElement {
         const [obj, member] = this.#getRef(args.path);
         elem.innerHTML = `<label>${args.label||'&nbsp;'}<input type="checkbox" ${this.#getRefValue(obj, member, args.value) ? "checked" : ""}${!!args.disabled ? " disabled" : ""}></label>`;
         const input = elem.querySelector('input');
-        this.#addListeners(args, [{type:"input", elem:elem.querySelector('input'), hdl:(e) => this.#setRefValue(obj, member, !!e.target.checked, args, elem)}]);
+        this.#addListeners(args, [{type:"input", elem:elem.querySelector('input'), hdl:(e) => this.#setRefValue(this, obj, member, !!e.target.checked, args, elem)}]);
         args._upd = () => { input.checked = obj[member] ? 'checked' : '' };
         return elem;
     }
@@ -312,7 +318,7 @@ class Ctrling extends HTMLElement {
         const value = this.#getRefValue(obj, member, (args.value || "#000000"));
         elem.innerHTML = `${args.label||'&nbsp;'}<span><input type="color" value="${value}"${!!args.disabled ? " disabled" : ""}><output>${value}</output></span>`;
         const input = elem.querySelector('input');
-        this.#addListeners(args, [{type:"input", elem:input, hdl:(e) => { input.nextSibling.innerHTML = this.#setRefValue(obj, member, e.target.value, args, elem) }}]);
+        this.#addListeners(args, [{type:"input", elem:input, hdl:(e) => { input.nextSibling.innerHTML = this.#setRefValue(this, obj, member, e.target.value, args, elem) }}]);
         args._upd = () => { input.nextSibling.innerHTML = input.value = this.#getRefValue(obj, member, "#000000"); };
         return elem;
     }
@@ -322,8 +328,8 @@ class Ctrling extends HTMLElement {
         const round = (value, decimals) => decimals ? value.toFixed(decimals) : value;
         elem.innerHTML = `<label>${args.label||'&nbsp;'}<span><input type="number" value="${round(value, args.fractions)}"${args.min !== undefined ? ` min="${args.min}"` : ''}${args.max !== undefined ? ` max="${args.max}"` : ''}${args.step !== undefined ? ` step="${args.step}"` : ''}${!!args.disabled ? " disabled" : ""}>${args.unit ? `<span>${args.unit}</span>` : ''}</span></label>`;
         const input = elem.querySelector('input');
-        this.#addListeners(args, [{type:"input", elem:input, hdl:(e) => this.#setRefValue(obj, member, round(+e.target.value, args.fractions), args, elem)},
-                                  {type:"change",elem:input, hdl:(e) => this.#setRefValue(obj, member, e.target.value=round(+e.target.value, args.fractions), args, elem)} ]);
+        this.#addListeners(args, [{type:"input", elem:input, hdl:(e) => this.#setRefValue(this, obj, member, round(+e.target.value, args.fractions), args, elem)},
+                                  {type:"change",elem:input, hdl:(e) => this.#setRefValue(this, obj, member, e.target.value=round(+e.target.value, args.fractions), args, elem)} ]);
         args._upd = () => { input.value = this.#getRefValue(obj, member, 0); };
         return elem;
     }
@@ -340,7 +346,7 @@ class Ctrling extends HTMLElement {
         const value = this.#getRefValue(obj, member, args.value);
         elem.innerHTML = `${args.label||'&nbsp;'}<span><input type="range" value="${value}"${args.min !== undefined ? ` min="${args.min}"` : ''}${args.max !== undefined ? ` max="${args.max}"` : ''}${args.step !== undefined ? ` step="${args.step}"` : ''}${!!args.disabled ? " disabled" : ""}><output>${value}</output>${args.unit ? `<span>${args.unit}</span>` : ''}`;
         const input = elem.querySelector('input');
-        this.#addListeners(args, [{type:"input", elem:input, hdl:(e) => { input.nextSibling.innerHTML = this.#setRefValue(obj, member, +e.target.value, args, elem) }}]);
+        this.#addListeners(args, [{type:"input", elem:input, hdl:(e) => { input.nextSibling.innerHTML = this.#setRefValue(this, obj, member, +e.target.value, args, elem) }}]);
         args._upd = () => { input.nextSibling.innerHTML = input.value = this.#getRefValue(obj, member, 0); };
         return elem;
     }
@@ -350,7 +356,7 @@ class Ctrling extends HTMLElement {
         const value =  this.#getRefValue(obj, member, options[0][1]);
         elem.innerHTML = `${args.label||'&nbsp;'}<select${!!args.disabled ? " disabled" : ""}>${options.map(o => `<option value="${o[1]}"${o[1]===value ? " selected" : ""}>${o[0]}</option>`).join('')}</select>`;
         const select = elem.querySelector('select');
-        this.#addListeners(args, [{type:"input", elem:select, hdl:(e) => this.#setRefValue(obj, member, isNaN(e.target.value) ? e.target.value : +e.target.value, args, elem)}]);
+        this.#addListeners(args, [{type:"input", elem:select, hdl:(e) => this.#setRefValue(this, obj, member, isNaN(e.target.value) ? e.target.value : +e.target.value, args, elem)}]);
         args._upd = () => { select.value = this.#getRefValue(obj, member, options[0][1]); };
         return elem;
     }
@@ -411,7 +417,7 @@ class Ctrling extends HTMLElement {
                 inputs[i]._ctrlpath = args.path[i];
                 listeners.push({type:"input", elem:inputs[i], hdl:(e) => {
                     const [obj, member] = this.#getRef(e.target._ctrlpath);
-                    this.#setRefValue(obj, member, isNaN(e.target.value) ? e.target.value : +e.target.value, args, elem)}});
+                    this.#setRefValue(this, obj, member, isNaN(e.target.value) ? e.target.value : +e.target.value, args, elem)}});
             }
             this.#addListeners(args, listeners);
             args._upd = () => {
@@ -423,7 +429,7 @@ class Ctrling extends HTMLElement {
         }
         return elem;
     }
-
+    // static methods ...
     static stringify(value) {
         return Array.isArray(value) ? JSON.stringify(value)
              : typeof value === 'object' ? JSON.stringify(value).replaceAll(/\[.*?\]/gm, ($0) => $0.replaceAll(',',';'))

@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <title>ctrl-svg</title>
+    <script src="../ctrling.js"></script>
+</head>
+<body>
+    <ctrl-ing ref="symbol" autogenerate darkmode></ctrl-ing>
+    <svg version="1.1"
+        width="300" height="300" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="120" cy="120" r="100" fill="#00ff00" stroke="#000000"/>
+        <rect x="50" y="50" width="141" height="141" fill="#bbbbbb" stroke="#000000"/>
+    </svg>
+
+    <script>
+        const symbol = {
+            _cir: document.querySelector('svg').querySelector('circle'),
+            _rec: document.querySelector('svg').querySelector('rect'),
+            get x() { return +this._cir.getAttribute('cx')},
+            set x(q) { 
+                const w = +this._rec.getAttribute('width');
+                this._rec.setAttribute('x',q-w/2);
+                this._cir.setAttribute('cx',q);
+            },
+            get y() { return +this._cir.getAttribute('cy')},
+            set y(q) {  
+                const h = +this._rec.getAttribute('height');
+                this._rec.setAttribute('y',q-h/2);
+                this._cir.setAttribute('cy',q);
+            },
+            get r() { return +this._cir.getAttribute('r')},
+            set r(q) {
+                const a = Math.sqrt(2)*q;
+                this._rec.setAttribute('width',a); this._rec.setAttribute('height',a);
+                this._rec.setAttribute('x',this.x-a/2);
+                this._rec.setAttribute('y',this.y-a/2);
+                this._cir.setAttribute('r',q);
+            },
+            get cirFill() { return this._cir.getAttribute('fill')},
+            set cirFill(q) { this._cir.setAttribute('fill',q)},
+            get recFill() { return this._rec.getAttribute('fill')},
+            set recFill(q) { this._rec.setAttribute('fill',q)}
+        }
+    </script>
+    </body>
+</html>

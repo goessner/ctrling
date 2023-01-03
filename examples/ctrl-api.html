@@ -6,7 +6,7 @@
     <script src="../ctrling.js"></script>
 </head>
 <body>
-    <ctrl-ing id="ctrl"></ctrl-ing>
+    <ctrl-ing></ctrl-ing>
     <script>
         const obj = {
             chk: true,
@@ -14,10 +14,10 @@
             str: 'hello'
         }
 
-        document.getElementById('ctrl').oninit((ctrl) => {                       // (1)
+        document.querySelector('ctrl-ing').oninit((ctrl) => {                       // (1)
             ctrl.setAttr('ref', 'obj')                                           // (2)
-                .setAttr('darkmode')
-                .setAttr('autoupdate')
+                .setAttr('darkmode',true)
+                .setAttr('autoupdate',true)
                 .addSection({"sec":"hdr","text":"API-Test"})                     // (3)
                 .addSection({"sec":"chk","label":"chk","path":"$['chok']"})      // (4)
                 .addSection({"sec":"num","label":"num","path":"$['num']"})
