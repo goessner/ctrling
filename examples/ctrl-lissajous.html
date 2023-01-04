@@ -42,8 +42,8 @@ const app = {
     get run() { return this._run !== undefined ? this._run : true; },
     set run(q) {
         const ctrl = document.getElementById('ctrl');
-        ctrl.sections[5].disabled = !q;
-        ctrl.updateSection(ctrl.sections[5], 5);
+        ctrl.section(5).disabled = !q;
+        ctrl.updateSection(5);
         return this._run = q; 
     },
     crv() {
@@ -97,5 +97,5 @@ const app = {
 window.addEventListener('load', () => app.tick(), false);
 
 </script>
-<script src="https://cdn.jsdelivr.net/npm/ctrling/ctrling.js"></script>
+<script src="../ctrling.js"></script>
 </html>

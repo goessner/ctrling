@@ -17,7 +17,7 @@
 <body id="top">
 <header>
 <h1>ctrl-ing</h1>
-<h3>An appealing GUI for controlling your Web-App, JSON or JavaScript Object Values</h3>
+<h3>An appealing GUI for controlling your Web-App, JSON, DOM or JavaScript Object Values</h3>
 <h4>Stefan Gössner<sup>1</sup>, <a href='https://github.com/goessner/ctrling'><svg height='16' width='16' viewBox='0 0 16 16'><path fill-rule='evenodd' fill='#1f3939' clip-rule='evenodd' d='M8 0C3.58 0 0 3.58 0 8C0 11.54 2.29 14.53 5.47 15.59C5.87 15.66 6.02 15.42 6.02 15.21C6.02 15.02 6.01 14.39 6.01 13.72C4 14.09 3.48 13.23 3.32 12.78C3.23 12.55 2.84 11.84 2.5 11.65C2.22 11.5 1.82 11.13 2.49 11.12C3.12 11.11 3.57 11.7 3.72 11.94C4.44 13.15 5.59 12.81 6.05 12.6C6.12 12.08 6.33 11.73 6.56 11.53C4.78 11.33 2.92 10.64 2.92 7.58C2.92 6.71 3.23 5.99 3.74 5.43C3.66 5.23 3.38 4.41 3.82 3.31C3.82 3.31 4.49 3.1 6.02 4.13C6.66 3.95 7.34 3.86 8.02 3.86C8.7 3.86 9.38 3.95 10.02 4.13C11.55 3.09 12.22 3.31 12.22 3.31C12.66 4.41 12.38 5.23 12.3 5.43C12.81 5.99 13.12 6.7 13.12 7.58C13.12 10.65 11.25 11.33 9.47 11.53C9.76 11.78 10.01 12.26 10.01 13.01C10.01 14.08 10 14.94 10 15.21C10 15.42 10.15 15.67 10.55 15.59C13.71 14.53 16 11.53 16 8C16 3.58 12.42 0 8 0Z'></path></svg></a></h4>
 <h5><sup>1</sup>Dortmund University of Applied Sciences. Department of Mechanical Engineering</h5>
 <h5>December 2022</h5>
@@ -52,11 +52,12 @@
 <li><a href="#references">References</a></li>
 </ul>
 <h2 id="1-what-is-it">1. What is It ?</h2>
-<p><code>ctrl-ing</code> is a tiny HTML custom element used to interactively control your Web-App parameters or JavaScript/JSON object values in a comfortable way with the following characteristics:</p>
+<p><code>ctrl-ing</code> is a tiny HTML custom element used to interactively control your Web-App parameters or JavaScript/JSON/DOM object values in a comfortable way with the following characteristics:</p>
 <ul>
 <li>tiny footprint <code>18.7/11.3 kB</code> un/compressed.</li>
 <li>dependency free.</li>
 <li>easy prototypical generation with low effort.</li>
+<li>given an object, a menu template can even be created automatically.</li>
 <li>no programming required.</li>
 <li>getting a pleasing GUI.</li>
 </ul>
@@ -115,7 +116,7 @@
             <span class="hljs-attr">toggle</span>: <span class="hljs-literal">false</span>
         }
     </span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
-    <span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span>
 </div></code></pre>
 <div  ></div>
@@ -141,6 +142,8 @@
     <span class="hljs-tag">&lt;/<span class="hljs-name">section</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-name">main</span>&gt;</span>
 </div></code></pre>
+<div  ></div>
+<figcaption>Listing 3: Internal DOM structure of the <code>ctrl-ing</code> element.</figcaption><br>
 <h2 id="3-ctrl-ing-element">3. <code>&lt;ctrl-ing&gt;</code> Element</h2>
 <p>The default width of the <code>&lt;ctrl-ing&gt;</code> menu is <code>200px</code>, which can be modified by the element's <code>width</code> attribute. Its default position is the top right corner of its parent element's area. This might be fine-adjusted via <code>top</code> and <code>right</code> attributes.</p>
 <p>We can use multiple <code>&lt;ctrl-ing&gt;</code>s per page – always right aligned each. In this case the elements should be encapsulated via</p>
@@ -165,6 +168,7 @@
 <li>using the bracket syntax <code>[...]</code> exclusively.</li>
 <li>enclosing member names in single quotation marks.</li>
 </ul>
+<h3 id="31-ctrl-ing-attributes">3.1 <code>&lt;ctrl-ing&gt;</code> Attributes</h3>
 <p>For an <code>&lt;ctrl-ing&gt;</code> element following optional attributes are supported:</p>
 <table>
 <thead>
@@ -213,17 +217,20 @@
 <tr>
 <td style="text-align:center"><code>tickspersecond</code></td>
 <td style="text-align:center"><code>4</code></td>
-<td style="text-align:left">How often to update sections per second.</td>
+<td style="text-align:left">How often to update sections per second (on external value change).</td>
 </tr>
 <tr>
 <td style="text-align:center"><code>callback</code></td>
 <td style="text-align:center">-</td>
-<td style="text-align:left">If present, will be called with each user value change by input sections. The attribute value must obey the <a href="https://ietf-wg-jsonpath.github.io/draft-ietf-jsonpath-base/draft-ietf-jsonpath-base.html#name-normalized-paths">JSONPath</a> syntax rules and might be a global function or a static object method.</td>
+<td style="text-align:left">If present, will be called with each user value change by input sections. The attribute value must obey the <a href="https://ietf-wg-jsonpath.github.io/draft-ietf-jsonpath-base/draft-ietf-jsonpath-base.html#name-normalized-paths">JSONPath</a> syntax rules and might be a global function or an object method.</td>
 </tr>
 </tbody>
 </table>
-<p>The <code>callback</code> function or method will be handed over an argument object with the structure</p>
+<div  ></div>
+<figcaption>Table 1: Supported <code>ctrl-ing</code> attributes.</figcaption><br>
+<p>The <code>callback</code> function or method will be handed over an argument object with the structure:</p>
 <pre><code class="code-line language-js"><div>args = {
+    ctrl,    <span class="hljs-comment">// current `&lt;ctrl-ing&gt;` element object.</span>
     obj,     <span class="hljs-comment">// parent object holding the member, whose value is to be set.</span>
     member,  <span class="hljs-comment">// the member name, whose value is to be set.</span>
     value,   <span class="hljs-comment">// the new member value.</span>
@@ -231,7 +238,43 @@
     elem     <span class="hljs-comment">// the current html &lt;section&gt; element.</span>
 }
 </div></code></pre>
-<p>Please note, that during a single initial call of the <code>callback</code> function an empty <code>args</code> object will be passed as an argument.</p>
+<p>Please note, that a first initial call of the <code>callback</code> function – when exists – is automatically done during initialization time. A reduced object <code>args = {ctrl}</code> will be passed as an argument then.</p>
+<h3 id="32-automatical-menu-generation">3.2 Automatical Menu Generation</h3>
+<p>It is possible to let a <code>&lt;ctrl-ing&gt;</code> element automatically generate a GUI menu from a given JavaScript object.</p>
+<pre><code class="code-line language-html"><div><span class="hljs-tag">&lt;<span class="hljs-name">ctrl-ing</span> <span class="hljs-attr">ref</span>=<span class="hljs-string">&quot;gen&quot;</span> <span class="hljs-attr">autogenerate</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">ctrl-ing</span>&gt;</span>
+</div></code></pre>
+<div  ></div>
+<div style="display:flex; position:relative; font-size:0.8em;">
+<pre id="genout"></pre>
+<ctrl-ing ref="gen" autogenerate autoupdate callback="window['cbgen']"></ctrl-ing>
+</div>
+<script>
+const gen = {
+    checked: true,
+    _priv: false,
+    month: "january",
+    number: 42,
+    color: '#ff0000',
+    get phi() { return this._phi || 3.14; },
+    set phi(q) { return this._phi = q; }
+}
+function cbgen() { document.getElementById('genout').innerHTML = "const gen = "+Ctrling.stringify(gen); }
+</script>
+<p>Automatical menu generation with <code>&lt;ctrl-ing&gt;</code> works according to following rules.</p>
+<ul>
+<li>its <code>ref</code> attribute must point to a valid object.</li>
+<li>its <code>autogenerate</code> attribute must be present.</li>
+<li>the object's properties delivered by <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/getOwnPropertyNames"><code>Object.getOwnPropertyNames()</code></a> are taken to build the menu.
+<ul>
+<li>the member value types <code>boolean</code>, <code>number</code> and <code>string</code> create sections of type <code>chk</code>, <code>num</code> and <code>txt</code>.</li>
+<li>a member value type of <code>string</code> whose value starts with <code>&quot;#&quot;</code> is assumed to represent a rgb color value and generates a section of type <code>col</code>.</li>
+<li>members with type of <code>object</code> are not taken into account.</li>
+<li>getters/setters are treated as normal properties.</li>
+<li>property names starting with underline <code>&quot;_&quot;</code> are considered private and skipped.</li>
+</ul>
+</li>
+<li>an <code>autogenerate=&quot;source&quot;</code> attribute generates an additional final section of type <code>out</code> containing the JSON text of the generated sections as a template for further use.</li>
+</ul>
 <h2 id="4-sections-reference">4. Sections Reference</h2>
 <p>For each section in the JSON content of the <code>&lt;ctrl-ing&gt;</code> element there is a HTML <code>&lt;section&gt;</code> element containing either plain visually structuring, data monitoring or interactive form elements. Here is an overview of the twelve different section types.</p>
 <table>
@@ -305,6 +348,8 @@
 </tr>
 </tbody>
 </table>
+<div  ></div>
+<figcaption>Table 2: Available section types.</figcaption><br>
 <h3 id="41-button">4.1 Button</h3>
 <p>The <code>btn</code> section is used to trigger an action of some kind, so it supports the invocation of a parameterless object method or a global function. You can specify a <code>label</code> and/or a <code>text</code> property. If one of them is missing, the other one is taken as the button text.</p>
 <pre><code class="code-line language-json"><div>&lt;ctrl-ing ref=<span class="hljs-string">&quot;btn&quot;</span>&gt;
@@ -316,7 +361,7 @@
 </div></code></pre>
 <div  ></div>
 <div style="display:flex; position:relative; font-size:0.8em;">
-<pre id="src">
+<pre id="btnsrc">
 function fnc() { ... }
 const btn = { method() { ... } }
 </pre>
@@ -328,7 +373,7 @@ const btn = { method() { ... } }
 </ctrl-ing>
 </div>
  <script>
-const src=document.getElementById('src');
+const src=document.getElementById('btnsrc');
 function fnc() { src.style.backgroundColor='red'; }
 var btn = {
   method() { src.style.backgroundColor='green'; }
@@ -1147,10 +1192,15 @@ Then object member names are displayed in the drop down menu and member values a
 <td style="text-align:center">-</td>
 <td style="text-align:left">Disabled input fields.</td>
 </tr>
+<tr>
+<td style="text-align:left"><br></td>
+<td style="text-align:center"></td>
+<td style="text-align:left"></td>
+</tr>
 </tbody>
 </table>
 <h2 id="5-api">5. API</h2>
-<p>The <code>&lt;ctrl-ing&gt;</code> menu's internals are hidden behind the shadow DOM. For offering programmatical access an API is provided.</p>
+<p>The <code>&lt;ctrl-ing&gt;</code> menu internals are hidden behind the shadow DOM. For offering programmatical access to these internals, an API is provided. Here is an example how to use it.</p>
 <pre><code class="code-line language-html"><div><span class="hljs-tag">&lt;<span class="hljs-name">ctrl-ing</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;ctrl&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">ctrl-ing</span>&gt;</span>
 <span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="language-javascript">
   <span class="hljs-keyword">const</span> obj = {
@@ -1173,20 +1223,130 @@ Then object member names are displayed in the drop down menu and member values a
   })
 </span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
 </div></code></pre>
-<p>Comments to the line numbers follow:</p>
+<div  ></div>
+<figcaption>Listing 4: Control menu generation and modification via API calls.</figcaption><br>
+<p>Comments to the line numbers:</p>
 <ol>
-<li>The API works properly at the earliest, after the <code>&lt;ctrl-ing&gt;</code> element is completely initialized. In order to ensure this, we need to encapsulate the API method calls in a callback function <code>oninit((ctrl) =&gt; { ... })</code>. The callback function recieves the <code>&lt;ctrl-ing&gt;</code> element object as a single argument.</li>
-<li>The <code>setAttr</code> method is merely syntactic sugar for native <code>setAttribute</code> method. It additionally supports chaining of method calls only.</li>
+<li>Ensure to start with API calls when the <code>&lt;ctrl-ing&gt;</code> element is completely initialized.</li>
+<li>The <code>setAttr</code> method is merely syntactic sugar for the native <code>setAttribute</code> method. It additionally supports chaining of method calls only.</li>
 <li><code>addSection</code> methods are used to sequentially build the control menu. They get a single object literal argument representing a section.</li>
 <li>Note the intentional typo with the <code>path</code> value. That will be corrected in (6).</li>
 <li><code>insertSection</code> method inserts a new section after section with current index <code>2</code>, i.e. <code>{&quot;sec&quot;:&quot;num&quot;,...}</code>.</li>
 <li><code>updateSection</code> method corrects the typo in line (4) and updates section with current index <code>1</code>, i.e. <code>{&quot;sec&quot;:&quot;chk&quot;,...}</code>.</li>
 <li><code>removeSection</code> method removes the section with current index <code>2</code>, i.e. <code>{&quot;sec&quot;:&quot;num&quot;,...}</code>.</li>
 </ol>
-<p>A <code>&lt;ctrl-ing&gt;</code> menu can be completely built by few HTML/JSON text. Accessing its HTML element via JavaScript can be done via well known DOM methods. Accessing the hidden shadow DOM sections is not possible though. For enabling programmatical access to the internal menu structure, an API can be used.</p>
-<h2 id="6-conclusion">6. Conclusion</h2>
-<p><code>ctrl-ing</code> is a lightweight HTML custom element. It helps to rapidly prototype a pleasing GUI without programming. Web-App parameters or JavaScript/JSON object values can be monitored or interactively modified.</p>
-<p><code>ctrl-ing</code> does not depend on other libraries and is meant as a helper for webapplications of small to medium size.</p>
+<p>The API works properly at the earliest after the <code>&lt;ctrl-ing&gt;</code> element is completely initialized. In order to ensure this, we want to encapsulate the API method calls in a callback function oninit((ctrl) =&gt; { ... }). The callback function receives the <code>&lt;ctrl-ing&gt;</code> element object as a single argument.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Method</th>
+<th style="text-align:left">Returns</th>
+<th style="text-align:left">Comment</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>addSection(sec)</code></td>
+<td style="text-align:left"><code>this</code></td>
+<td style="text-align:left">Append a new section object <code>sec</code> to the sections array.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>findSectionIndex(fn)</code></td>
+<td style="text-align:left">index</td>
+<td style="text-align:left">Locate the first section in the sections array, that fulfills the condition given by function <code>fn</code>. Returns the array index found or <code>-1</code> on failure. The condition function receives the current section during iteration as argument.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>insertSection(idx,sec)</code></td>
+<td style="text-align:left"><code>this</code></td>
+<td style="text-align:left">Insert a new section object <code>sec</code> to the sections array after the section at index <code>idx</code>.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>oninit(fn)</code></td>
+<td style="text-align:left">-</td>
+<td style="text-align:left">Invoking a callback function <code>fn</code>, while ensuring that the control menu object is completely initialized. The callback function receives the <code>&lt;ctrl-ing&gt;</code> element object as a single argument.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>removeAttr(attr)</code></td>
+<td style="text-align:left"><code>this</code></td>
+<td style="text-align:left">Remove <code>&lt;ctrl-ing&gt;</code>'s attribute <code>attr</code>.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>removeSection(idx)</code></td>
+<td style="text-align:left"><code>this</code></td>
+<td style="text-align:left">Remove the section at index <code>idx</code>.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>setAttr(attr,value)</code></td>
+<td style="text-align:left"><code>this</code></td>
+<td style="text-align:left">Set <code>&lt;ctrl-ing&gt;</code>'s attribute <code>attr</code> to value <code>value</code>.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>section(idx)</code></td>
+<td style="text-align:left">section</td>
+<td style="text-align:left">Select a section from the sections array by index <code>idx</code>.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>updateControlValues()</code></td>
+<td style="text-align:left"><code>this</code></td>
+<td style="text-align:left">When the <code>autoupdate</code> attribute is not set, this method might be used to programmatically update current values in the control elements instead.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>updateSection(idx,sec)</code></td>
+<td style="text-align:left"><code>this</code></td>
+<td style="text-align:left">If <code>sec</code> is present, current section at index <code>idx</code> will be replaced by <code>sec</code>, otherwise current section is assumed to be modified and stays in place. The shadow DOM is getting updated hereafter.</td>
+</tr>
+</tbody>
+</table>
+<div  ></div>
+<figcaption>Table 3: API Methods.</figcaption><br>
+<h3 id="51-self-control">5.1 Self-Control</h3>
+<p>API methods may be used to modify the <code>&lt;ctrl-ing&gt;</code> menu itself. Here is an example, how to disable the section with index <code>2</code>.</p>
+<pre><code class="code-line language-json"><div>&lt;ctrl-ing id=<span class="hljs-string">&quot;ctrlslf&quot;</span> ref=<span class="hljs-string">&quot;obj&quot;</span> callback=<span class="hljs-string">&quot;$[&#x27;callbk&#x27;]&quot;</span>&gt;
+  <span class="hljs-punctuation">[</span> <span class="hljs-punctuation">{</span><span class="hljs-attr">&quot;sec&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;hdr&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;text&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;Self-Control&quot;</span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-punctuation">{</span><span class="hljs-attr">&quot;sec&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;chk&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;label&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;Disable str&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;path&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;$[&#x27;disable&#x27;]&quot;</span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-punctuation">{</span><span class="hljs-attr">&quot;sec&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;txt&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;label&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;str&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;path&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;$[&#x27;str&#x27;]&quot;</span><span class="hljs-punctuation">}</span>
+  <span class="hljs-punctuation">]</span>
+&lt;/ctrl-ing&gt;
+</div></code></pre>
+<div  ></div>
+<div style="display:flex; position:relative; font-size:0.8em;">
+<pre><code class="code-line language-js"><div><span class="hljs-keyword">const</span> objslf = {
+    <span class="hljs-attr">disable</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">str</span>: <span class="hljs-string">&quot;Hello&quot;</span>,
+    <span class="hljs-title function_">callbk</span>(<span class="hljs-params">{ctrl, obj, member, value, section, elem}</span>) {
+        <span class="hljs-keyword">if</span> (member === <span class="hljs-string">&#x27;disable&#x27;</span>) {
+            ctrl.<span class="hljs-title function_">section</span>(<span class="hljs-number">2</span>).<span class="hljs-property">disabled</span> = value;
+            ctrl.<span class="hljs-title function_">updateSection</span>(<span class="hljs-number">2</span>);
+        }
+    }
+}
+</div></code></pre>
+<div  ></div>
+  <ctrl-ing id="ctrlslf" ref="objslf" callback="$['callbk']">
+    [ {"sec":"hdr","text":"Self-Control"},
+      {"sec":"chk","label":"Disable str","path":"$['disable']"},
+      {"sec":"txt","label":"str","path":"$['str']"}
+    ]
+  </ctrl-ing>
+</div>
+<script>
+    const ctrlr = document.getElementById('ctrlslf');
+    const objslf = {
+        disable: false,
+        str: "Hello",
+        callbk({ctrl,obj, member, value, section, elem}) {
+            if (member === 'disable') {
+                ctrlr.section(2).disabled = value;
+                ctrlr.updateSection(2);
+            }
+        }
+    }
+</script>
+<h2 id="6-other-controller-libraries">6. Other Controller Libraries</h2>
+<h2 id="7-conclusion">7. Conclusion</h2>
+<p><code>&lt;ctrl-ing&gt;</code> is a lightweight HTML custom element. It helps to rapidly prototype a pleasing GUI without programming. Web-App parameters or JavaScript/JSON object values can be monitored or interactively modified.</p>
+<p>A <code>&lt;ctrl-ing&gt;</code> menu can be built with few HTML/JSON text alone. Accessing its HTML element via JavaScript can be done via well known DOM methods. Accessing the hidden shadow DOM sections is not possible though. For enabling programmatical access to the internal menu structure, an API is provided.</p>
+<p><code>&lt;ctrl-ing&gt;</code> does not depend on other libraries and is meant as a helper for webapplications of small to medium size.</p>
 <div  ></div>
 <br>
 <h2 id="references">References</h2>

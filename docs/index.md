@@ -1,7 +1,7 @@
 ---
 "lang": "en-US",
 "title": "ctrl-ing",
-"subtitle": "An appealing GUI for controlling your Web-App, JSON or JavaScript Object Values",
+"subtitle": "An appealing GUI for controlling your Web-App, JSON, DOM or JavaScript Object Values",
 "authors": ["Stefan Gössner<sup>1</sup>", "<a href='https://github.com/goessner/ctrling'><svg height='16' width='16' viewBox='0 0 16 16'><path fill-rule='evenodd' fill='#1f3939' clip-rule='evenodd' d='M8 0C3.58 0 0 3.58 0 8C0 11.54 2.29 14.53 5.47 15.59C5.87 15.66 6.02 15.42 6.02 15.21C6.02 15.02 6.01 14.39 6.01 13.72C4 14.09 3.48 13.23 3.32 12.78C3.23 12.55 2.84 11.84 2.5 11.65C2.22 11.5 1.82 11.13 2.49 11.12C3.12 11.11 3.57 11.7 3.72 11.94C4.44 13.15 5.59 12.81 6.05 12.6C6.12 12.08 6.33 11.73 6.56 11.53C4.78 11.33 2.92 10.64 2.92 7.58C2.92 6.71 3.23 5.99 3.74 5.43C3.66 5.23 3.38 4.41 3.82 3.31C3.82 3.31 4.49 3.1 6.02 4.13C6.66 3.95 7.34 3.86 8.02 3.86C8.7 3.86 9.38 3.95 10.02 4.13C11.55 3.09 12.22 3.31 12.22 3.31C12.66 4.41 12.38 5.23 12.3 5.43C12.81 5.99 13.12 6.7 13.12 7.58C13.12 10.65 11.25 11.33 9.47 11.53C9.76 11.78 10.01 12.26 10.01 13.01C10.01 14.08 10 14.94 10 15.21C10 15.42 10.15 15.67 10.55 15.59C13.71 14.53 16 11.53 16 8C16 3.58 12.42 0 8 0Z'></path></svg></a>"],
 "adresses": ["<sup>1</sup>Dortmund University of Applied Sciences. Department of Mechanical Engineering"],
 "date": "December 2022",
@@ -74,7 +74,7 @@ Beside implementing your web application, all you need to do for prototyping an 
 * *output* monitoring values.
 * *structuring* elements.
 
-All section objects are generating plain native HTML (form) elements in the background (shadow DOM). That markup is hidden and separated from other code on the page &mdash; thus avoiding code collisions.
+All section objects are generating plain native HTML (form) elements in the background (shadow DOM) [[1]](#1). That markup is hidden and separated from other code on the page &mdash; thus avoiding code collisions.
 
 ## 2. Getting Started
 
@@ -107,7 +107,7 @@ Here is the complete HTML code ([Live version](./gettingstarted.html))
             toggle: false
         }
     </script>
-    </body>
+</body>
 </html>
 ```
 <figcaption>Listing 2: Minimalistic example using <code>&lt;ctrl-ing&gt;</code> element.</figcaption><br>
@@ -207,9 +207,37 @@ Please note, that a first initial call of the `callback` function &ndash; when e
 It is possible to let a `<ctrl-ing>` element automatically generate a GUI menu from a given JavaScript object.
 
 ```html
-<ctrl-ing ref="obj" autogenerate></ctrl-ing>
+<ctrl-ing ref="gen" autogenerate></ctrl-ing>
 ```
 
+<div style="display:flex; position:relative; font-size:0.8em;">
+<pre id="genout"></pre>
+<ctrl-ing ref="gen" autogenerate autoupdate callback="window['cbgen']"></ctrl-ing>
+</div>
+<script>
+const gen = {
+    checked: true,
+    _priv: false,
+    month: "january",
+    number: 42,
+    color: '#ff0000',
+    get phi() { return this._phi || 3.14; },
+    set phi(q) { return this._phi = q; }
+}
+function cbgen() { document.getElementById('genout').innerHTML = "const gen = "+Ctrling.stringify(gen); }
+</script>
+
+Automatical menu generation with `<ctrl-ing>` works according to following rules.
+
+* its `ref` attribute must point to a valid object.
+* its `autogenerate` attribute must be present.
+* the object's properties delivered by [`Object.getOwnPropertyNames()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/getOwnPropertyNames) are taken to build the menu.
+  * the member value types `boolean`, `number` and `string` create sections of type `chk`, `num` and `txt`.
+  * a member value type of `string` whose value starts with `"#"` is assumed to represent a rgb color value and generates a section of type `col`.
+  * members with type of `object` are not taken into account.
+  * getters/setters are treated as normal properties.
+  * property names starting with underline `"_"` are considered private and skipped.
+* an `autogenerate="source"` attribute generates an additional final section of type `out` containing the JSON text of the generated sections as a template for further use.
 
 
 ## 4. Sections Reference
@@ -247,7 +275,7 @@ The `btn` section is used to trigger an action of some kind, so it supports the 
 ```
 
 <div style="display:flex; position:relative; font-size:0.8em;">
-<pre id="src">
+<pre id="btnsrc">
 function fnc() { ... }
 const btn = { method() { ... } }
 </pre>
@@ -259,7 +287,7 @@ const btn = { method() { ... } }
 </ctrl-ing>
 </div>
  <script>
-const src=document.getElementById('src');
+const src=document.getElementById('btnsrc');
 function fnc() { src.style.backgroundColor='red'; }
 var btn = {
   method() { src.style.backgroundColor='green'; }
@@ -858,13 +886,13 @@ The `<ctrl-ing>` menu internals are hidden behind the shadow DOM. For offering p
         .addSection({"sec":"chk","label":"chk","path":"$['chok']"})         // (4)
         .addSection({"sec":"num","label":"num","path":"$['num']"})
         .addSection({"sec":"out","label":"obj=","path":"$"})
-        .insertSection(2, {"sec":"txt","label":"str","path":"$['str']"})    // (5)
+        .insertSection(3, {"sec":"txt","label":"str","path":"$['str']"})    // (5)
         .updateSection(1, {"sec":"chk","label":"chk","path":"$['chk']"})    // (6)
         .removeSection(2)                                                   // (7)
   })
 </script>
 ```
-<figcaption>Listing 4: Control menu generation via API calls.</figcaption><br>
+<figcaption>Listing 4: Control menu generation and modification via API calls.</figcaption><br>
 
 Comments to the line numbers:
 
@@ -872,17 +900,17 @@ Comments to the line numbers:
 2. The `setAttr` method is merely syntactic sugar for the native `setAttribute` method. It additionally supports chaining of method calls only.
 3. `addSection` methods are used to sequentially build the control menu. They get a single object literal argument representing a section.
 4. Note the intentional typo with the `path` value. That will be corrected in (6).
-5. `insertSection` method inserts a new section after section with current index `2`, i.e. `{"sec":"num",...}`.
+5. `insertSection` method inserts a new section before section with current index `3`, i.e. `{"sec":"out",...}`.
 6. `updateSection` method corrects the typo in line (4) and updates section with current index `1`, i.e. `{"sec":"chk",...}`.
 7. `removeSection` method removes the section with current index `2`, i.e. `{"sec":"num",...}`.
 
-The API works properly at the earliest after the <ctrl-ing> element is completely initialized. In order to ensure this, we want to encapsulate the API method calls in a callback function oninit((ctrl) => { ... }). The callback function receives the <ctrl-ing> element object as a single argument.
+The API works properly at the earliest after the `<ctrl-ing>` element is completely initialized. In order to ensure this, we want to encapsulate the API method calls in a callback function oninit((ctrl) => { ... }). The callback function receives the `<ctrl-ing>` element object as a single argument.
 
 | Method | Returns | Comment |
 |:--|:--|:--|
 |`addSection(sec)` | `this` | Append a new section object `sec` to the sections array.  |
 |`findSectionIndex(fn)` | index | Locate the first section in the sections array, that fulfills the condition given by function `fn`. Returns the array index found or `-1` on failure. The condition function receives the current section during iteration as argument. |
-|`insertSection(idx,sec)` | `this` | Insert a new section object `sec` to the sections array after the section at index `idx`.  |
+|`insertSection(idx,sec)` | `this` | Insert a new section object `sec` to the sections array before the section at index `idx`.  |
 |`oninit(fn)` | - | Invoking a callback function `fn`, while ensuring that the control menu object is completely initialized. The callback function receives the `<ctrl-ing>` element object as a single argument. |
 |`removeAttr(attr)` | `this` | Remove `<ctrl-ing>`'s attribute `attr`.  |
 |`removeSection(idx)` | `this` | Remove the section at index `idx`. |
@@ -895,7 +923,7 @@ The API works properly at the earliest after the <ctrl-ing> element is completel
 
 ### 5.1 Self-Control
 
-API methods may be used to modify the `<ctrl-ing>` menu itself. Here is an example, how to disable a section.
+API methods may be used to modify the `<ctrl-ing>` menu itself. Here is an example, how to disable the section with index `2`.
 
 
 ```json
@@ -910,7 +938,6 @@ API methods may be used to modify the `<ctrl-ing>` menu itself. Here is an examp
 <div style="display:flex; position:relative; font-size:0.8em;">
 
 ```js
-document.getElementById('ctrlslf');
 const objslf = {
     disable: false,
     str: "Hello",
@@ -930,33 +957,39 @@ const objslf = {
   </ctrl-ing>
 </div>
 <script>
-    const ctrl = document.getElementById('ctrlslf');
-    const obj = {
+    const ctrlr = document.getElementById('ctrlslf');
+    const objslf = {
         disable: false,
         str: "Hello",
         callbk({ctrl,obj, member, value, section, elem}) {
             if (member === 'disable') {
-                ctrl.section(2).disabled = value;
-                ctrl.updateSection(2);
-                console.log(this.str);
+                ctrlr.section(2).disabled = value;
+                ctrlr.updateSection(2);
             }
         }
     }
 </script>
 
-## 6. Conclusion
+## 6. Other Controller Libraries
 
-`ctrl-ing` is a lightweight HTML custom element. It helps to rapidly prototype a pleasing GUI without programming. Web-App parameters or JavaScript/JSON object values can be monitored or interactively modified.
 
-A `<ctrl-ing>` menu can be built by few HTML/JSON text alone. Accessing its HTML element via JavaScript can be done via well known DOM methods. Accessing the hidden shadow DOM sections is not possible though. For enabling programmatical access to the internal menu structure, an API is provided.
 
-`ctrl-ing` does not depend on other libraries and is meant as a helper for webapplications of small to medium size.
+
+## 7. Conclusion
+
+`<ctrl-ing>` is a lightweight HTML custom element. It helps to rapidly prototype a pleasing GUI without programming. Web-App parameters or JavaScript/JSON object values can be monitored or interactively modified.
+
+A `<ctrl-ing>` menu can be built with few HTML/JSON text alone. Accessing its HTML element via JavaScript can be done via well known DOM methods. Accessing the hidden shadow DOM sections is not possible though. For enabling programmatical access to the internal menu structure, an API is provided.
+
+`<ctrl-ing>` does not depend on other libraries and is meant as a helper for webapplications of small to medium size.
 
 <br>
 
 ## References 
 
-<span id="1">[1] Canvas API, [https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API)</span>    
+
+
+<span id="1">[1] HTML input types, [https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Input#input_types](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Input#input_types)</span>    
 <span id="2">[2] 
 D. Corbacho, Debouncing and Throttling Explained Through Examples    
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[https://css-tricks.com/debouncing-throttling-explained-examples/](https://css-tricks.com/debouncing-throttling-explained-examples/)</span>    

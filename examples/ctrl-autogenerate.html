@@ -9,7 +9,7 @@
     <h2>ctrl-autogenerate</h2>
     <div style="display:flex; position:relative;">
         <pre id="out"></pre>
-        <ctrl-ing ref="obj" autogenerate="src" autoupdate callback="window['callbk']" width="400px" darkmode></ctrl-ing>
+        <ctrl-ing ref="obj" autogenerate="src" autoupdate callback="window['callbk']"></ctrl-ing>
     </div>
 </body>
 <script>
@@ -17,7 +17,6 @@
         checked: true,
         _priv: false,
         month: "january",
-        number: 42,
         color: '#ff0000',
         get phi() { return this._phi || 3.14; },
         set phi(q) { return this._phi = q; }

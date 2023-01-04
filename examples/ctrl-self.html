@@ -4,11 +4,11 @@
     <meta charset='utf-8'>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>ctrl-self</title>
-    <script src="../ctrling.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ctrling/ctrling.min.js"></script>
 </head>
 <body>
     <h2>ctrl-self</h2>
-    <ctrl-ing ref="obj" callback="$['callbk']" autoupdate>
+    <ctrl-ing id="ctrlr" ref="obj" callback="window['callbk']" autoupdate>
         [ {"sec":"hdr","text":"Self-Control"},
           {"sec":"chk","label":"Disable str","path":"$['disable']"},
           {"sec":"txt","label":"str","path":"$['str']"},
@@ -19,13 +19,15 @@
 <script>
     const obj = {
         disable: false,
-        str: "Hello",
-        callbk({ctrl, obj, member, value, section, elem}) {
-            if (member === 'disable') {
-                ctrl.section(2).disabled = value;
-                ctrl.updateSection(2);
-            }
+        str: "Hello"
+    }
+    function callbk({ctrlr, obj, member, value, section, elem}) {
+        if (member === 'disable') {
+            const ctrl = document.querySelector('ctrl-ing');
+            ctrl.section(2).disabled = value;
+            ctrl.updateSection(2);
         }
     }
+
 </script>
 </html>

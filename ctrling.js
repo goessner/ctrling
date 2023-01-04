@@ -1,6 +1,6 @@
 /**
  * ctrling.js (c) 2022/23 Stefan Goessner
- * ver. 0.8.19
+ * ver. 0.8.20
  * @license MIT License
  */
 "use strict";
@@ -128,14 +128,15 @@ class Ctrling extends HTMLElement {
             this.#sectionsFromJSON(content);
 
         this.style.display = 'block';
-        this.style.height = this.offsetHeight + 'px';
-        this.#main.style.width = this.offsetWidth + 'px';  // fill up to width of :host ... !
-
+        this.style.height = this.#main.offsetHeight + 'px';  // adjust height of :host with height of shadow content ... !
+        this.#main.style.width = this.offsetWidth + 'px';    // fill up to width of :host ... !
         if (this.#oninit && typeof this.#oninit === 'function')
             this.#oninit(this);
 
         if (this.#usrValueCallback)
             this.#usrValueCallback({ctrl:this});  // call initially once with empty arguments object ...
+        console.log('initialized!');
+        this.initialized = true;
     }
 
     #sectionsFromJSON(content) {
@@ -263,8 +264,8 @@ class Ctrling extends HTMLElement {
         if (idx >= 0) {
             const secElem = this.#newHtmlSection(sec);
             if (secElem) {
-                this.#main.getElementsByTagName('section')[idx]?.insertAdjacentElement('afterend', secElem);
-                this.#sections.splice(idx+1, 0, sec);
+                this.#main.getElementsByTagName('section')[idx]?.insertAdjacentElement('beforebegin', secElem);
+                this.#sections.splice(idx, 0, sec);
             }
         }
         return this;
@@ -437,6 +438,7 @@ class Ctrling extends HTMLElement {
                                                                 .replace(/^\{/gm,'{\n  ')
                                                                 .replace(/\}$/gm,'\n}')
                                                                 .replaceAll(',',',\n  ')
+                                                                .replaceAll(/  ("_[^"]*":[^,\n]*,?\n)/gm,'') // skip private members
                                                                 .replaceAll(';',',')
              : typeof value === 'string' ? value
              : JSON.stringify(value);
