@@ -3,10 +3,10 @@
 <head>
     <meta charset='utf-8'>
     <title>ctrl-api</title>
-    <script src="../ctrling.js"></script>
 </head>
 <body>
     <ctrl-ing></ctrl-ing>
+</body>
     <script>
         const obj = {
             chk: true,
@@ -14,7 +14,7 @@
             str: 'hello'
         }
 
-        document.querySelector('ctrl-ing').oninit((ctrl) => {                       // (1)
+        document.querySelector('ctrl-ing').oninit((ctrl) => {                    // (1)
             ctrl.setAttr('ref', 'obj')                                           // (2)
                 .setAttr('darkmode',true)
                 .setAttr('autoupdate',true)
@@ -27,5 +27,5 @@
                 .removeSection(2)                                                // (7)
         })
     </script>
-    </body>
+    <script src="https://cdn.jsdelivr.net/npm/ctrling/ctrling.js"></script>
 </html>

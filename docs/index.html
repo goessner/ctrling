@@ -12,11 +12,11 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/markdown-it-texmath/css/texmath.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/goessner/mdmath/themes/publication/style.css">
 
-<title>ctrl-ing</title>
+<title>&lt;ctrl-ing&gt; - Smart GUI Controller</title>
 </head>
 <body id="top">
 <header>
-<h1>ctrl-ing</h1>
+<h1>&lt;ctrl-ing&gt; - Smart GUI Controller</h1>
 <h3>An appealing GUI for controlling your Web-App, JSON, DOM or JavaScript Object Values</h3>
 <h4>Stefan Gössner<sup>1</sup>, <a href='https://github.com/goessner/ctrling'><svg height='16' width='16' viewBox='0 0 16 16'><path fill-rule='evenodd' fill='#1f3939' clip-rule='evenodd' d='M8 0C3.58 0 0 3.58 0 8C0 11.54 2.29 14.53 5.47 15.59C5.87 15.66 6.02 15.42 6.02 15.21C6.02 15.02 6.01 14.39 6.01 13.72C4 14.09 3.48 13.23 3.32 12.78C3.23 12.55 2.84 11.84 2.5 11.65C2.22 11.5 1.82 11.13 2.49 11.12C3.12 11.11 3.57 11.7 3.72 11.94C4.44 13.15 5.59 12.81 6.05 12.6C6.12 12.08 6.33 11.73 6.56 11.53C4.78 11.33 2.92 10.64 2.92 7.58C2.92 6.71 3.23 5.99 3.74 5.43C3.66 5.23 3.38 4.41 3.82 3.31C3.82 3.31 4.49 3.1 6.02 4.13C6.66 3.95 7.34 3.86 8.02 3.86C8.7 3.86 9.38 3.95 10.02 4.13C11.55 3.09 12.22 3.31 12.22 3.31C12.66 4.41 12.38 5.23 12.3 5.43C12.81 5.99 13.12 6.7 13.12 7.58C13.12 10.65 11.25 11.33 9.47 11.53C9.76 11.78 10.01 12.26 10.01 13.01C10.01 14.08 10 14.94 10 15.21C10 15.42 10.15 15.67 10.55 15.59C13.71 14.53 16 11.53 16 8C16 3.58 12.42 0 8 0Z'></path></svg></a></h4>
 <h5><sup>1</sup>Dortmund University of Applied Sciences. Department of Mechanical Engineering</h5>
@@ -31,7 +31,12 @@
 <ul>
 <li><a href="#1-what-is-it">1. What is It ?</a></li>
 <li><a href="#2-getting-started">2. Getting Started</a></li>
-<li><a href="#3-ctrl-ing-element">3. <code>&lt;ctrl-ing&gt;</code> Element</a></li>
+<li><a href="#3-ctrl-ing-element">3. <code>&lt;ctrl-ing&gt;</code> Element</a>
+<ul>
+<li><a href="#31-ctrl-ing-attributes">3.1 <code>&lt;ctrl-ing&gt;</code> Attributes</a></li>
+<li><a href="#32-automatical-menu-generation">3.2 Automatical Menu Generation</a></li>
+</ul>
+</li>
 <li><a href="#4-sections-reference">4. Sections Reference</a>
 <ul>
 <li><a href="#41-button">4.1 Button</a></li>
@@ -48,13 +53,19 @@
 <li><a href="#412-vector">4.12 Vector</a></li>
 </ul>
 </li>
-<li><a href="#5-conclusion">5. Conclusion</a></li>
+<li><a href="#5-api">5. API</a>
+<ul>
+<li><a href="#51-self-control">5.1 Self-Control</a></li>
+</ul>
+</li>
+<li><a href="#6-other-controller-libraries">6. Other Controller Libraries</a></li>
+<li><a href="#7-conclusion">7. Conclusion</a></li>
 <li><a href="#references">References</a></li>
 </ul>
 <h2 id="1-what-is-it">1. What is It ?</h2>
 <p><code>ctrl-ing</code> is a tiny HTML custom element used to interactively control your Web-App parameters or JavaScript/JSON/DOM object values in a comfortable way with the following characteristics:</p>
 <ul>
-<li>tiny footprint <code>18.7/11.3 kB</code> un/compressed.</li>
+<li>tiny footprint <code>25.3/14.2 kB</code> un/compressed.</li>
 <li>dependency free.</li>
 <li>easy prototypical generation with low effort.</li>
 <li>given an object, a menu template can even be created automatically.</li>
@@ -88,7 +99,7 @@
 <li><em>output</em> monitoring values.</li>
 <li><em>structuring</em> elements.</li>
 </ul>
-<p>All section objects are generating plain native HTML (form) elements in the background (shadow DOM). That markup is hidden and separated from other code on the page — thus avoiding code collisions.</p>
+<p>All section objects are generating plain native HTML (form) elements in the background (shadow DOM) <a href="#1">[1]</a>. That markup is hidden and separated from other code on the page — thus avoiding code collisions.</p>
 <h2 id="2-getting-started">2. Getting Started</h2>
 <p>You might want to start with a minimal example. Let's say, we want to create this controlling menu.</p>
 <div  ></div>
@@ -327,7 +338,7 @@ function cbgen() { document.getElementById('genout').innerHTML = "const gen = "+
 <td style="text-align:left">Display a slider element for setting a numerical parameter value.</td>
 </tr>
 <tr>
-<td style="text-align:center"><a href="#49-select"><code>sel</code></a></td>
+<td style="text-align:center"><a href="#49-selection"><code>sel</code></a></td>
 <td style="text-align:left"><code>&lt;select&gt;</code></td>
 <td style="text-align:left">Provides a drop down menu of options.</td>
 </tr>
@@ -1217,7 +1228,7 @@ Then object member names are displayed in the drop down menu and member values a
         .<span class="hljs-title function_">addSection</span>({<span class="hljs-string">&quot;sec&quot;</span>:<span class="hljs-string">&quot;chk&quot;</span>,<span class="hljs-string">&quot;label&quot;</span>:<span class="hljs-string">&quot;chk&quot;</span>,<span class="hljs-string">&quot;path&quot;</span>:<span class="hljs-string">&quot;$[&#x27;chok&#x27;]&quot;</span>})         <span class="hljs-comment">// (4)</span>
         .<span class="hljs-title function_">addSection</span>({<span class="hljs-string">&quot;sec&quot;</span>:<span class="hljs-string">&quot;num&quot;</span>,<span class="hljs-string">&quot;label&quot;</span>:<span class="hljs-string">&quot;num&quot;</span>,<span class="hljs-string">&quot;path&quot;</span>:<span class="hljs-string">&quot;$[&#x27;num&#x27;]&quot;</span>})
         .<span class="hljs-title function_">addSection</span>({<span class="hljs-string">&quot;sec&quot;</span>:<span class="hljs-string">&quot;out&quot;</span>,<span class="hljs-string">&quot;label&quot;</span>:<span class="hljs-string">&quot;obj=&quot;</span>,<span class="hljs-string">&quot;path&quot;</span>:<span class="hljs-string">&quot;$&quot;</span>})
-        .<span class="hljs-title function_">insertSection</span>(<span class="hljs-number">2</span>, {<span class="hljs-string">&quot;sec&quot;</span>:<span class="hljs-string">&quot;txt&quot;</span>,<span class="hljs-string">&quot;label&quot;</span>:<span class="hljs-string">&quot;str&quot;</span>,<span class="hljs-string">&quot;path&quot;</span>:<span class="hljs-string">&quot;$[&#x27;str&#x27;]&quot;</span>})    <span class="hljs-comment">// (5)</span>
+        .<span class="hljs-title function_">insertSection</span>(<span class="hljs-number">3</span>, {<span class="hljs-string">&quot;sec&quot;</span>:<span class="hljs-string">&quot;txt&quot;</span>,<span class="hljs-string">&quot;label&quot;</span>:<span class="hljs-string">&quot;str&quot;</span>,<span class="hljs-string">&quot;path&quot;</span>:<span class="hljs-string">&quot;$[&#x27;str&#x27;]&quot;</span>})    <span class="hljs-comment">// (5)</span>
         .<span class="hljs-title function_">updateSection</span>(<span class="hljs-number">1</span>, {<span class="hljs-string">&quot;sec&quot;</span>:<span class="hljs-string">&quot;chk&quot;</span>,<span class="hljs-string">&quot;label&quot;</span>:<span class="hljs-string">&quot;chk&quot;</span>,<span class="hljs-string">&quot;path&quot;</span>:<span class="hljs-string">&quot;$[&#x27;chk&#x27;]&quot;</span>})    <span class="hljs-comment">// (6)</span>
         .<span class="hljs-title function_">removeSection</span>(<span class="hljs-number">2</span>)                                                   <span class="hljs-comment">// (7)</span>
   })
@@ -1231,7 +1242,7 @@ Then object member names are displayed in the drop down menu and member values a
 <li>The <code>setAttr</code> method is merely syntactic sugar for the native <code>setAttribute</code> method. It additionally supports chaining of method calls only.</li>
 <li><code>addSection</code> methods are used to sequentially build the control menu. They get a single object literal argument representing a section.</li>
 <li>Note the intentional typo with the <code>path</code> value. That will be corrected in (6).</li>
-<li><code>insertSection</code> method inserts a new section after section with current index <code>2</code>, i.e. <code>{&quot;sec&quot;:&quot;num&quot;,...}</code>.</li>
+<li><code>insertSection</code> method inserts a new section before section with current index <code>3</code>, i.e. <code>{&quot;sec&quot;:&quot;out&quot;,...}</code>.</li>
 <li><code>updateSection</code> method corrects the typo in line (4) and updates section with current index <code>1</code>, i.e. <code>{&quot;sec&quot;:&quot;chk&quot;,...}</code>.</li>
 <li><code>removeSection</code> method removes the section with current index <code>2</code>, i.e. <code>{&quot;sec&quot;:&quot;num&quot;,...}</code>.</li>
 </ol>
@@ -1258,7 +1269,7 @@ Then object member names are displayed in the drop down menu and member values a
 <tr>
 <td style="text-align:left"><code>insertSection(idx,sec)</code></td>
 <td style="text-align:left"><code>this</code></td>
-<td style="text-align:left">Insert a new section object <code>sec</code> to the sections array after the section at index <code>idx</code>.</td>
+<td style="text-align:left">Insert a new section object <code>sec</code> to the sections array before the section at index <code>idx</code>.</td>
 </tr>
 <tr>
 <td style="text-align:left"><code>oninit(fn)</code></td>
@@ -1288,7 +1299,7 @@ Then object member names are displayed in the drop down menu and member values a
 <tr>
 <td style="text-align:left"><code>updateControlValues()</code></td>
 <td style="text-align:left"><code>this</code></td>
-<td style="text-align:left">When the <code>autoupdate</code> attribute is not set, this method might be used to programmatically update current values in the control elements instead.</td>
+<td style="text-align:left">When the <code>autoupdate</code> attribute is not set, this method might be used programmatically to update current values in the control elements instead.</td>
 </tr>
 <tr>
 <td style="text-align:left"><code>updateSection(idx,sec)</code></td>
@@ -1301,7 +1312,7 @@ Then object member names are displayed in the drop down menu and member values a
 <figcaption>Table 3: API Methods.</figcaption><br>
 <h3 id="51-self-control">5.1 Self-Control</h3>
 <p>API methods may be used to modify the <code>&lt;ctrl-ing&gt;</code> menu itself. Here is an example, how to disable the section with index <code>2</code>.</p>
-<pre><code class="code-line language-json"><div>&lt;ctrl-ing id=<span class="hljs-string">&quot;ctrlslf&quot;</span> ref=<span class="hljs-string">&quot;obj&quot;</span> callback=<span class="hljs-string">&quot;$[&#x27;callbk&#x27;]&quot;</span>&gt;
+<pre><code class="code-line language-json"><div>&lt;ctrl-ing ref=<span class="hljs-string">&quot;objslf&quot;</span> callback=<span class="hljs-string">&quot;$[&#x27;callbk&#x27;]&quot;</span>&gt;
   <span class="hljs-punctuation">[</span> <span class="hljs-punctuation">{</span><span class="hljs-attr">&quot;sec&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;hdr&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;text&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;Self-Control&quot;</span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
     <span class="hljs-punctuation">{</span><span class="hljs-attr">&quot;sec&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;chk&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;label&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;Disable str&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;path&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;$[&#x27;disable&#x27;]&quot;</span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
     <span class="hljs-punctuation">{</span><span class="hljs-attr">&quot;sec&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;txt&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;label&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;str&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;path&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;$[&#x27;str&#x27;]&quot;</span><span class="hljs-punctuation">}</span>
@@ -1322,7 +1333,7 @@ Then object member names are displayed in the drop down menu and member values a
 }
 </div></code></pre>
 <div  ></div>
-  <ctrl-ing id="ctrlslf" ref="objslf" callback="$['callbk']">
+  <ctrl-ing ref="objslf" callback="$['callbk']">
     [ {"sec":"hdr","text":"Self-Control"},
       {"sec":"chk","label":"Disable str","path":"$['disable']"},
       {"sec":"txt","label":"str","path":"$['str']"}
@@ -1330,36 +1341,35 @@ Then object member names are displayed in the drop down menu and member values a
   </ctrl-ing>
 </div>
 <script>
-    const ctrlr = document.getElementById('ctrlslf');
     const objslf = {
         disable: false,
         str: "Hello",
         callbk({ctrl,obj, member, value, section, elem}) {
             if (member === 'disable') {
-                ctrlr.section(2).disabled = value;
-                ctrlr.updateSection(2);
+                ctrl.section(2).disabled = value;
+                ctrl.updateSection(2);
             }
         }
     }
 </script>
 <h2 id="6-other-controller-libraries">6. Other Controller Libraries</h2>
+<p>There are a couple of JavaScript controller libraries. Here are two overview pages <a href="#2">[2, 3]</a>. From the controller libraries listed there <code>dat.gui</code> is the most mature and most popular one. Many of the other libraries are kind of <code>dat.gui</code> clones providing an identical or very similar API. Some of them have very powerful features added like enhanced color pickers and/or charting capabilities. If you want a <code>dat.gui</code> like JavaScript solution, it is recommended to take one of these controller libraries.</p>
+<p><code>&lt;ctr-ing&gt;</code> has a different, more minimalistic approach with quickly prototyping a GUI menu by using markup/JSON alone. It deliberately uses plain standard HTML form elements for user interaction despite some of their known deficiencies. Hence the advantage of its light weight, which is considerable smaller (25 kB uncompressed) than the libraries above.</p>
 <h2 id="7-conclusion">7. Conclusion</h2>
-<p><code>&lt;ctrl-ing&gt;</code> is a lightweight HTML custom element. It helps to rapidly prototype a pleasing GUI without programming. Web-App parameters or JavaScript/JSON object values can be monitored or interactively modified.</p>
-<p>A <code>&lt;ctrl-ing&gt;</code> menu can be built with few HTML/JSON text alone. Accessing its HTML element via JavaScript can be done via well known DOM methods. Accessing the hidden shadow DOM sections is not possible though. For enabling programmatical access to the internal menu structure, an API is provided.</p>
+<p><code>&lt;ctrl-ing&gt;</code> is a lightweight HTML custom element. It helps to rapidly prototype a pleasing GUI without programming. Web-App parameters or JavaScript/JSON/DOM object values can be monitored or interactively modified.</p>
+<p>A <code>&lt;ctrl-ing&gt;</code> menu can be built with few HTML/JSON text alone. Accessing its HTML element via JavaScript can be done via well known DOM methods. Accessing the hidden shadow DOM sections is not possible though. For enabling programmatical access to the internal menu structure, a small API is provided.</p>
 <p><code>&lt;ctrl-ing&gt;</code> does not depend on other libraries and is meant as a helper for webapplications of small to medium size.</p>
 <div  ></div>
 <br>
 <h2 id="references">References</h2>
-<p><span id="1">[1] Canvas API, <a href="https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API">https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API</a></span><br>
-<span id="2">[2]
-D. Corbacho, Debouncing and Throttling Explained Through Examples<br>
-     <a href="https://css-tricks.com/debouncing-throttling-explained-examples/">https://css-tricks.com/debouncing-throttling-explained-examples/</a></span><br>
-<span id="3">[3] S. Goessner, <code>canvas-area</code>,
-<a href="https://github.com/goessner/canvas-area">https://github.com/goessner/canvas-area</a></span><br>
+<p><span id="1">[1] HTML input types,<br>      <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Input#input_types">https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Input#input_types</a></span><br>
+<span id="2">[2] List of JavaScript GUI Control libraries, <a href="https://xosh.org/javascript-control-ui/">https://xosh.org/javascript-control-ui/</a></span><br>
+<span id="3">[3] JavaScript GUI libraries,<br>     
+<a href="https://gist.github.com/SMUsamaShah/71d5ac6849cdc0bffff4c19329e9d0bb">https://gist.github.com/SMUsamaShah/71d5ac6849cdc0bffff4c19329e9d0bb</a></span><br>
 <span id="4">[4] S. Goessner, Make your HTML canvas Interactive,
 <a href="https://www.researchgate.net/publication/360034117_Make_your_HTML_canvas_Interactive">Researchgate, DOI: 10.13140/RG.2.2.31978.39367</a></span></p>
 <div  ></div>
-<script src="https://cdn.jsdelivr.net/npm/ctrling/ctrling.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/ctrling/ctrling.js"></script>
 
 </main>
 </body>

@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/markdown-it-texmath/css/texmath.min.css">
     <title>ctrl-lissajous</title>
 </head>
-
 <body>
     <h1 style="text-align:center;width:98vw">Lissajous</h1>
     <div style="display: flex; flex-wrap: nowrap; justify-content: space-between; background-color:#efefef; position:relative;">
@@ -44,7 +43,7 @@ const app = {
         const ctrl = document.getElementById('ctrl');
         ctrl.section(5).disabled = !q;
         ctrl.updateSection(5);
-        return this._run = q; 
+        this._run = q; 
     },
     crv() {
         if (!this._crv) this._crv = [];
@@ -97,5 +96,5 @@ const app = {
 window.addEventListener('load', () => app.tick(), false);
 
 </script>
-<script src="../ctrling.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/ctrling/ctrling.js"></script>
 </html>

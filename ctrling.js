@@ -1,6 +1,6 @@
 /**
  * ctrling.js (c) 2022/23 Stefan Goessner
- * ver. 0.8.20
+ * ver. 0.8.21
  * @license MIT License
  */
 "use strict";
@@ -136,7 +136,7 @@ class Ctrling extends HTMLElement {
         if (this.#usrValueCallback)
             this.#usrValueCallback({ctrl:this});  // call initially once with empty arguments object ...
         console.log('initialized!');
-        this.initialized = true;
+        this.initialized = true; // temorary globally accessible ... !
     }
 
     #sectionsFromJSON(content) {
@@ -310,7 +310,7 @@ class Ctrling extends HTMLElement {
         const [obj, member] = this.#getRef(args.path);
         elem.innerHTML = `<label>${args.label||'&nbsp;'}<input type="checkbox" ${this.#getRefValue(obj, member, args.value) ? "checked" : ""}${!!args.disabled ? " disabled" : ""}></label>`;
         const input = elem.querySelector('input');
-        this.#addListeners(args, [{type:"input", elem:elem.querySelector('input'), hdl:(e) => this.#setRefValue(this, obj, member, !!e.target.checked, args, elem)}]);
+        this.#addListeners(args, [{type:"input", elem:input, hdl:(e) => this.#setRefValue(this, obj, member, !!e.target.checked, args, elem)}]);
         args._upd = () => { input.checked = obj[member] ? 'checked' : '' };
         return elem;
     }

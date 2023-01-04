@@ -1,6 +1,6 @@
 ---
 "lang": "en-US",
-"title": "ctrl-ing",
+"title": "&lt;ctrl-ing&gt; - Smart GUI Controller",
 "subtitle": "An appealing GUI for controlling your Web-App, JSON, DOM or JavaScript Object Values",
 "authors": ["Stefan Gössner<sup>1</sup>", "<a href='https://github.com/goessner/ctrling'><svg height='16' width='16' viewBox='0 0 16 16'><path fill-rule='evenodd' fill='#1f3939' clip-rule='evenodd' d='M8 0C3.58 0 0 3.58 0 8C0 11.54 2.29 14.53 5.47 15.59C5.87 15.66 6.02 15.42 6.02 15.21C6.02 15.02 6.01 14.39 6.01 13.72C4 14.09 3.48 13.23 3.32 12.78C3.23 12.55 2.84 11.84 2.5 11.65C2.22 11.5 1.82 11.13 2.49 11.12C3.12 11.11 3.57 11.7 3.72 11.94C4.44 13.15 5.59 12.81 6.05 12.6C6.12 12.08 6.33 11.73 6.56 11.53C4.78 11.33 2.92 10.64 2.92 7.58C2.92 6.71 3.23 5.99 3.74 5.43C3.66 5.23 3.38 4.41 3.82 3.31C3.82 3.31 4.49 3.1 6.02 4.13C6.66 3.95 7.34 3.86 8.02 3.86C8.7 3.86 9.38 3.95 10.02 4.13C11.55 3.09 12.22 3.31 12.22 3.31C12.66 4.41 12.38 5.23 12.3 5.43C12.81 5.99 13.12 6.7 13.12 7.58C13.12 10.65 11.25 11.33 9.47 11.53C9.76 11.78 10.01 12.26 10.01 13.01C10.01 14.08 10 14.94 10 15.21C10 15.42 10.15 15.67 10.55 15.59C13.71 14.53 16 11.53 16 8C16 3.58 12.42 0 8 0Z'></path></svg></a>"],
 "adresses": ["<sup>1</sup>Dortmund University of Applied Sciences. Department of Mechanical Engineering"],
@@ -18,6 +18,8 @@ Many webapplications are of small to medium size. Equipping these with a pleasin
   - [1. What is It ?](#1-what-is-it)
   - [2. Getting Started](#2-getting-started)
   - [3. `<ctrl-ing>` Element](#3-ctrl-ing-element)
+    - [3.1 `<ctrl-ing>` Attributes](#31-ctrl-ing-attributes)
+    - [3.2 Automatical Menu Generation](#32-automatical-menu-generation)
   - [4. Sections Reference](#4-sections-reference)
     - [4.1 Button](#41-button)
     - [4.2 Checkbox](#42-checkbox)
@@ -31,14 +33,18 @@ Many webapplications are of small to medium size. Equipping these with a pleasin
     - [4.10 Separator](#410-separator)
     - [4.11 Text](#411-text)
     - [4.12 Vector](#412-vector)
-  - [5. Conclusion](#5-conclusion)
+  - [5. API](#5-api)
+    - [5.1 Self-Control](#51-self-control)
+  - [6. Other Controller Libraries](#6-other-controller-libraries)
+  - [7. Conclusion](#7-conclusion)
   - [References](#references)
+
 
 ## 1. What is It ?
 
 `ctrl-ing` is a tiny HTML custom element used to interactively control your Web-App parameters or JavaScript/JSON/DOM object values in a comfortable way with the following characteristics:
 
-* tiny footprint `18.7/11.3 kB` un/compressed.
+* tiny footprint `25.3/14.2 kB` un/compressed.
 * dependency free.
 * easy prototypical generation with low effort.
 * given an object, a menu template can even be created automatically.
@@ -254,7 +260,7 @@ For each section in the JSON content of the `<ctrl-ing>` element there is a HTML
 |[`num`](#46-number)  | `<input type="number">` | Display an input field for entering a numerical parameter value. |
 |[`out`](#47-output)  | `<output>` | Monitoring any data. |
 |[`rng`](#48-range)  | `<input type="range">` | Display a slider element for setting a numerical parameter value. |
-|[`sel`](#49-select)  | `<select>` | Provides a drop down menu of options. |
+|[`sel`](#49-selection)  | `<select>` | Provides a drop down menu of options. |
 |[`sep`](#410-separator)  | `<hr>` | Display a separating line for menu structuring. |
 |[`txt`](#411-text)  | `<input type="text">` | Display an input field for entering a textual parameter value. |
 |[`vec`](#412-vector)  | multiple<br>`<input type="text">` | Display a set of input fields for entering multiple related data values. |
@@ -356,7 +362,7 @@ The `chk` section is usually assigned to a boolean object property to be control
 
 ### 4.3 Color
 
-The `col` section provides a user interface to assign a RGB color to an object property.
+The `col` section provides a user interface to assign a RGB color in HEX-notation to an object property.
 ```json
 <ctrl-ing ref="col">
   [ {"sec":"hdr","text":"Color"},
@@ -916,7 +922,7 @@ The API works properly at the earliest after the `<ctrl-ing>` element is complet
 |`removeSection(idx)` | `this` | Remove the section at index `idx`. |
 |`setAttr(attr,value)` | `this` | Set `<ctrl-ing>`'s attribute `attr` to value `value`.  |
 |`section(idx)` | section | Select a section from the sections array by index `idx`.  |
-|`updateControlValues()` | `this` | When the `autoupdate` attribute is not set, this method might be used to programmatically update current values in the control elements instead. |
+|`updateControlValues()` | `this` | When the `autoupdate` attribute is not set, this method might be used programmatically to update current values in the control elements instead. |
 |`updateSection(idx,sec)` | `this` | If `sec` is present, current section at index `idx` will be replaced by `sec`, otherwise current section is assumed to be modified and stays in place. The shadow DOM is getting updated hereafter. |
 
 <figcaption>Table 3: API Methods.</figcaption><br>
@@ -927,7 +933,7 @@ API methods may be used to modify the `<ctrl-ing>` menu itself. Here is an examp
 
 
 ```json
-<ctrl-ing id="ctrlslf" ref="obj" callback="$['callbk']">
+<ctrl-ing ref="objslf" callback="$['callbk']">
   [ {"sec":"hdr","text":"Self-Control"},
     {"sec":"chk","label":"Disable str","path":"$['disable']"},
     {"sec":"txt","label":"str","path":"$['str']"}
@@ -949,7 +955,7 @@ const objslf = {
     }
 }
 ```
-  <ctrl-ing id="ctrlslf" ref="objslf" callback="$['callbk']">
+  <ctrl-ing ref="objslf" callback="$['callbk']">
     [ {"sec":"hdr","text":"Self-Control"},
       {"sec":"chk","label":"Disable str","path":"$['disable']"},
       {"sec":"txt","label":"str","path":"$['str']"}
@@ -957,14 +963,13 @@ const objslf = {
   </ctrl-ing>
 </div>
 <script>
-    const ctrlr = document.getElementById('ctrlslf');
     const objslf = {
         disable: false,
         str: "Hello",
         callbk({ctrl,obj, member, value, section, elem}) {
             if (member === 'disable') {
-                ctrlr.section(2).disabled = value;
-                ctrlr.updateSection(2);
+                ctrl.section(2).disabled = value;
+                ctrl.updateSection(2);
             }
         }
     }
@@ -972,14 +977,16 @@ const objslf = {
 
 ## 6. Other Controller Libraries
 
+There are a couple of JavaScript controller libraries. Here are two overview pages [[2, 3]](#2). From the controller libraries listed there `dat.gui` is the most mature and most popular one. Many of the other libraries are kind of `dat.gui` clones providing an identical or very similar API. Some of them have very powerful features added like enhanced color pickers and/or charting capabilities. If you want a `dat.gui` like JavaScript solution, it is recommended to take one of these controller libraries.
 
+`<ctr-ing>` has a different, more minimalistic approach with quickly prototyping a GUI menu by using markup/JSON alone. It deliberately uses plain standard HTML form elements for user interaction despite some of their known deficiencies. Hence the advantage of its light weight, which is considerable smaller (25 kB uncompressed) than the libraries above.
 
 
 ## 7. Conclusion
 
-`<ctrl-ing>` is a lightweight HTML custom element. It helps to rapidly prototype a pleasing GUI without programming. Web-App parameters or JavaScript/JSON object values can be monitored or interactively modified.
+`<ctrl-ing>` is a lightweight HTML custom element. It helps to rapidly prototype a pleasing GUI without programming. Web-App parameters or JavaScript/JSON/DOM object values can be monitored or interactively modified.
 
-A `<ctrl-ing>` menu can be built with few HTML/JSON text alone. Accessing its HTML element via JavaScript can be done via well known DOM methods. Accessing the hidden shadow DOM sections is not possible though. For enabling programmatical access to the internal menu structure, an API is provided.
+A `<ctrl-ing>` menu can be built with few HTML/JSON text alone. Accessing its HTML element via JavaScript can be done via well known DOM methods. Accessing the hidden shadow DOM sections is not possible though. For enabling programmatical access to the internal menu structure, a small API is provided.
 
 `<ctrl-ing>` does not depend on other libraries and is meant as a helper for webapplications of small to medium size.
 
@@ -987,15 +994,11 @@ A `<ctrl-ing>` menu can be built with few HTML/JSON text alone. Accessing its HT
 
 ## References 
 
-
-
-<span id="1">[1] HTML input types, [https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Input#input_types](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Input#input_types)</span>    
-<span id="2">[2] 
-D. Corbacho, Debouncing and Throttling Explained Through Examples    
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[https://css-tricks.com/debouncing-throttling-explained-examples/](https://css-tricks.com/debouncing-throttling-explained-examples/)</span>    
-<span id="3">[3] S. Goessner, <code>canvas-area</code>, 
-[https://github.com/goessner/canvas-area](https://github.com/goessner/canvas-area)</span>    
+<span id="1">[1] HTML input types,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Input#input_types](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Input#input_types)</span>    
+<span id="2">[2] List of JavaScript GUI Control libraries, [https://xosh.org/javascript-control-ui/](https://xosh.org/javascript-control-ui/)</span>    
+<span id="3">[3] JavaScript GUI libraries,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+[https://gist.github.com/SMUsamaShah/71d5ac6849cdc0bffff4c19329e9d0bb](https://gist.github.com/SMUsamaShah/71d5ac6849cdc0bffff4c19329e9d0bb)</span>    
 <span id="4">[4] S. Goessner, Make your HTML canvas Interactive, 
 [Researchgate, DOI: 10.13140/RG.2.2.31978.39367](https://www.researchgate.net/publication/360034117_Make_your_HTML_canvas_Interactive)</span>
 
-<script src="https://cdn.jsdelivr.net/npm/ctrling/ctrling.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/ctrling/ctrling.js"></script>

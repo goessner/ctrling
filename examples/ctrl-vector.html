@@ -10,32 +10,19 @@
     <pre>
 &lt;ctrl-ing ref="obj" darkmode>
     [ {"sec":"hdr","text":"Vektor-Demo"},
-      {"sec":"chk","label":"Check","path":"$['checked']"},
-      {"sec":"num","label":"Number","min":1,"max":2,"step":0.2,"fractions":2,"path":"$['number']","unit":"[s]"},
       {"sec":"vec","label":"Vector","path":["$['vec']['u']","$['vec']['v']","$['vec']['w']","$['vec']['x']","$['vec']['y']"],"unit":"[px]"},
-      {"sec":"sel","label":"Linestyle","options":["solid","dashed","dotted"],"path":"$['lineStyle']"},
-      {"sec":"sel","label":"Thickness","options":{"thin":1,"medium":2,"thick":3},"path":"$['thickness']"},
-      {"sec":"txt","label":"Text","path":"$['text']"},
       {"sec":"out","label":"Point","path":"$['pnt']","unit":"[mm]"}
     ]
 &lt;/ctrl-ing>
     </pre>
-    <div style="display: flex; flex-wrap: nowrap; justify-content: space-between; background-color:#efefef; position:relative;">
+    <div style="display:flex; position:relative;">
         <pre id="out"></pre>
         <ctrl-ing id="ctrlr" ref="obj" autoupdate darkmode callback="callbk">
             [ {"sec":"hdr","text":"Vektor-Demo"},
-              {"sec":"chk","label":"Check","path":"$['checked']"},
-              {"sec":"num","label":"Number","min":1,"max":2,"step":0.2,"fractions":2,"path":"$['number']","unit":"[s]"},
-              {"sec":"sel","label":"Linestyle","options":["solid","dashed","dotted"],"path":"$['lineStyle']"},
-              {"sec":"sel","label":"Thickness","options":{"thin":1,"medium":2,"thick":3},"path":"$['thickness']"},
-              {"sec":"sep"},
-              {"sec":"txt","label":"Text","path":"$['text']"},
               {"sec":"vec","label":"Array","width":"4em",
                "path":["$['arr'][0]","$['arr'][1]","$['arr'][2]","$['arr'][3]","$['arr'][4]","$['arr'][5]"]},
               {"sec":"vec","label":"Object (x,y,z)",
-               "path":["$['vec']['x']","$['vec']['y']","$['vec']['z']"],
-               "unit":"[mm]"},
-              {"sec":"out","label":"Point","path":"$['pnt']","unit":"[mm]"}
+               "path":["$['vec']['x']","$['vec']['y']","$['vec']['z']"],"unit":"[mm]"}
             ]
         </ctrl-ing>
     </div>
@@ -43,16 +30,9 @@
 <script>
 const obj = {
     arr: ["string",3.14,true,null,[1,2],{a:2,b:3}],
-    vec: {x:1,y:2,z:3},
-    number: 1.235,
-    checked: true,
-    lineStyle: "dashed",
-    thickness: 1,
-    text: "something ...",
-    nums: 4,
-    pnt: {x:5, y:7}
+    vec: {x:1,y:2,z:3}
 }
 function callbk() { document.getElementById('out').innerHTML = "var obj = "+Ctrling.stringify(obj); }
 </script>
-<script src="./ctrling.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/ctrling/ctrling.min.js"></script>
 </html>

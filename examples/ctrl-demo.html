@@ -4,20 +4,28 @@
     <meta charset='utf-8'>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>ctrl-demo</title>
-    <script src="../ctrling.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ctrling/ctrling.min.js"></script>
 </head>
 <body>
     <h2>Demo</h2>
     <pre>
         &lt;ctrl-ing ref="obj" darkmode>
-          [ {"sec":"hdr","text":"Demo"},
-            {"sec":"num","label":"Numbers","path":"$['numbers'][0]","unit":"[-]"},
-            {"sec":"chk","label":"Toggle","path":"$['toggle']"},
-            {"sec":"txt","label":"Text","path":"$['text']"},
-            {"sec":"col","label":"Color","path":"$['color']"},
-            {"sec":"sel","label":"Select","options":{"solid":1,"dashed":2,"dotted":3},"path":"$['lineStyle']"}
-            ]
-        &lt;/ctrl-ing>
+        [ {"sec":"hdr","text":"Demo"},
+          {"sec":"num","label":"Numbers[0]","min":1,"max":20,"step":1.00,"path":"$['numbers'][0]","unit":"[-]"},
+          {"sec":"chk","label":"Toggle","path":"$['toggle']"},
+          {"sec":"txt","label":"Text","path":"$['text']"},
+          {"sec":"sep"},
+          {"sec":"col","label":"Color","path":"$['color']"},
+          {"sec":"sel","label":"Select","options":{"solid":1,"dashed":2,"dotted":3},"path":"$['lineStyle']"},
+          {"sec":"num","label":"x","path":"$['x']","unit":"[-]"},
+          {"sec":"btn","label":"coloring","text":"press","path":"window['f']"},
+          {"sec":"rng","label":"slide","path":"$['slide']"},
+          {"sec":"vec","label":"Vector","path":["$['vec']['x']","$['vec']['y']"]},
+          {"sec":"mtr","label":"Meter","path":"$['volumn']","min":20,"max":80,
+           "low":45,"high":70,"optimum":30,"value":50,"unit":"m&sup2;"},
+          {"sec":"out","label":"obj=","path":"$"}
+        ]
+  &lt;/ctrl-ing>
     </pre>
     <div style="display:flex; position:relative;">
         <pre id="out"></pre>
@@ -30,11 +38,11 @@
               {"sec":"col","label":"Color","path":"$['color']"},
               {"sec":"sel","label":"Select","options":{"solid":1,"dashed":2,"dotted":3},"path":"$['lineStyle']"},
               {"sec":"num","label":"x","path":"$['x']","unit":"[-]"},
-              {"sec":"btn","label":"show current time","text":"press","path":"window['f']"},
+              {"sec":"btn","label":"coloring","text":"press","path":"window['f']"},
               {"sec":"rng","label":"slide","path":"$['slide']"},
               {"sec":"vec","label":"Vector","path":["$['vec']['x']","$['vec']['y']"]},
               {"sec":"mtr","label":"Meter","path":"$['volumn']","min":20,"max":80,
-              "low":45,"high":70,"optimum":30,"value":50,"unit":"m&sup2;"},
+               "low":45,"high":70,"optimum":30,"value":50,"unit":"m&sup2;"},
               {"sec":"out","label":"obj=","path":"$"}
             ]
         </ctrl-ing>
@@ -56,7 +64,7 @@ const obj = {
         volumn:40
     }
     function callbk() { document.getElementById('out').innerHTML = "obj = "+Ctrling.stringify(obj); }
-    function f() { console.log('#'); document.body.style.color = "red"; }
+    function f() { document.body.style.color = document.body.style.color == "red" ? "blue" : "red"; }
 //    callbk1();
 </script>
 </html>
