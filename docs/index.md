@@ -998,7 +998,5 @@ A `<ctrl-ing>` menu can be built with few HTML/JSON text alone. Accessing its HT
 <span id="2">[2] List of JavaScript GUI Control libraries, [https://xosh.org/javascript-control-ui/](https://xosh.org/javascript-control-ui/)</span>    
 <span id="3">[3] JavaScript GUI libraries,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 [https://gist.github.com/SMUsamaShah/71d5ac6849cdc0bffff4c19329e9d0bb](https://gist.github.com/SMUsamaShah/71d5ac6849cdc0bffff4c19329e9d0bb)</span>    
-<span id="4">[4] S. Goessner, Make your HTML canvas Interactive, 
-[Researchgate, DOI: 10.13140/RG.2.2.31978.39367](https://www.researchgate.net/publication/360034117_Make_your_HTML_canvas_Interactive)</span>
 
 <script src="https://cdn.jsdelivr.net/npm/ctrling/ctrling.js"></script>
