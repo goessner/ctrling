@@ -57,7 +57,7 @@ Many webapplications are of small to medium size. Equipping these with a pleasin
 </figure>  
 <figcaption style="font-size:0.95em;text-align:center">Fig. 1: Controlling an Animation.</figcaption><br>
 
-Here is the [live version](./examples/ctrl-lissajous.html) of the Lissajous example. Its interactive menu was created via:
+Here is the [live version](https://goessner.github.io/ctrling/examples/ctrl-lissajous.html) of the Lissajous example. Its interactive menu was created via:
 
 ```html
 <ctrl-ing ref="app" darkmode>
@@ -92,7 +92,7 @@ You might want to start with a minimal example. Let's say, we want to create thi
 </figure>  
 <figcaption style="font-size:0.95em;text-align:center">Fig. 2: Minimal <code>&lt;ctrl-ing&gt;</code> Example.</figcaption><br>
 
-Here is the complete HTML code ([Live version](./gettingstarted.html))
+Here is the complete HTML code ([Live version](https://goessner.github.io/ctrling/ctrl-lissajous.html))
 
 ```html
 <!doctype html>
