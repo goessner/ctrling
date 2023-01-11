@@ -100,7 +100,8 @@
 <li><em>output</em> monitoring values.</li>
 <li><em>structuring</em> elements.</li>
 </ul>
-<p>All section objects are generating plain native HTML (form) elements in the background (shadow DOM) <a href="#1">[1]</a>. That markup is hidden and separated from other code on the page — thus avoiding code collisions.</p>
+<p>All section objects are generating plain native HTML (form) elements in the background (shadow DOM) <a href="#2">[2]</a>. That markup is hidden and separated from other code on the page — thus avoiding code collisions.</p>
+<p>A short version of this is published as a paper on <a href="#1">[1]</a> <a href="https://www.researchgate.net/publication/367045965_ctrl-ing_-_A_Smart_GUI_Controller">ResearchGate</a>.</p>
 <h2 id="2-getting-started">2. Getting Started</h2>
 <p>You might want to start with a minimal example. Let's say, we want to create this controlling menu.</p>
 <div  ></div>
@@ -1438,7 +1439,7 @@ Then object member names are displayed in the drop down menu and member values a
     }
 </script>
 <h2 id="6-other-controller-libraries">6. Other Controller Libraries</h2>
-<p>There are a couple of JavaScript controller libraries. Here are two overview pages <a href="#2">[2, 3]</a>. From the controller libraries listed there <code>dat.gui</code> is the most mature and most popular one. Many of the other libraries are kind of <code>dat.gui</code> clones providing an identical or very similar API. Some of them have very powerful features added like enhanced color pickers and/or charting capabilities. If you want a <code>dat.gui</code> like JavaScript solution, it is recommended to take one of these controller libraries.</p>
+<p>There are a couple of JavaScript controller libraries. Here are two overview pages <a href="#3">[3, 4]</a>. From the controller libraries listed there <code>dat.gui</code> is the most mature and most popular one. Many of the other libraries are kind of <code>dat.gui</code> clones providing an identical or very similar API. Some of them have very powerful features added like enhanced color pickers and/or charting capabilities. If you want a <code>dat.gui</code> like JavaScript solution, it is recommended to take one of these controller libraries.</p>
 <p><code>&lt;ctr-ing&gt;</code> has a different, more minimalistic approach with quickly prototyping a GUI menu by using markup/JSON alone. It deliberately uses plain standard HTML form elements for user interaction despite some of their known deficiencies. Hence the advantage of its light weight, which is considerable smaller (25 kB uncompressed) than the libraries above.</p>
 <h2 id="7-conclusion">7. Conclusion</h2>
 <p><code>&lt;ctrl-ing&gt;</code> is a lightweight HTML custom element. It helps to rapidly prototype a pleasing GUI without programming. Web-App parameters or JavaScript/JSON/DOM object values can be monitored or interactively modified.</p>
@@ -1447,9 +1448,10 @@ Then object member names are displayed in the drop down menu and member values a
 <div  ></div>
 <br>
 <h2 id="references">References</h2>
-<p><span id="1">[1] HTML input types,<br>      <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Input#input_types">https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Input#input_types</a></span><br>
-<span id="2">[2] List of JavaScript GUI Control libraries, <a href="https://xosh.org/javascript-control-ui/">https://xosh.org/javascript-control-ui/</a></span><br>
-<span id="3">[3] JavaScript GUI libraries,<br>     
+<p><span id="1">[1] &lt;ctrl-ing&gt; on ResearchGate, <a href="https://tinyurl.com/7824v27u">https://tinyurl.com/7824v27u</a></span><br>
+<span id="2">[2] HTML input types,<br>      <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Input#input_types">https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Input#input_types</a></span></p>
+<p><span id="3">[3] List of JavaScript GUI Control libraries, <a href="https://xosh.org/javascript-control-ui/">https://xosh.org/javascript-control-ui/</a></span><br>
+<span id="4">[4] JavaScript GUI libraries,<br>     
 <a href="https://gist.github.com/SMUsamaShah/71d5ac6849cdc0bffff4c19329e9d0bb">https://gist.github.com/SMUsamaShah/71d5ac6849cdc0bffff4c19329e9d0bb</a></span></p>
 <div  ></div>
 <script src="https://cdn.jsdelivr.net/npm/ctrling/ctrling.js"></script>

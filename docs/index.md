@@ -81,7 +81,9 @@ Beside implementing your web application, all you need to do for prototyping an 
 * *output* monitoring values.
 * *structuring* elements.
 
-All section objects are generating plain native HTML (form) elements in the background (shadow DOM) [[1]](#1). That markup is hidden and separated from other code on the page &mdash; thus avoiding code collisions.
+All section objects are generating plain native HTML (form) elements in the background (shadow DOM) [[2]](#2). That markup is hidden and separated from other code on the page &mdash; thus avoiding code collisions.
+
+A short version of this is published as a paper on [[1]](#1) [ResearchGate](https://www.researchgate.net/publication/367045965_ctrl-ing_-_A_Smart_GUI_Controller).
 
 ## 2. Getting Started
 
@@ -998,7 +1000,7 @@ const objslf = {
 
 ## 6. Other Controller Libraries
 
-There are a couple of JavaScript controller libraries. Here are two overview pages [[2, 3]](#2). From the controller libraries listed there `dat.gui` is the most mature and most popular one. Many of the other libraries are kind of `dat.gui` clones providing an identical or very similar API. Some of them have very powerful features added like enhanced color pickers and/or charting capabilities. If you want a `dat.gui` like JavaScript solution, it is recommended to take one of these controller libraries.
+There are a couple of JavaScript controller libraries. Here are two overview pages [[3, 4]](#3). From the controller libraries listed there `dat.gui` is the most mature and most popular one. Many of the other libraries are kind of `dat.gui` clones providing an identical or very similar API. Some of them have very powerful features added like enhanced color pickers and/or charting capabilities. If you want a `dat.gui` like JavaScript solution, it is recommended to take one of these controller libraries.
 
 `<ctr-ing>` has a different, more minimalistic approach with quickly prototyping a GUI menu by using markup/JSON alone. It deliberately uses plain standard HTML form elements for user interaction despite some of their known deficiencies. Hence the advantage of its light weight, which is considerable smaller (25 kB uncompressed) than the libraries above.
 
@@ -1015,9 +1017,11 @@ A `<ctrl-ing>` menu can be built with few HTML/JSON text alone. Accessing its HT
 
 ## References 
 
-<span id="1">[1] HTML input types,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Input#input_types](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Input#input_types)</span>    
-<span id="2">[2] List of JavaScript GUI Control libraries, [https://xosh.org/javascript-control-ui/](https://xosh.org/javascript-control-ui/)</span>    
-<span id="3">[3] JavaScript GUI libraries,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<span id="1">[1] &lt;ctrl-ing&gt; on ResearchGate, [https://tinyurl.com/7824v27u](https://tinyurl.com/7824v27u )</span>    
+<span id="2">[2] HTML input types,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Input#input_types](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Input#input_types)</span>    
+
+<span id="3">[3] List of JavaScript GUI Control libraries, [https://xosh.org/javascript-control-ui/](https://xosh.org/javascript-control-ui/)</span>    
+<span id="4">[4] JavaScript GUI libraries,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 [https://gist.github.com/SMUsamaShah/71d5ac6849cdc0bffff4c19329e9d0bb](https://gist.github.com/SMUsamaShah/71d5ac6849cdc0bffff4c19329e9d0bb)</span>    
 
 <script src="https://cdn.jsdelivr.net/npm/ctrling/ctrling.js"></script>
