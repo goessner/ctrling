@@ -77,14 +77,14 @@ Use a local instance or one of the following CDN links for `ctrling.js`.
 * __Can I control a single global variable ?__
   * In short ... yes.
   * You only need to declare it using `var`, since `let` and `const` variables aren't accessible using `globalThis` or `window` object, which is used here for global variables. No restriction for objects or arrays though.
-  * See [`ctrl-variable.html`](./examples/ctrl-variable.html) for an example.
+  * See [`ctrl-variable.html`](https://github.com/goessner/ctrling/blob/master/docs/examples/ctrl-variable.html) for an example.
 * __Can I control an array ?__
-  * Yes, see [`ctrl-array.html`](./examples/ctrl-array.html) for an example.
+  * Yes, see [`ctrl-array.html`](https://github.com/goessner/ctrling/blob/master/docs/examples/ctrl-array.html) for an example.
 * __Can I convert values while setting ?__
   * Yes.
   * Either use getter/setter pair for get/set value ...
   * ... or use `callback` function for setting value only.
-  * See [`ctrl-todeg.html`](./examples/ctrl-todeg.html) for an example.
+  * See [`ctrl-todeg.html`](https://github.com/goessner/ctrling/blob/master/docs/examples/ctrl-todeg.html) for an example.
 * __Can you implement feature X and possibly feature Y ?__
   * `ctrling` serves my personal needs very well as it is.
   * So ... no, I won't.
