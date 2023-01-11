@@ -64,7 +64,7 @@ Help for getting started and a complete documentation containing an interactive 
 |[todeg](https://goessner.github.io/ctrling/examples/ctrl-todeg.html) | [source](https://github.com/goessner/ctrling/docs/examples/ctrl-todeg.html) | Transform property with user setting |
 |[variable](https://goessner.github.io/ctrling/examples/ctrl-variable.html) | [source](https://github.com/goessner/ctrling/docs/examples/ctrl-variable.html) | Controlling a single variable value |
 |[vector](https://goessner.github.io/ctrling/examples/ctrl-vector.html) | [source](https://github.com/goessner/ctrling/docs/examples/ctrl-vector.html) | Controlling multiple values as vector |
-<figcaption style="font-size:0.95em;text-align:center">Table: Controlling an Animation.</figcaption><br>
+<figcaption style="font-size:0.95em;text-align:center">Table: Examples for using &lt;ctrl-ing&gt;.</figcaption><br>
 
 ## CDN
 
