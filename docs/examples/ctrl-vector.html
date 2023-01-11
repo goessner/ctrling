@@ -3,24 +3,16 @@
 <head>
     <meta charset='utf-8'>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>ctrl-demo</title>
+    <title>ctrl-vector</title>
 </head>
 <body>
-    <h2>Demo</h2>
-    <pre>
-&lt;ctrl-ing ref="obj" darkmode>
-    [ {"sec":"hdr","text":"Vektor-Demo"},
-      {"sec":"vec","label":"Vector","path":["$['vec']['u']","$['vec']['v']","$['vec']['w']","$['vec']['x']","$['vec']['y']"],"unit":"[px]"},
-      {"sec":"out","label":"Point","path":"$['pnt']","unit":"[mm]"}
-    ]
-&lt;/ctrl-ing>
-    </pre>
+    <h2>ctrl-vector</h2>
     <div style="display:flex; position:relative;">
         <pre id="out"></pre>
-        <ctrl-ing id="ctrlr" ref="obj" autoupdate darkmode callback="callbk">
+        <ctrl-ing ref="obj" darkmode callback="globalThis['callbk']">
             [ {"sec":"hdr","text":"Vektor-Demo"},
               {"sec":"vec","label":"Array","width":"4em",
-               "path":["$['arr'][0]","$['arr'][1]","$['arr'][2]","$['arr'][3]","$['arr'][4]","$['arr'][5]"]},
+               "path":["$['arr'][0]","$['arr'][1]","$['arr'][2]","$['arr'][3]","$['arr'][4]"]},
               {"sec":"vec","label":"Object (x,y,z)",
                "path":["$['vec']['x']","$['vec']['y']","$['vec']['z']"],"unit":"[mm]"}
             ]
@@ -29,10 +21,10 @@
 </body>
 <script>
 const obj = {
-    arr: ["string",3.14,true,null,[1,2],{a:2,b:3}],
+    arr: ["string",3.14,true,null,{a:2,b:3}],
     vec: {x:1,y:2,z:3}
 }
 function callbk() { document.getElementById('out').innerHTML = "var obj = "+Ctrling.stringify(obj); }
 </script>
-<script src="https://cdn.jsdelivr.net/npm/ctrling/ctrling.min.js"></script>
+<script src="../../ctrling.js"></script>
 </html>

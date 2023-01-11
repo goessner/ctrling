@@ -3,19 +3,19 @@
 <head>
     <meta charset='utf-8'>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>ctrl-minimal</title>
+    <title>ctrl-color</title>
 </head>
 <body>
-    <h2>ctrl-minimal</h2>
-    <ctrl-ing ref="obj" darkmode>
-        [ {"sec":"hdr","text":"Minimal"},
-          {"sec":"chk","label":"Check","path":"$['checked']"}
+    <h2>ctrl-color</h2>
+    <ctrl-ing ref="obj">
+        [ {"sec":"hdr","text":"Color"},
+          {"sec":"col","label":"Color","path":"$['color']"}
         ]
     </ctrl-ing>
 </body>
 <script>
     const obj = {
-        checked: true
+        color: '#ff0000'
     }
 </script>
 <script src="https://cdn.jsdelivr.net/npm/ctrling/ctrling.min.js"></script>

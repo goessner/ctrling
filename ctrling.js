@@ -1,6 +1,6 @@
 /**
  * ctrling.js (c) 2022/23 Stefan Goessner
- * ver. 0.8.21
+ * ver. 0.8.23
  * @license MIT License
  */
 "use strict";
@@ -103,7 +103,6 @@ class Ctrling extends HTMLElement {
                 }
             }
         }
-        // console.log(name + ' changed')
     }
 
     #init() {
@@ -135,8 +134,6 @@ class Ctrling extends HTMLElement {
 
         if (this.#usrValueCallback)
             this.#usrValueCallback({ctrl:this});  // call initially once with empty arguments object ...
-        console.log('initialized!');
-        this.initialized = true; // temorary globally accessible ... !
     }
 
     #sectionsFromJSON(content) {
@@ -410,7 +407,7 @@ class Ctrling extends HTMLElement {
         if (Array.isArray(args.path) && args.path.length > 0) {
             elem.innerHTML = `${args.label||'&nbsp;'}<span>${args.path.map(path => {
                 const [obj, member] = this.#getRef(path);
-                return `<input type="text" ${obj ? ` value="${Ctrling.stringify(obj[member])}"` : ""}${!!args.disabled ? " disabled" : ""}${args.width ? ` style="width:${args.width}"` : ""}>`
+                return `<input type="text"${obj ? ` value='${Ctrling.stringify(obj[member],true)}'` : ""}${!!args.disabled ? " disabled" : ""}${args.width ? ` style="width:${args.width}"` : ""}>`
             }).join('')}</span>${args.unit ? `<span>${args.unit}</span>` : ''}`;
             const inputs = elem.getElementsByTagName('input');
             const listeners = [];
@@ -431,12 +428,13 @@ class Ctrling extends HTMLElement {
         return elem;
     }
     // static methods ...
-    static stringify(value) {
+    static stringify(value,inner=false) {
         return Array.isArray(value) ? JSON.stringify(value)
-             : typeof value === 'object' ? JSON.stringify(value).replaceAll(/\[.*?\]/gm, ($0) => $0.replaceAll(',',';'))
+             : (typeof value === 'object' && inner) ? JSON.stringify(value)
+             : typeof value === 'object' ? JSON.stringify(value).replaceAll(/\[.*?\]/gm, ($0) => $0.replaceAll(',',';')) // nested arrays not treated properly !
                                                                 .replaceAll(/\:\{([^}]*?)\}/gm, ($0) => $0.replaceAll(',',';'))
-                                                                .replace(/^\{/gm,'{\n  ')
-                                                                .replace(/\}$/gm,'\n}')
+                                                                .replace(/^\{/g,'{\n  ')
+                                                                .replace(/\}$/g,'\n}')
                                                                 .replaceAll(',',',\n  ')
                                                                 .replaceAll(/  ("_[^"]*":[^,\n]*,?\n)/gm,'') // skip private members
                                                                 .replaceAll(';',',')
@@ -559,6 +557,7 @@ main > section.num input {
 }
 main > section.col input {
     width: 2em;
+    height: 2em;
 }
 main > section.rng input {
     width: 7em;

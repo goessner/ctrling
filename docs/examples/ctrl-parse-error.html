@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset='utf-8'>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ctrl-parse-error</title>
+</head>
+<body>
+    <h2>ctrl-parse-error</h2>
+    <!-- invalid JSON: `sec` needs to be `"sec"`-->
+    <ctrl-ing ref="obj">
+        [ {sec:"hdr"} ]
+    </ctrl-ing>
+</body>
+<script>
+    const obj = {
+        checked: true
+    }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/ctrling/ctrling.min.js"></script>
+</html>

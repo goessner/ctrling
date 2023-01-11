@@ -3,12 +3,14 @@
 <head>
     <meta charset='utf-8'>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>ctrl-parse-error</title>
+    <title>ctrl-minimal</title>
 </head>
 <body>
-    <h2>ctrl-parse-error</h2>
+    <h2>ctrl-minimal</h2>
     <ctrl-ing ref="obj">
-        [ {sec:"hdr"} ]
+        [ {"sec":"hdr","text":"Minimal"},
+          {"sec":"chk","label":"Check","path":"$['checked']"}
+        ]
     </ctrl-ing>
 </body>
 <script>

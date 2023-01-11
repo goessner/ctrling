@@ -4,7 +4,7 @@
 "subtitle": "An appealing GUI for controlling your Web-App, JSON, DOM or JavaScript Object Values",
 "authors": ["Stefan Gössner<sup>1</sup>", "<a href='https://github.com/goessner/ctrling'><svg height='16' width='16' viewBox='0 0 16 16'><path fill-rule='evenodd' fill='#1f3939' clip-rule='evenodd' d='M8 0C3.58 0 0 3.58 0 8C0 11.54 2.29 14.53 5.47 15.59C5.87 15.66 6.02 15.42 6.02 15.21C6.02 15.02 6.01 14.39 6.01 13.72C4 14.09 3.48 13.23 3.32 12.78C3.23 12.55 2.84 11.84 2.5 11.65C2.22 11.5 1.82 11.13 2.49 11.12C3.12 11.11 3.57 11.7 3.72 11.94C4.44 13.15 5.59 12.81 6.05 12.6C6.12 12.08 6.33 11.73 6.56 11.53C4.78 11.33 2.92 10.64 2.92 7.58C2.92 6.71 3.23 5.99 3.74 5.43C3.66 5.23 3.38 4.41 3.82 3.31C3.82 3.31 4.49 3.1 6.02 4.13C6.66 3.95 7.34 3.86 8.02 3.86C8.7 3.86 9.38 3.95 10.02 4.13C11.55 3.09 12.22 3.31 12.22 3.31C12.66 4.41 12.38 5.23 12.3 5.43C12.81 5.99 13.12 6.7 13.12 7.58C13.12 10.65 11.25 11.33 9.47 11.53C9.76 11.78 10.01 12.26 10.01 13.01C10.01 14.08 10 14.94 10 15.21C10 15.42 10.15 15.67 10.55 15.59C13.71 14.53 16 11.53 16 8C16 3.58 12.42 0 8 0Z'></path></svg></a>"],
 "adresses": ["<sup>1</sup>Dortmund University of Applied Sciences. Department of Mechanical Engineering"],
-"date": "December 2022",
+"date": "January 2023",
 "description": "A tiny HTML custom element for interactively controlling your Web-App parameters",
 "tags": ["prototypical","GUI","controlling","JSON","javascript","object","JSONPath","HTML","custom element"]
 ---
@@ -183,9 +183,9 @@ For an `<ctrl-ing>` element following optional attributes are supported:
 | Attribute | Default | Meaning |
 |:--:|:--:|:--|
 |`ref`  | `window` | Referencing a global object variable of the name indicated by this attribute.  |
-|`width`  | `200px` | Width of the GUI menu.  |
-|`top`  | `0` | Distance relative to top edge of parent element. |
-|`right`  | `0` | Distance relative to right edge of parent element. |
+|`width`  | `200px` | Width of the GUI menu (CSS units).  |
+|`top`  | `0` | Distance relative to top edge of parent element (CSS units). |
+|`right`  | `0` | Distance relative to right edge of parent element (CSS units). |
 |`darkmode`  | - | Display GUI menu in dark mode (default: light). |
 |`autoupdate`  | - | Automatically update monitoring and input sections. |
 |`autogenerate`  | - | Automatically generate a prototype menu from the object given by `ref` attribute. |
@@ -244,6 +244,25 @@ Automatical menu generation with `<ctrl-ing>` works according to following rules
   * getters/setters are treated as normal properties.
   * property names starting with underline `"_"` are considered private and skipped.
 * an `autogenerate="source"` attribute generates an additional final section of type `out` containing the JSON text of the generated sections as a template for further use.
+
+### 3.3 Examples
+
+| Run | Source | Example |
+|:--|:--|:--|
+|[API](https://goessner.github.io/ctrling/examples/ctrl-api.html) | [source](https://github.com/goessner/ctrling/docs/examples/ctrl-api.html) | Using the API |
+|[array](https://goessner.github.io/ctrling/examples/ctrl-array.html) | [source](https://github.com/goessner/ctrling/docs/examples/ctrl-array.html) | Controlling an array object |
+|[autogenerate](https://goessner.github.io/ctrling/examples/ctrl-autogenerate.html) | [source](https://github.com/goessner/ctrling/docs/examples/ctrl-autogenerate.html) | Automatically generating a menu |
+|[color](https://goessner.github.io/ctrling/examples/ctrl-color.html) | [source](https://github.com/goessner/ctrling/docs/examples/ctrl-color.html) | Controlling an RGB color |
+|[demo](https://goessner.github.io/ctrling/examples/ctrl-demo.html) | [source](https://github.com/goessner/ctrling/docs/examples/ctrl-demo.html) | Showing all features |
+|[lissajous](https://goessner.github.io/ctrling/examples/ctrl-lissajous.html) | [source](https://github.com/goessner/ctrling/docs/examples/ctrl-lissajous.html) | Lissajous App |
+|[minimal](https://goessner.github.io/ctrling/examples/ctrl-minimal.html) | [source](https://github.com/goessner/ctrling/docs/examples/ctrl-minimal.html) | Minimal menu generation |
+|[parse-error](https://goessner.github.io/ctrling/examples/ctrl-parse-error.html) | [source](https://github.com/goessner/ctrling/docs/examples/ctrl-parse-error.html) | Treating JSON parse error |
+|[paths](https://goessner.github.io/ctrling/examples/ctrl-paths.html) | [source](https://github.com/goessner/ctrling/docs/examples/ctrl-paths.html) | Using paths as JSONPath strings |
+|[self](https://goessner.github.io/ctrling/examples/ctrl-self.html) | [source](https://github.com/goessner/ctrling/docs/examples/ctrl-self.html) | Controlling the menu itself |
+|[svg](https://goessner.github.io/ctrling/examples/ctrl-svg.html) | [source](https://github.com/goessner/ctrling/docs/examples/ctrl-svg.html) | Controlling SVG graphics |
+|[todeg](https://goessner.github.io/ctrling/examples/ctrl-todeg.html) | [source](https://github.com/goessner/ctrling/docs/examples/ctrl-todeg.html) | Transform property with user setting |
+|[variable](https://goessner.github.io/ctrling/examples/ctrl-variable.html) | [source](https://github.com/goessner/ctrling/docs/examples/ctrl-variable.html) | Controlling a single variable value |
+|[vector](https://goessner.github.io/ctrling/examples/ctrl-vector.html) | [source](https://github.com/goessner/ctrling/docs/examples/ctrl-vector.html) | Controlling multiple values as vector |
 
 
 ## 4. Sections Reference
