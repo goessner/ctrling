@@ -5,22 +5,22 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1,user-scalable=no">
 <meta name="description" content="A tiny HTML custom element for interactively controlling your Web-App parameters">
 <meta name="author" content="Stefan Gössner<sup>1</sup>,<a href='https://github.com/goessner/ctrling'><svg height='16' width='16' viewBox='0 0 16 16'><path fill-rule='evenodd' fill='#1f3939' clip-rule='evenodd' d='M8 0C3.58 0 0 3.58 0 8C0 11.54 2.29 14.53 5.47 15.59C5.87 15.66 6.02 15.42 6.02 15.21C6.02 15.02 6.01 14.39 6.01 13.72C4 14.09 3.48 13.23 3.32 12.78C3.23 12.55 2.84 11.84 2.5 11.65C2.22 11.5 1.82 11.13 2.49 11.12C3.12 11.11 3.57 11.7 3.72 11.94C4.44 13.15 5.59 12.81 6.05 12.6C6.12 12.08 6.33 11.73 6.56 11.53C4.78 11.33 2.92 10.64 2.92 7.58C2.92 6.71 3.23 5.99 3.74 5.43C3.66 5.23 3.38 4.41 3.82 3.31C3.82 3.31 4.49 3.1 6.02 4.13C6.66 3.95 7.34 3.86 8.02 3.86C8.7 3.86 9.38 3.95 10.02 4.13C11.55 3.09 12.22 3.31 12.22 3.31C12.66 4.41 12.38 5.23 12.3 5.43C12.81 5.99 13.12 6.7 13.12 7.58C13.12 10.65 11.25 11.33 9.47 11.53C9.76 11.78 10.01 12.26 10.01 13.01C10.01 14.08 10 14.94 10 15.21C10 15.42 10.15 15.67 10.55 15.59C13.71 14.53 16 11.53 16 8C16 3.58 12.42 0 8 0Z'></path></svg></a>">
-<meta name="date" content="Thu Dec 01 2022 00:00:00 GMT+0100 (Mitteleuropäische Normalzeit)">
+<meta name="date" content="Sun Jan 01 2023 00:00:00 GMT+0100 (Mitteleuropäische Normalzeit)">
 <meta name="keywords" content="prototypical,GUI,controlling,JSON,javascript,object,JSONPath,HTML,custom element">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js/styles/vs.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/markdown-it-texmath/css/texmath.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/goessner/mdmath/themes/publication/style.css">
 
-<title>&lt;ctrl-ing&gt; - Smart GUI Controller</title>
+<title>&lt;ctrl-ing&gt; - A Smart GUI Controller</title>
 </head>
 <body id="top">
 <header>
-<h1>&lt;ctrl-ing&gt; - Smart GUI Controller</h1>
+<h1>&lt;ctrl-ing&gt; - A Smart GUI Controller</h1>
 <h3>An appealing GUI for controlling your Web-App, JSON, DOM or JavaScript Object Values</h3>
 <h4>Stefan Gössner<sup>1</sup>, <a href='https://github.com/goessner/ctrling'><svg height='16' width='16' viewBox='0 0 16 16'><path fill-rule='evenodd' fill='#1f3939' clip-rule='evenodd' d='M8 0C3.58 0 0 3.58 0 8C0 11.54 2.29 14.53 5.47 15.59C5.87 15.66 6.02 15.42 6.02 15.21C6.02 15.02 6.01 14.39 6.01 13.72C4 14.09 3.48 13.23 3.32 12.78C3.23 12.55 2.84 11.84 2.5 11.65C2.22 11.5 1.82 11.13 2.49 11.12C3.12 11.11 3.57 11.7 3.72 11.94C4.44 13.15 5.59 12.81 6.05 12.6C6.12 12.08 6.33 11.73 6.56 11.53C4.78 11.33 2.92 10.64 2.92 7.58C2.92 6.71 3.23 5.99 3.74 5.43C3.66 5.23 3.38 4.41 3.82 3.31C3.82 3.31 4.49 3.1 6.02 4.13C6.66 3.95 7.34 3.86 8.02 3.86C8.7 3.86 9.38 3.95 10.02 4.13C11.55 3.09 12.22 3.31 12.22 3.31C12.66 4.41 12.38 5.23 12.3 5.43C12.81 5.99 13.12 6.7 13.12 7.58C13.12 10.65 11.25 11.33 9.47 11.53C9.76 11.78 10.01 12.26 10.01 13.01C10.01 14.08 10 14.94 10 15.21C10 15.42 10.15 15.67 10.55 15.59C13.71 14.53 16 11.53 16 8C16 3.58 12.42 0 8 0Z'></path></svg></a></h4>
 <h5><sup>1</sup>Dortmund University of Applied Sciences. Department of Mechanical Engineering</h5>
-<h5>December 2022</h5>
+<h5>January 2023</h5>
 <h5><b>Keywords:</b> prototypical, GUI, controlling, JSON, javascript, object, JSONPath, HTML, custom element</h5>
 </header>
 <main>
@@ -35,6 +35,7 @@
 <ul>
 <li><a href="#31-ctrl-ing-attributes">3.1 <code>&lt;ctrl-ing&gt;</code> Attributes</a></li>
 <li><a href="#32-automatical-menu-generation">3.2 Automatical Menu Generation</a></li>
+<li><a href="#33-examples">3.3 Examples</a></li>
 </ul>
 </li>
 <li><a href="#4-sections-reference">4. Sections Reference</a>
@@ -198,17 +199,17 @@
 <tr>
 <td style="text-align:center"><code>width</code></td>
 <td style="text-align:center"><code>200px</code></td>
-<td style="text-align:left">Width of the GUI menu.</td>
+<td style="text-align:left">Width of the GUI menu (CSS units).</td>
 </tr>
 <tr>
 <td style="text-align:center"><code>top</code></td>
 <td style="text-align:center"><code>0</code></td>
-<td style="text-align:left">Distance relative to top edge of parent element.</td>
+<td style="text-align:left">Distance relative to top edge of parent element (CSS units).</td>
 </tr>
 <tr>
 <td style="text-align:center"><code>right</code></td>
 <td style="text-align:center"><code>0</code></td>
-<td style="text-align:left">Distance relative to right edge of parent element.</td>
+<td style="text-align:left">Distance relative to right edge of parent element (CSS units).</td>
 </tr>
 <tr>
 <td style="text-align:center"><code>darkmode</code></td>
@@ -286,6 +287,88 @@ function cbgen() { document.getElementById('genout').innerHTML = "const gen = "+
 </li>
 <li>an <code>autogenerate=&quot;source&quot;</code> attribute generates an additional final section of type <code>out</code> containing the JSON text of the generated sections as a template for further use.</li>
 </ul>
+<h3 id="33-examples">3.3 Examples</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Run</th>
+<th style="text-align:left">Source</th>
+<th style="text-align:left">Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><a href="https://goessner.github.io/ctrling/examples/ctrl-api.html">API</a></td>
+<td style="text-align:left"><a href="https://github.com/goessner/ctrling/docs/examples/ctrl-api.html">source</a></td>
+<td style="text-align:left">Using the API</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://goessner.github.io/ctrling/examples/ctrl-array.html">array</a></td>
+<td style="text-align:left"><a href="https://github.com/goessner/ctrling/docs/examples/ctrl-array.html">source</a></td>
+<td style="text-align:left">Controlling an array object</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://goessner.github.io/ctrling/examples/ctrl-autogenerate.html">autogenerate</a></td>
+<td style="text-align:left"><a href="https://github.com/goessner/ctrling/docs/examples/ctrl-autogenerate.html">source</a></td>
+<td style="text-align:left">Automatically generating a menu</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://goessner.github.io/ctrling/examples/ctrl-color.html">color</a></td>
+<td style="text-align:left"><a href="https://github.com/goessner/ctrling/docs/examples/ctrl-color.html">source</a></td>
+<td style="text-align:left">Controlling an RGB color</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://goessner.github.io/ctrling/examples/ctrl-demo.html">demo</a></td>
+<td style="text-align:left"><a href="https://github.com/goessner/ctrling/docs/examples/ctrl-demo.html">source</a></td>
+<td style="text-align:left">Showing all features</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://goessner.github.io/ctrling/examples/ctrl-lissajous.html">lissajous</a></td>
+<td style="text-align:left"><a href="https://github.com/goessner/ctrling/docs/examples/ctrl-lissajous.html">source</a></td>
+<td style="text-align:left">Lissajous App</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://goessner.github.io/ctrling/examples/ctrl-minimal.html">minimal</a></td>
+<td style="text-align:left"><a href="https://github.com/goessner/ctrling/docs/examples/ctrl-minimal.html">source</a></td>
+<td style="text-align:left">Minimal menu generation</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://goessner.github.io/ctrling/examples/ctrl-parse-error.html">parse-error</a></td>
+<td style="text-align:left"><a href="https://github.com/goessner/ctrling/docs/examples/ctrl-parse-error.html">source</a></td>
+<td style="text-align:left">Treating JSON parse error</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://goessner.github.io/ctrling/examples/ctrl-paths.html">paths</a></td>
+<td style="text-align:left"><a href="https://github.com/goessner/ctrling/docs/examples/ctrl-paths.html">source</a></td>
+<td style="text-align:left">Using paths as JSONPath strings</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://goessner.github.io/ctrling/examples/ctrl-self.html">self</a></td>
+<td style="text-align:left"><a href="https://github.com/goessner/ctrling/docs/examples/ctrl-self.html">source</a></td>
+<td style="text-align:left">Controlling the menu itself</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://goessner.github.io/ctrling/examples/ctrl-svg.html">svg</a></td>
+<td style="text-align:left"><a href="https://github.com/goessner/ctrling/docs/examples/ctrl-svg.html">source</a></td>
+<td style="text-align:left">Controlling SVG graphics</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://goessner.github.io/ctrling/examples/ctrl-todeg.html">todeg</a></td>
+<td style="text-align:left"><a href="https://github.com/goessner/ctrling/docs/examples/ctrl-todeg.html">source</a></td>
+<td style="text-align:left">Transform property with user setting</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://goessner.github.io/ctrling/examples/ctrl-variable.html">variable</a></td>
+<td style="text-align:left"><a href="https://github.com/goessner/ctrling/docs/examples/ctrl-variable.html">source</a></td>
+<td style="text-align:left">Controlling a single variable value</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://goessner.github.io/ctrling/examples/ctrl-vector.html">vector</a></td>
+<td style="text-align:left"><a href="https://github.com/goessner/ctrling/docs/examples/ctrl-vector.html">source</a></td>
+<td style="text-align:left">Controlling multiple values as vector</td>
+</tr>
+</tbody>
+</table>
 <h2 id="4-sections-reference">4. Sections Reference</h2>
 <p>For each section in the JSON content of the <code>&lt;ctrl-ing&gt;</code> element there is a HTML <code>&lt;section&gt;</code> element containing either plain visually structuring, data monitoring or interactive form elements. Here is an overview of the twelve different section types.</p>
 <table>
@@ -492,7 +575,7 @@ var btn = {
 <span class="hljs-tag">&lt;/<span class="hljs-name">section</span>&gt;</span>
 </div></code></pre>
 <h3 id="43-color">4.3 Color</h3>
-<p>The <code>col</code> section provides a user interface to assign a RGB color to an object property.</p>
+<p>The <code>col</code> section provides a user interface to assign a RGB color in HEX-notation to an object property.</p>
 <pre><code class="code-line language-json"><div>&lt;ctrl-ing ref=<span class="hljs-string">&quot;col&quot;</span>&gt;
   <span class="hljs-punctuation">[</span> <span class="hljs-punctuation">{</span><span class="hljs-attr">&quot;sec&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;hdr&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;text&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;Color&quot;</span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
     <span class="hljs-punctuation">{</span><span class="hljs-attr">&quot;sec&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;col&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;label&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;Color&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;path&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;$[&#x27;color&#x27;]&quot;</span><span class="hljs-punctuation">}</span>
@@ -1365,9 +1448,7 @@ Then object member names are displayed in the drop down menu and member values a
 <p><span id="1">[1] HTML input types,<br>      <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Input#input_types">https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Input#input_types</a></span><br>
 <span id="2">[2] List of JavaScript GUI Control libraries, <a href="https://xosh.org/javascript-control-ui/">https://xosh.org/javascript-control-ui/</a></span><br>
 <span id="3">[3] JavaScript GUI libraries,<br>     
-<a href="https://gist.github.com/SMUsamaShah/71d5ac6849cdc0bffff4c19329e9d0bb">https://gist.github.com/SMUsamaShah/71d5ac6849cdc0bffff4c19329e9d0bb</a></span><br>
-<span id="4">[4] S. Goessner, Make your HTML canvas Interactive,
-<a href="https://www.researchgate.net/publication/360034117_Make_your_HTML_canvas_Interactive">Researchgate, DOI: 10.13140/RG.2.2.31978.39367</a></span></p>
+<a href="https://gist.github.com/SMUsamaShah/71d5ac6849cdc0bffff4c19329e9d0bb">https://gist.github.com/SMUsamaShah/71d5ac6849cdc0bffff4c19329e9d0bb</a></span></p>
 <div  ></div>
 <script src="https://cdn.jsdelivr.net/npm/ctrling/ctrling.js"></script>
 

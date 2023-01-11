@@ -20,6 +20,7 @@ Many webapplications are of small to medium size. Equipping these with a pleasin
   - [3. `<ctrl-ing>` Element](#3-ctrl-ing-element)
     - [3.1 `<ctrl-ing>` Attributes](#31-ctrl-ing-attributes)
     - [3.2 Automatical Menu Generation](#32-automatical-menu-generation)
+    - [3.3 Examples](#33-examples)
   - [4. Sections Reference](#4-sections-reference)
     - [4.1 Button](#41-button)
     - [4.2 Checkbox](#42-checkbox)
