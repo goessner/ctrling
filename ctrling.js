@@ -1,6 +1,6 @@
 /**
  * ctrling.js (c) 2022/23 Stefan Goessner
- * ver. 0.8.23
+ * ver. 0.8.24
  * @license MIT License
  */
 "use strict";
@@ -335,7 +335,7 @@ class Ctrling extends HTMLElement {
         const [obj, member] = this.#getRef(args.path);
         elem.innerHTML = `<label>${args.label||'&nbsp;'}<input type="text" value="${this.#getRefValue(obj, member, args.value || "")}"${!!args.disabled ? " disabled" : ""}></label>`;
         const input = elem.querySelector('input');
-        this.#addListeners(args, [{type:"input", elem:input, hdl:(e) => this.#setRefValue(obj, member, e.target.value, args, elem)}]);
+        this.#addListeners(args, [{type:"input", elem:input, hdl:(e) => this.#setRefValue(this, obj, member, e.target.value, args, elem)}]);
         args._upd = () => { input.value = this.#getRefValue(obj, member, "?"); };
         return elem;
     }
