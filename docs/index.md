@@ -53,7 +53,7 @@ Many webapplications are of small to medium size. Equipping these with a pleasin
 * getting a pleasing GUI.
 
 <figure style="text-align:center"> 
-   <img src="./img/lissajous.gif">
+   <img src="https://goessner.github.io/ctrling/img/lissajous.gif">
 </figure>  
 <figcaption style="font-size:0.95em;text-align:center">Fig. 1: Controlling an Animation.</figcaption><br>
 
@@ -88,7 +88,7 @@ All section objects are generating plain native HTML (form) elements in the back
 You might want to start with a minimal example. Let's say, we want to create this controlling menu.
 
 <figure style="text-align:center"> 
-   <img src="./img/gettingstarted.gif">
+   <img src="https://goessner.github.io/ctrling/img/gettingstarted.gif">
 </figure>  
 <figcaption style="font-size:0.95em;text-align:center">Fig. 2: Minimal <code>&lt;ctrl-ing&gt;</code> Example.</figcaption><br>
 
