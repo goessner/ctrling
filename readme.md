@@ -14,7 +14,7 @@
 <br>
 
 <figure style="text-align:center"> 
-   <img src="./docs/img/lissajous.png">
+   <img src="./docs/img/lissajous.gif">
 </figure>  
 <figcaption style="font-size:0.95em;text-align:center">Fig.: Controlling an Animation.</figcaption><br>
 
