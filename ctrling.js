@@ -1,6 +1,6 @@
 /**
  * ctrling.js (c) 2022/23 Stefan Goessner
- * ver. 0.8.24
+ * ver. 0.8.25
  * @license MIT License
  */
 "use strict";
@@ -375,15 +375,17 @@ class Ctrling extends HTMLElement {
     }
     out(elem, args) { // args={label,value,unit,path}
         const [obj, member] = this.#getRef(args.path);
-        const value =  Ctrling.stringify(this.#getRefValue(obj, member, (args.value || "")));
+        const val = this.#getRefValue(obj, member, (args.value || ""));
+        const value =  Ctrling.stringify(args.precision && typeof val === 'number' ? val.toPrecision(args.precision) : val);
 
         elem.innerHTML = `${args.label||'&nbsp;'}<span><output>${value}</output>${args.unit ? `<span>${args.unit}</span>` : ''}</span>`;
         if (obj !== undefined) {
             const output = elem.querySelector('output');
             args._upd = () => {
-                const refval = Ctrling.stringify(member ? obj[member] : obj);
-                if (output.innerHTML !== refval) 
-                    output.innerHTML = refval;
+                const val = member ? obj[member] : obj;
+                const value = Ctrling.stringify(args.precision && typeof val === 'number' ? val.toPrecision(args.precision) : val);
+                if (output.innerHTML !== value) 
+                    output.innerHTML = value;
             };
         }
         return elem; 

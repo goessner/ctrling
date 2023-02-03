@@ -46,6 +46,7 @@ All section objects are generating plain native HTML (form) elements in the back
 
 Help for getting started and a complete documentation containing an interactive reference [is available](https://goessner.github.io/ctrling/).
 
+
 ## Examples
 
 | Run | Source | Example |
@@ -93,10 +94,12 @@ Use a local instance or one of the following CDN links for `ctrling.js`.
 
 ## Changelog
 
-###  [0.8.1] on December 20, 2022
-* First published.
+###  [0.8.25] on February 01, 2023
+* Rounding bug with `num` section removed.
 ###  [0.8.23] on January 11, 2023
 * Feature complete.
+###  [0.8.1] on December 20, 2022
+* First published.
 
 ## License
 

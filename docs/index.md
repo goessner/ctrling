@@ -626,6 +626,7 @@ The property value is mutated to JSON text for display. So only primitive object
 |`path`  | - | Location of reference value. |
 |`[value]`  | reference value | Only used as value, if reference value is not available. |
 |`[unit]`  | - | Append unit string. |
+|`[precision]`  | - | present a numerical value with the given precision (number of relevant fractions after the first non-zero digit). |
 
 ### 4.8 Range
 
